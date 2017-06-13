@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts
+END
+activate
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/activate
+END
+easy_install-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/easy_install-script.py
+END
+easy_install-3.3-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/easy_install-3.3-script.py
+END
+pip-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/pip-script.py
+END
+activate.ps1
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/activate.ps1
+END
+pip-3.3-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/pip-3.3-script.py
+END
+coverage-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/11/trunk/PyMud/PyMudInterpreter/Scripts/coverage-script.py
+END
+activate.bat
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/activate.bat
+END
+coverage-3.3-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/11/trunk/PyMud/PyMudInterpreter/Scripts/coverage-3.3-script.py
+END
+coverage3-script.py
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/11/trunk/PyMud/PyMudInterpreter/Scripts/coverage3-script.py
+END
+activate_this.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/activate_this.py
+END
+deactivate.bat
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Scripts/deactivate.bat
+END

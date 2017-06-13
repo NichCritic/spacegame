@@ -1,0 +1,23 @@
+Room
+
+Still thinking of this as an object
+What would a room system do? Is it really a room system? Or is it a set of other systems?
+
+Traditional room roles:
+Container of players and objects
+	- Object pointers need to be stored for dynamic descriptions
+	- Player pointers can be indirect? Location component
+Message passing handler
+	- Need a generic message passing system
+	- Other uses - object to object communication
+Implementation of grid node
+	Has a location
+		 - Location component (roomid, x, y)
+	Has links to other grid nodes
+		- Need this? Generating world from pixels. 1 pixel = 100 units square
+		- Can go anywhere, unless you can't
+		- Good for outdoors, but do we want traditional rooms for indoors?
+	
+Holds description
+	Going to have an object list -> dynamic description generator anyways
+

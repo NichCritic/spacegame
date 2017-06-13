@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib
+END
+_bootstrap.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib/_bootstrap.py
+END
+util.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib/util.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib/__init__.py
+END
+machinery.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib/machinery.py
+END
+abc.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/importlib/abc.py
+END

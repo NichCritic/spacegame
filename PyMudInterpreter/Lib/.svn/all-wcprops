@@ -1,0 +1,263 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib
+END
+rlcompleter.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/rlcompleter.py
+END
+tokenize.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/tokenize.py
+END
+warnings.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/warnings.py
+END
+genericpath.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/genericpath.py
+END
+ntpath.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/ntpath.py
+END
+reprlib.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/reprlib.py
+END
+_weakrefset.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/_weakrefset.py
+END
+site.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/site.py
+END
+tempfile.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/tempfile.py
+END
+re.py
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/re.py
+END
+__future__.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/__future__.py
+END
+io.py
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/io.py
+END
+copyreg.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/copyreg.py
+END
+bisect.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/bisect.py
+END
+copy.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/copy.py
+END
+hashlib.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/hashlib.py
+END
+linecache.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/linecache.py
+END
+stat.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/stat.py
+END
+no-global-site-packages.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/no-global-site-packages.txt
+END
+random.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/random.py
+END
+fnmatch.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/fnmatch.py
+END
+token.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/token.py
+END
+os.py
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/os.py
+END
+_dummy_thread.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/_dummy_thread.py
+END
+orig-prefix.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/orig-prefix.txt
+END
+base64.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/base64.py
+END
+struct.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/struct.py
+END
+sre_constants.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/sre_constants.py
+END
+heapq.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/heapq.py
+END
+locale.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/locale.py
+END
+codecs.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/codecs.py
+END
+sre_compile.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/sre_compile.py
+END
+types.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/types.py
+END
+shutil.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/shutil.py
+END
+hmac.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/hmac.py
+END
+functools.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/functools.py
+END
+posixpath.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/posixpath.py
+END
+sre_parse.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/sre_parse.py
+END
+keyword.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/keyword.py
+END
+weakref.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/weakref.py
+END
+imp.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/imp.py
+END
+abc.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/abc.py
+END
+tarfile.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/PyMud/PyMudInterpreter/Lib/tarfile.py
+END

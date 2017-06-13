@@ -1,0 +1,33 @@
+'''
+Created on 2013-11-12
+
+@author: Nich
+'''
+
+
+def say(command_args, messanger):
+    args = command_args
+    messanger.sendAVMessage(msg_type = "player_say", source_id = args["calling_player_id"], location=args["calling_player_location"], message_templates = verbs["say"]["messages"], text = args["text"])
+
+    
+verbs = {"say": {
+                 
+                 "function" : say,
+                 
+                 "messages":[([("loudness", 50), ("targeted",), ("is_caller",)], ['You say to {target}, "{text}".']),
+                             ([("loudness", 50), ("targeted",), ("is_target",)], ['{player} says to you, "{text}".']),
+                             ([("loudness", 50), ("targeted",),],                 ['{player} says to {target}, "{text}".']),
+                             ([("loudness", 50), ("is_caller",)],               ['You say, "{text}".']),
+                             ([("loudness", 50)],                              ['{player} says, "{text}".']),
+                             ([("visibility", 60), ("is_caller")],              ["You can't hear your own voice!"]),          
+                                                    
+                             ([("visibility", 60), ("is_caller")],             ["{player}'s lips move, but you can't make out what they're saying."])
+                             ],
+                     
+                 }
+            
+            
+            
+            
+            
+        }

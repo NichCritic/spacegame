@@ -1,0 +1,93 @@
+'''
+Created on 2014-02-01
+
+@author: Nich
+'''
+import unittest
+import PyMud.model.base as base
+from PyMud.objects.component_manager import DBComponentSource, ComponentManager
+from PyMud.objects.node_factory import NodeFactoryDB
+from PyMud.objects.components import components
+from PyMud.room.room_components import components as room_components
+from PyMud.room.room import RoomFactory
+
+
+
+class Test(unittest.TestCase):
+
+
+    def setUp(self):
+        self.engine = base.engine('sqlite://', echo=True)
+        self.Session = base.create_sessionmaker(self.engine)
+        base.Base.metadata.create_all(self.engine)
+        
+        all_components = {}
+        all_components.update(components)
+        all_components.update(room_components)
+        
+        self.component_object = DBComponentSource(all_components)
+        self.comp_manager = ComponentManager([self.component_object])
+        self.node_factory = NodeFactoryDB(self.comp_manager, self.Session)
+        
+        session = self.Session()
+        
+        self.chair1 = self.comp_manager.create_entity({
+                                         "names": {"name":"chair1"},
+                                         "description":{"description":"A simple chair"},
+                                         "type":{"type":"chair1"},
+                                                                                  
+                                         }, session)
+        self.chair2 = self.comp_manager.create_entity({
+                                         "names": {"name":"chair1"},
+                                         "description":{"description":"A simple chair"},
+                                         "type":{"type":"chair1"},
+                                         "node":None
+                                         
+                                         }, session)
+        self.chair3 = self.comp_manager.create_entity({
+                                         "names": {"name":"chair1"},
+                                         "description":{"description":"A simple chair"},
+                                         "type":{"type":"chair1"},
+                                         
+                                         
+                                         }, session)
+        
+        session.commit()
+        session.close()
+        
+        room_factory = RoomFactory(self.comp_manager)
+        self.test_room = room_factory.create_room("test", 20, 20, 20, session)
+       
+
+
+    def tearDown(self):
+        base.Base.metadata.drop_all(self.engine)
+        pass
+
+
+    def testCreate(self):
+        with self.node_factory.create_node_list_session(["names"]) as (_, names):
+            print(names)
+            
+        with self.node_factory.create_node_list_session(["names", "node"]) as (_, names):
+            print(names)
+            
+    def testRoom(self):
+        print("------------TEST ROOM--------------")
+        with self.node_factory.create_node_session(self.test_room, ["names"]) as (_,room):
+            
+            print(room.names.name)
+            
+        print("--------END TEST ROOM--------------")
+        
+        
+    
+            
+        
+    
+        
+
+
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+    unittest.main()

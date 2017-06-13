@@ -1,0 +1,5 @@
+#!C:\Projects\PyMud\PyMudInterpreter\Scripts\python.exe
+# EASY-INSTALL-SCRIPT: 'nose2==0.5.0','nose2'
+__requires__ = 'nose2==0.5.0'
+import pkg_resources
+pkg_resources.run_script('nose2==0.5.0', 'nose2')

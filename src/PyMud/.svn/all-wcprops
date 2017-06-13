@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/3/trunk/PyMud/src/PyMud
+END
+startup_scripts.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/16/trunk/PyMud/src/PyMud/startup_scripts.py
+END
+testing.db
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/15/trunk/PyMud/src/PyMud/testing.db
+END
+testing2.db
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/15/trunk/PyMud/src/PyMud/testing2.db
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/3/trunk/PyMud/src/PyMud/__init__.py
+END
+main.db
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/15/trunk/PyMud/src/PyMud/main.db
+END
+generate_data.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/15/trunk/PyMud/src/PyMud/generate_data.py
+END
+main_entry.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/16/trunk/PyMud/src/PyMud/main_entry.py
+END

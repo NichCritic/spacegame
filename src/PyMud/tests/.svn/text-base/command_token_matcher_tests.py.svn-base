@@ -1,0 +1,33 @@
+'''
+Created on 2013-11-08
+
+@author: Nich
+'''
+import unittest
+import PyMud.command.command_token_matcher
+
+class Test(unittest.TestCase):
+
+
+    def setUp(self):
+        self.command_grammer = PyMud.command.command_token_matcher.command_grammar
+        
+        self.command_context = {"players":{"julie":"0000001", "alice":"00000002"}}
+        self.command_matcher = PyMud.command.command_token_matcher.CommandTokenMatcher()
+
+    def tearDown(self):
+        pass
+
+
+    def testGrammer(self):
+        #print(self.command_grammer.parse("test"))
+        self.assertTrue(self.command_grammer.parse("say hello world"))
+        self.assertTrue(self.command_grammer.parse("say to alice hello world"))
+        self.assertEqual(self.command_matcher.match_command("say hello world",self.command_context), {"text":" hello world", "verb":"say"})
+        self.assertEqual(self.command_matcher.match_command("say to julie hello world", self.command_context), {'verb': 'say', 'target':'0000001', 'text':' hello world'})
+        
+
+
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testGrammer']
+    unittest.main()

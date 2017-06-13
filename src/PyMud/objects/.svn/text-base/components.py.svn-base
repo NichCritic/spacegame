@@ -1,0 +1,166 @@
+'''
+Created on 2013-11-03
+
+@author: Nich
+'''
+
+from PyMud.model.base import Base
+from sqlalchemy import Column, String, Integer, ForeignKey
+
+class Location(Base):
+    __compname__ = "location"
+    __tablename__ = "location"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    room = Column(Integer)
+    
+    x = Column(Integer) 
+    y = Column(Integer)
+    z = Column(Integer)
+    
+    def __init__(self, entity_id, room=0, x=0, y=0, z=0):
+        self.entity_id = entity_id
+        self.room = room
+        
+        self.x = x
+        self.y = y
+        self.z = z
+        
+    
+class Space(Base):
+    __compname__ = "space"
+    __tablename__ = "space"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    
+    width = Column(Integer) 
+    length = Column(Integer)
+    height = Column(Integer)
+    
+    def __init__(self, entity_id, width, length, height):
+        self.entity_id = entity_id
+        
+        self.width = width
+        self.length = length
+        self.height = height      
+        
+
+
+class Temperature(Base):
+    __compname__ = "temperature"
+    __tablename__ = "temperature"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    temperature = Column(Integer)
+    
+    
+    def __init__(self, entity_id, temperature = 0):
+        self.entity_id = entity_id
+        self.temperature = temperature
+
+class Description(Base):
+    __compname__ = "description"
+    __tablename__ = "description"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    description = Column(String)
+    
+    def __init__(self, entity_id, description="temp_description"):
+        #todo will have to be replaced with something more robust
+        self.entity_id = entity_id
+        self.description = description
+
+class Names(Base):
+    __compname__ = "names"
+    __tablename__ = "names"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    name = Column(String)
+    
+    def __init__(self, entity_id, name = "temp_name"):
+        self.name = name
+        self.entity_id = entity_id
+
+class Aliases(Base):
+    __compname__ = "aliases"
+    __tablename__ = "aliases"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    alias_id = Column(String)
+    
+    def __init__(self, entity_id, alias_id = 0):
+        self.name = "temp_name"
+        self.entity_id = entity_id
+        self.alias_id = alias_id
+        
+
+class Type(Base):
+    __compname__ = "type"
+    __tablename__ = "type"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    type = Column(String)
+    
+    def __init__(self, entity_id, type="temp_type"):
+        self.entity_id = entity_id
+        self.type = type
+
+
+class PlayerControlled(Base):
+    __compname__ = "player_controlled"
+    
+    __tablename__ = "player_controlled"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    pid = Column(String)
+    
+    def __init__(self,  entity_id, pid = 0):
+        self.entity_id = entity_id
+        self.pid = pid
+        
+    
+
+        
+class Senses(Base):
+    __compname__ = "senses"
+    __tablename__ = "senses"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    sight = Column(Integer)
+    hearing = Column(Integer)
+    
+    def __init__(self, entity_id, sight= 20, hearing= 30):
+        self.entity_id = entity_id
+        self.sight = sight
+        self.hearing = hearing
+
+class Material(Base):
+    __compname__ = "material"
+    __tablename__ = "material"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    material_id = Column(Integer)
+    
+    def __init__(self, entity_id, material_id):
+        self.entity_id = entity_id
+        self.material_id = material_id
+    
+
+components  = {
+    "temperature" : Temperature,
+    "location" : Location,
+    "description" : Description,
+    "type" : Type,
+    "names" : Names,
+    "player_controlled": PlayerControlled,
+    "senses":Senses,
+    "aliases": Aliases,
+    "space": Space,
+    "material": Material
+}

@@ -1,0 +1,35 @@
+'''
+Created on 2013-11-21
+
+@author: Nich
+'''
+from PyMud.Systems.NetworkMessageSystem import NetworkMessage
+
+
+class AnnoyingTickSystem(object):
+    '''
+    Generates annoying ticks that everyone with a network connection gets (Debug)
+    '''
+
+
+    def __init__(self, message_queue, node_factory):
+        self.ids = []
+        self.q = message_queue
+        self.node_factory = node_factory
+        
+        
+        
+    def register(self, id):
+        self.ids.append(id)
+    
+    def get_ids(self):
+        with self.node_factory.create_node_list_session(["player_controlled"]) as network_nodes:
+            return {node.id for node in network_nodes}
+        
+        
+    def send_annoying_tick(self):
+        self.ids = self.get_ids()
+        
+        for id in self.ids:
+            self.q.put(NetworkMessage(id, "****TICK****"))
+        

@@ -1,0 +1,23 @@
+DynDescriptionSystem
+	Generates a dynamic description of an object based on data
+	Components:
+		- Required
+			-TBD
+		- Optional
+			-TBD
+
+BasicDescriptionSystem
+	Just fetches the description from the description component
+		- Required
+			- Description
+		-Optional
+			- None
+
+Message passing system
+	Input:
+		A message
+		A list of targets
+		A hint of what they should do with the message?
+	
+	Output
+		Varies depending on the nature of the message

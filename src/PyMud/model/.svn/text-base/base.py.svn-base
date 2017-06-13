@@ -1,0 +1,19 @@
+'''
+Created on 2014-01-30
+
+@author: Nich
+'''
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+
+def engine(dbstring = 'sqlite:///fake.db', echo=False):
+    engine = create_engine(dbstring, echo=echo)
+    return engine
+
+def create_sessionmaker(engine):
+    Session = sessionmaker(bind=engine)
+    return Session
+
+Base = declarative_base()

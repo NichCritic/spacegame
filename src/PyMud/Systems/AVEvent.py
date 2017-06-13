@@ -1,0 +1,16 @@
+
+'''
+Created on 2014-03-14
+
+@author: Nich
+'''
+
+class AVEvent(object):
+
+    def __init__(self, msg_type, text, location, source_id, message_templates, target_id = None):
+        self.msg_type = msg_type
+        self.text = text
+        self.location = location
+        self.source_id = source_id
+        self.message_templates = message_templates
+        self.target_id = target_id

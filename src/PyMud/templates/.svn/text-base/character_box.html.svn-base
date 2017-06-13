@@ -1,0 +1,6 @@
+<div class="character_box" id={{character["index"]}}>
+	<div id = "character_name">Alice Liddell</div>
+	<div id = "character_description">A short, blond haired girl in a ruffly blue victorian dress</div>
+	<div id = "character_location">Gryffindore Common Room</div>
+	<div id = "character_id"> {{  character["id"] }} </div>
+</div>

@@ -1,0 +1,90 @@
+'''
+Created on 2013-11-10
+
+@author: Nich
+'''
+
+import PyMud.model.base as base
+from PyMud.objects.component_manager import DBComponentSource, ComponentManager
+from PyMud.objects.node_factory import NodeFactoryDB
+from PyMud.objects.components import components
+from PyMud.room.room_components import components as room_components
+from PyMud.room.room import RoomFactory
+from PyMud.objects.materials import materials
+
+
+def main():
+    engine = base.engine('sqlite:///testing2.db', echo = True)
+    Session = base.create_sessionmaker(engine)
+    base.Base.metadata.create_all(engine)
+    
+    all_components = {}
+    all_components.update(components)
+    all_components.update(room_components)
+    
+    component_object = DBComponentSource(all_components, Session)
+    comp_manager = ComponentManager([component_object])
+    node_factory = NodeFactoryDB(all_components, Session)
+    room_factory = RoomFactory(comp_manager)
+    
+    gcr = room_factory.create_room(name = "Gryffindor Common Room",
+                             width = 20,
+                             length = 20,
+                             height = 20)
+    
+    north_wall = comp_manager.create_entity({
+                                       "space":{"width":20, "length":1, "height":20},
+                                       "location":{"room": gcr.id, "x":0, "y":0, "z":0},
+                                       "material":{"material_id":materials.stone},
+                                       "description":{"description":"A grey stone wall"},
+                                       "object_content":None,
+                                       "type": {"type":"wall"}
+                                       })
+    
+    east_wall = comp_manager.create_entity({
+                                       "space":{"width":1, "length":20, "height":20},
+                                       "location":{"room": gcr.id, "x":20, "y":0, "z":0},
+                                       "material":{"material_id":materials.stone},
+                                       "description":{"description":"A grey stone wall"},
+                                       "object_content":None,
+                                       "type": {"type":"wall"}
+                                       })
+    
+    west_wall = comp_manager.create_entity({
+                                       "space":{"width":1, "length":20, "height":20},
+                                       "location":{"room": gcr.id, "x":0, "y":0, "z":0},
+                                       "material":{"material_id":materials.stone},
+                                       "description":{"description":"A grey stone wall"},
+                                       "object_content":None,
+                                       "type": {"type":"wall"}
+                                       })
+    
+    south_wall = comp_manager.create_entity({
+                                       "space":{"width":20, "length":1, "height":20},
+                                       "location":{"room": gcr.id, "x":0, "y":20, "z":0},
+                                       "material":{"material_id":materials.stone},
+                                       "description":{"description":"A grey stone wall"},
+                                       "object_content":None,
+                                       "type": {"type":"wall"}
+                                       })
+    
+    with node_factory.create_node_session(gcr.id, ["object_container"]) as (session, gcr_node):
+        session.add(north_wall)
+        nw_node = node_factory.create_node(session, north_wall.id, ["object_content"])
+        ew_node = node_factory.create_node(session, east_wall.id, ["object_content"])
+        sw_node = node_factory.create_node(session, south_wall.id, ["object_content"])
+        ww_node = node_factory.create_node(session, west_wall.id, ["object_content"])
+        gcr_node.object_container.objects.append(nw_node.object_content)
+        gcr_node.object_container.objects.append(ew_node.object_content)
+        gcr_node.object_container.objects.append(sw_node.object_content)
+        gcr_node.object_container.objects.append(ww_node.object_content)
+    
+    
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+        

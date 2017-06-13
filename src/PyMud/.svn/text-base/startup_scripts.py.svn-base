@@ -1,0 +1,32 @@
+'''
+Created on 2014-02-25
+
+@author: Nich
+'''
+
+import PyMud.model.base as base
+from PyMud.objects.component_manager import DBComponentSource, ComponentManager
+from PyMud.objects.node_factory import NodeFactoryDB
+from PyMud.objects.components import components
+from PyMud.room.room_components import components as room_components
+
+
+
+def setup_db():
+    engine = base.engine('sqlite:///../testing2.db', echo=True)
+    Session = base.create_sessionmaker(engine)
+    base.Base.metadata.create_all(engine)
+    return Session
+
+
+
+class ObjectProvider(object):
+    
+    def __init__(self, Session):
+        all_components = {}
+        all_components.update(components)
+        all_components.update(room_components)
+        
+        self.component_object = DBComponentSource(all_components)
+        self.comp_manager = ComponentManager([self.component_object], Session)
+        self.node_factory = NodeFactoryDB(all_components, Session)      

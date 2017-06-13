@@ -1,0 +1,166 @@
+'''
+Created on 2013-11-15
+
+@author: Nich
+'''
+from PyMud.model.base import Base
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+
+print("IMPORTING!!!")
+
+
+    
+
+class NodeComponent(Base):
+    __tablename__ = "node" 
+    __compname__ = "node"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    
+    def __init__(self, entity_id):
+        #self.links = []
+        self.entity_id = entity_id
+        
+class Link():
+    __tablename__ = "link" 
+    __compname__ = "link"
+
+    a_id = Column(Integer, primary_key=True)
+    b_id = Column(Integer, primary_key=True)
+    
+    upper_neighbour = relationship(NodeComponent,
+                                primaryjoin=a_id==NodeComponent.id,
+                                backref='upper_neighbours')
+    
+    lower_neighbour = relationship(NodeComponent,
+                                primaryjoin=b_id==NodeComponent.id,
+                                backref='lower_neighbours')
+    
+    
+    
+    def __init__(self, a, b):
+        if a.id < b.id:
+            self.lower_neighbour = a
+            self.upper_neighbour = b
+        elif a.id > b.id:
+            self.lower_neighbour = b
+            self.upper_neighbour = a
+        else:
+            raise Exception("Node can't link to itself")
+        
+    def get_neighbour(self, node):
+        
+        if node == self.a_id:
+            return self.b_id
+        elif node == self.b_id:
+            return self.a_id
+        else:
+            raise Exception("The node specified is not part of this link")    
+
+
+class ContainerComponent(Base):
+    __tablename__ = "container"
+    __compname__ = "container"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    
+  
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        
+    
+class ContentComponent(Base):
+    '''Contents can be put inside a container'''
+    __tablename__ = "content"
+    __compname__ = "content"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    container_id = Column(String, ForeignKey("container.id"))
+ 
+    relationship(ContainerComponent,
+                                primaryjoin=container_id==ContainerComponent.id,
+                                backref='contents')
+    
+
+
+class ObjectContainerComponent(Base):
+    __tablename__ = "object_container"
+    __compname__ = "object_container"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    objects = relationship("ObjectContentComponent")
+  
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+    
+
+class ObjectContentComponent(Base):
+    '''Contents can be put inside a container'''
+    __tablename__ = "object"
+    __compname__ = "object"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    object_container_id = Column(String, ForeignKey("object_container.id"))
+ 
+    relationship(ObjectContainerComponent,
+                                primaryjoin=object_container_id==ObjectContainerComponent.id,
+                                backref='objects')
+    
+    def __init__(self, entity_id, object_container_id = None):
+        self.entity_id = entity_id
+        self.object_container_id = object_container_id
+        
+
+
+
+        
+
+class LocationContainerComponent(Base):
+    __tablename__ = "location_container"
+    __compname__ = "location_container"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    
+  
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+    
+class LocationContentComponent(Base):
+    '''Contents can be put inside a container'''
+    __tablename__ = "location_content"
+    __compname__ = "location_content"
+    
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String)
+    location_container_id = Column(String, ForeignKey("location_container.id"))
+ 
+    relationship(LocationContainerComponent,
+                                primaryjoin=location_container_id==LocationContainerComponent.id,
+                                backref='locations')
+   
+    
+
+
+
+components  = {
+    "node" : NodeComponent,
+    "location_container": LocationContainerComponent,
+    "container": ContainerComponent,
+    "object_container": ObjectContainerComponent,
+    "content":ContentComponent,
+    "object_content":ObjectContentComponent,
+    "location_content":LocationContentComponent
+    
+}
+
+
+    
+       
+        

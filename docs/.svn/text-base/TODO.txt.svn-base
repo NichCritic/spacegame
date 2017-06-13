@@ -1,0 +1,11 @@
+
+Commands
+	Come up with better names for parser/handler - not clear
+	Write the actual execution code for a command. 
+	Write the glue code to handle command targeting
+	
+Rooms
+	Write support systems
+	Decide once and for all - Rooms with nsew movement, or 3d world?
+	Dynamic description engine (lol)
+	

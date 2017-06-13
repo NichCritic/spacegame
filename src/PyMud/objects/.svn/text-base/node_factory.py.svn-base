@@ -1,0 +1,118 @@
+'''
+Created on 2013-11-23
+
+@author: Nich
+'''
+
+
+from contextlib import contextmanager
+
+class NodeFactoryDB(object):
+    
+    def __init__(self, component_manager, Session):
+        self.Session = Session
+        self.component_manager = component_manager
+    
+
+        
+
+    def create_node_list(self, component_list, session):
+        
+        
+        
+        entities = self.component_manager.get_entities_with_components(component_list, session)
+        
+        
+        #feels strange to do this again
+        components = {}
+        
+        for comp_name in component_list:
+            comps = self.component_manager.get_components_for_entities(entities, comp_name, session)
+            
+            for c in comps:
+                if not c.entity_id in components:
+                    components[c.entity_id] = {}
+                components[c.entity_id][comp_name] = c
+        
+        
+        
+                
+        
+            
+        results = [Node(e, components[e]) for e in entities]
+        
+        return results
+        
+    
+    @contextmanager   
+    def create_node_list_session(self, component_list):
+        '''
+            Create a list of all entities matching the given components. 
+            Return a list of Node objects, which contain references to the given components
+        '''
+        session = self.Session()
+        
+        try:
+            yield session, self.create_node_list(component_list, session)
+        except:
+            raise
+        
+        finally:
+            session.commit()
+            session.close()
+            
+    def create_node(self, entity_id, component_list, session):
+        components = {}
+            
+        for comp_name in component_list:
+            c= self.component_manager.get_components_for_entities([entity_id], comp_name, session)
+            if len(c) > 0:
+                components[comp_name] = c[0]
+            else:
+                raise AttributeError("No nodes found with comp_name "+comp_name)
+        
+            
+        result = Node(entity_id, components)
+        return result
+         
+    @contextmanager
+    def create_node_session(self, entity_id, component_list):
+        #feels strange to do this again
+        session = self.Session()
+        try:
+            yield session, self.create_node(entity_id, component_list, session)
+        except:
+            raise
+        finally:
+            session.commit()
+            session.close()  
+        
+                       
+
+
+
+        
+            
+            
+            
+class Node(object):
+    def __init__(self, entity_id, components):
+        self.id = entity_id
+        self.components = components
+        
+        
+    def __getattr__(self, arg):
+        if arg == "components":
+            raise AttributeError(arg)
+        if arg in self.components:
+            return self.components[arg]
+        else:
+            raise AttributeError(arg)
+        
+    
+    
+        
+        
+        
+        
+

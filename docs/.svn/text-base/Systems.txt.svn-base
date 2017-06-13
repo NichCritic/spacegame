@@ -1,0 +1,5 @@
+Systems do all the work in the MUD. They can run continuously, or be requested (ContinuousSystem//System)
+
+Systems that run continuously have a queue and their own thread. 
+Systems that can be requested run (typically) from the CommandHandlingSystem thread in response to user actions
+They basically work the same except the first should have an automatic calling system, where the other can just be called
