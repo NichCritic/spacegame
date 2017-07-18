@@ -6,13 +6,13 @@ Created on 2014-03-22
 
 
 import unittest
-import PyMud.model.base as base
-from PyMud.objects.component_manager import ArrayComponentSource, DBComponentSource, ComponentManager
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.components import components, db_components
-from PyMud.room.room_components import db_components as db_room_components, components as room_components
-from PyMud.room.room import RoomFactory
-from PyMud.Systems.RoomDescriptionSystem import NetworkDescriptionSystem, DescriptionSystem
+import model.base as base
+from objects.component_manager import ArrayComponentSource, DBComponentSource, ComponentManager
+from objects.node_factory import NodeFactoryDB
+from objects.components import components, db_components
+from room.room_components import db_components as db_room_components, components as room_components
+from room.room import RoomFactory
+from Systems.RoomDescriptionSystem import NetworkDescriptionSystem, DescriptionSystem
 
 class Test(unittest.TestCase):
 

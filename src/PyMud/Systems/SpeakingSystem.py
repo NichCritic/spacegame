@@ -1,4 +1,4 @@
-from PyMud.Systems.AVEvent import AVEvent
+from Systems.AVEvent import AVEvent
 
 class SpeakingSystem(object):
     '''

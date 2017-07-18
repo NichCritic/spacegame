@@ -6,7 +6,7 @@ Created on 2013-11-15
 import unittest
 
 
-from PyMud.tests.test_data import create_test_room
+from tests.test_data import create_test_room
 
 
 

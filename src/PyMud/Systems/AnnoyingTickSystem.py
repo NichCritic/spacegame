@@ -3,7 +3,7 @@ Created on 2013-11-21
 
 @author: Nich
 '''
-from PyMud.Systems.NetworkMessageSystem import NetworkMessage
+from Systems.NetworkMessageSystem import NetworkMessage
 
 
 class AnnoyingTickSystem(object):

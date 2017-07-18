@@ -6,9 +6,9 @@ Created on 2014-01-27
 '''
 import unittest
 from multiprocessing import Queue
-from PyMud.Systems.AnnoyingTickSystem import AnnoyingTickSystem
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.component_manager import ComponentManager
+from Systems.AnnoyingTickSystem import AnnoyingTickSystem
+from objects.node_factory import NodeFactoryDB
+from objects.component_manager import ComponentManager
 
 
 class AnnoyingTickSystemTest(unittest.TestCase):

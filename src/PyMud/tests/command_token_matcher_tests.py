@@ -4,7 +4,7 @@ Created on 2013-11-08
 @author: Nich
 '''
 import unittest
-import PyMud.command.command_token_matcher
+import command.command_token_matcher
 
 
 class Test(unittest.TestCase):
@@ -14,8 +14,8 @@ class Test(unittest.TestCase):
         
         
         self.command_context = {"names":["julie", "alice", "archway"]}
-        self.command_grammar = PyMud.command.command_token_matcher.build_grammar(self.command_context["names"])
-        self.command_matcher = PyMud.command.command_token_matcher.CommandTokenMatcher(self.command_context)
+        self.command_grammar = command.command_token_matcher.build_grammar(self.command_context["names"])
+        self.command_matcher = command.command_token_matcher.CommandTokenMatcher(self.command_context)
 
     def tearDown(self):
         pass

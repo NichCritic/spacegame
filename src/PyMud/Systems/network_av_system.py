@@ -4,7 +4,7 @@ Created on 2013-11-22
 @author: Nich
 '''
 
-from PyMud.Systems.NetworkMessageSystem import NetworkMessage
+from Systems.NetworkMessageSystem import NetworkMessage
 
 
 class NetworkAVSystem(object):

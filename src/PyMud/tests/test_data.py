@@ -4,12 +4,12 @@ Created on 2013-11-17
 @author: Nich
 '''
  
-from PyMud.objects.baseobject import Entity
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.room.room import RoomFactory
-from PyMud.objects.component_manager import ComponentManager
-from PyMud.objects.components import components
-from PyMud.room.room_components import db_components as db_room_components
+from objects.baseobject import Entity
+from objects.node_factory import NodeFactoryDB
+from room.room import RoomFactory
+from objects.component_manager import ComponentManager
+from objects.components import components
+from room.room_components import db_components as db_room_components
 
 
 

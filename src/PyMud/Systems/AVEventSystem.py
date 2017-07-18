@@ -4,7 +4,7 @@ Created on 2014-03-15
 @author: Nich
 '''
 
-from PyMud.messages.message_types import AVMessage
+from messages.message_types import AVMessage
 
 class AVEventSystem(object):
     '''

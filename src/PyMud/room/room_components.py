@@ -3,11 +3,10 @@ Created on 2013-11-15
 
 @author: Nich
 '''
-from PyMud.model.base import Base
+from model.base import Base
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-print("IMPORTING!!!")
 
 class Container(Base):
     

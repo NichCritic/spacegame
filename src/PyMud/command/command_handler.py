@@ -5,7 +5,7 @@ Created on 2011-08-13
 '''
 
 import logging    
-#import PyMud.command.command_token_matcher as command_token_matcher
+#import command.command_token_matcher as command_token_matcher
 from parsimonious.exceptions import ParseError
 
 class CommandHandler():

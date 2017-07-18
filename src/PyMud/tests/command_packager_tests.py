@@ -4,8 +4,8 @@ Created on 2013-11-18
 @author: Nich
 '''
 import unittest
-from PyMud.command.command_packager import CommandPackager
-from PyMud.command.commands import verbs
+from command.command_packager import CommandPackager
+from command.commands import verbs
 
 class CommandPackagerTest(unittest.TestCase):
 

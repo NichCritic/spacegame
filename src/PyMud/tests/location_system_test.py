@@ -4,8 +4,8 @@ Created on 2013-11-30
 @author: Nich
 '''
 import unittest
-from PyMud.Systems.LocationSystem import LocationSystem
-from PyMud.tests.test_data import create_test_room
+from Systems.LocationSystem import LocationSystem
+from tests.test_data import create_test_room
 
 class LocationSystemTest(unittest.TestCase):
 

@@ -5,7 +5,7 @@ Created on 2013-11-27
 '''
 
 from collections import defaultdict
-from PyMud.Systems.NetworkMessageSystem import NetworkMessage
+from Systems.NetworkMessageSystem import NetworkMessage
 
 def walk_tree_bf(starting_node):
     queue = []
@@ -76,7 +76,7 @@ class NetworkDescriptionSystem():
                     
                 
 if __name__ == "__main__":
-    from PyMud.startup_scripts import setup_db, ObjectProvider, components
+    from startup_scripts import setup_db, ObjectProvider, components
     Session = setup_db()
     op = ObjectProvider(Session)
     

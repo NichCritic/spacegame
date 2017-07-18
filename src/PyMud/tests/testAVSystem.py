@@ -4,10 +4,10 @@ Created on 2013-11-22
 @author: Nich
 '''
 import unittest
-from PyMud.Systems.network_av_system import NetworkAVSystem #, NetworkAVNode
-from PyMud.messages.message_types import AVMessage
+from Systems.network_av_system import NetworkAVSystem #, NetworkAVNode
+from messages.message_types import AVMessage
 from multiprocessing import Queue
-from PyMud.objects.components import Location,  Senses, AVMessages
+from objects.components import Location,  Senses, AVMessages
 
 
 

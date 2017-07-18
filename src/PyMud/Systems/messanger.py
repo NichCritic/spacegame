@@ -6,7 +6,7 @@ Created on 2011-08-13
 import logging
 from multiprocessing import Process, Queue
 import inspect
-from PyMud.messages.message_types import *
+from messages.message_types import *
 
 class Messanger(object):
     '''

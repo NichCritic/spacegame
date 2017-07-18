@@ -25,7 +25,7 @@ class NetworkMessageSystem(object):
     def __init__(self, node_factory, player_factory):
         self.node_factory = node_factory
         self.player_factory = player_factory
-        message_template_loader = template.Loader(os.path.join(os.path.dirname("./"), "templates"))
+        message_template_loader = template.Loader(os.path.join(os.path.dirname("./PyMud/"), "templates"))
         self.message_template = message_template_loader.load("message.html")
         
         

@@ -4,36 +4,36 @@ Created on 2014-02-25
 @author: Nich
 '''
 
-import PyMud.model.base as base
-from PyMud.model.base import SessionManager
-from PyMud.model.account import AccountUtils
+import model.base as base
+from model.base import SessionManager
+from model.account import AccountUtils
 
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.components import components
-from PyMud.room.room_components import components as room_components
+from objects.node_factory import NodeFactoryDB
+from objects.components import components
+from room.room_components import components as room_components
 
-from PyMud.player.avatar import AvatarFactory
-from PyMud.player.player import PlayerFactory
-from PyMud.objects.component_manager import ComponentManager, DBComponentSource, ArrayComponentSource
+from player.avatar import AvatarFactory
+from player.player import PlayerFactory
+from objects.component_manager import ComponentManager, DBComponentSource, ArrayComponentSource
 
-from PyMud.Systems.NetworkMessageSystem import NetworkMessageSystem
-from PyMud.Systems.network_av_system import NetworkAVSystem
-from PyMud.Systems.SpeakingSystem import SpeakingSystem
-from PyMud.Systems.AVEventSystem import AVEventSystem
-from PyMud.Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
-from PyMud.Systems.movement_system import MovementSystem
-from PyMud.Systems.system_set import DBSystemSet
-from PyMud.Systems.visible_things_system import VisibleThingsSystem
-from PyMud.Systems.names_system import NamesSystem
-from PyMud.Systems.creating_system import CreatingSystem
+from Systems.NetworkMessageSystem import NetworkMessageSystem
+from Systems.network_av_system import NetworkAVSystem
+from Systems.SpeakingSystem import SpeakingSystem
+from Systems.AVEventSystem import AVEventSystem
+from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
+from Systems.movement_system import MovementSystem
+from Systems.system_set import DBSystemSet
+from Systems.visible_things_system import VisibleThingsSystem
+from Systems.names_system import NamesSystem
+from Systems.creating_system import CreatingSystem
 
 
-from PyMud.command.command_handler import CommandHandler
-from PyMud.command.command_token_matcher import CommandTokenMatcher
-from PyMud.command.command_packager import CommandPackager
-from PyMud.command.command_executor import CommandExecutor
-from PyMud.command.command_context_builder import CommandContextBuilder
-from PyMud.command.commands import verbs
+from command.command_handler import CommandHandler
+from command.command_token_matcher import CommandTokenMatcher
+from command.command_packager import CommandPackager
+from command.command_executor import CommandExecutor
+from command.command_context_builder import CommandContextBuilder
+from command.commands import verbs
 
 
 
@@ -43,7 +43,7 @@ def setup_objects(all_db_components, all_components, session):
     component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
     player_factory = PlayerFactory(component_manager)
-    default_room = "e1a62c5e-42fb-48dc-a09a-c28400f554af"
+    default_room = "4179c094-5a7b-4308-8124-f3c4f4112179"
     avatar_factory = AvatarFactory(node_factory, component_manager, {
             "starting_room": default_room,
             "player_id": 0})

@@ -18,7 +18,7 @@ class TestConfig(unittest.TestCase):
 
 
     def testImport(self):
-        import PyMud.main_entry
+        import main_entry
 
 
 if __name__ == "__main__":

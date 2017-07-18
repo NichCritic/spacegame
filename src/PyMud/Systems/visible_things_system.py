@@ -3,7 +3,6 @@ Created on 2014-03-31
 
 @author: Nich
 '''
-from PyMud import objects
 
 class VisibleThingsSystem(object):
     '''

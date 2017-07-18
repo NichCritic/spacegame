@@ -5,7 +5,7 @@ Created on 2013-11-21
 '''
 import unittest
 
-from PyMud.Systems.messanger import MessagePassingModule
+from Systems.messanger import MessagePassingModule
 from multiprocessing import Queue
 
 class Test(unittest.TestCase):

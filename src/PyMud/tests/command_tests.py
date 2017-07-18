@@ -4,12 +4,12 @@ Created on 2013-11-08
 @author: Nich
 '''
 import unittest
-import PyMud.command.commands as commands
+import command.commands as commands
 
 
-from PyMud.objects.component_manager import ComponentManager, ArrayComponentSource
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.components import components
+from objects.component_manager import ComponentManager, ArrayComponentSource
+from objects.node_factory import NodeFactoryDB
+from objects.components import components
 
     
 

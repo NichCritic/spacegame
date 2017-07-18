@@ -4,11 +4,11 @@ Created on Nov 1, 2014
 @author: Nich
 '''
 import unittest
-from PyMud.objects.components import components, db_components
-from PyMud.room.room_components import db_components as db_room_components, components as room_components
+from objects.components import components, db_components
+from room.room_components import db_components as db_room_components, components as room_components
 
-from PyMud.startup_scripts import register_systems, setup_commands, setup_db, setup_objects
-from PyMud.Systems.visible_things_system import VisibleThingsSystem
+from startup_scripts import register_systems, setup_commands, setup_db, setup_objects
+from Systems.visible_things_system import VisibleThingsSystem
 
 
 all_db_components = {}

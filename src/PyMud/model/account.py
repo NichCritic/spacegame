@@ -5,7 +5,7 @@ Created on Nov 27, 2011
 '''
 import uuid
 
-from PyMud.model.base import Base
+from model.base import Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -93,7 +93,7 @@ class AccountUtils():
         return avatars
         
     def set_avatars_pid(self, avatar_id, player_id, session):
-        from PyMud.objects.components import PlayerControlled
+        from objects.components import PlayerControlled
         from sqlalchemy import update
         
         ex = update(PlayerControlled.__table__).where(PlayerControlled.entity_id==avatar_id).values(pid=player_id)
@@ -104,7 +104,7 @@ class AccountUtils():
     def handle_login(self, user, player_factory, session):
         db_user = self.get(user["email"], session)
         if db_user is None:
-            db_user = self.make_account(user["first_name"], user["last_name"], user["email"], session)
+            db_user = self.make_account(user["given_name"], user["family_name"], user["email"], session)
         return db_user
     
 #Base.metadata.create_all(engine)

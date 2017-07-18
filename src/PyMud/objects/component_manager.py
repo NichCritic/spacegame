@@ -7,10 +7,10 @@ Created on 2013-11-02
 
 
 
-#from PyMud.objects.components import components
-from PyMud.objects.baseobject import Entity
+#from objects.components import components
+from objects.baseobject import Entity
 
-#from PyMud.room.room_components import room_components
+#from room.room_components import room_components
 
 #all_components = {}
 #all_components.update(components)

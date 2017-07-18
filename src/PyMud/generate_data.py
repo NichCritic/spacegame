@@ -4,13 +4,14 @@ Created on 2013-11-10
 @author: Nich
 '''
 
-import PyMud.model.base as base
-from PyMud.objects.component_manager import DBComponentSource, ComponentManager, ArrayComponentSource
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.components import db_components, components
-from PyMud.room.room_components import db_components as db_room_components, components as room_components
-from PyMud.room.room import RoomFactory
-from PyMud.objects.materials import materials
+import model.base as base
+from objects.component_manager import DBComponentSource, ComponentManager, ArrayComponentSource
+from objects.node_factory import NodeFactoryDB
+from objects.components import db_components, components
+from objects.materials import materials
+from room.room_components import db_components as db_room_components, components as room_components
+from room.room import RoomFactory
+from objects.materials import materials
 
 
 def main():
@@ -53,8 +54,14 @@ def main():
                              length = 20,
                              height = 20, container_id=castle_node.container.id)
     
-    
-    
+   
+    gcr_node = node_factory.create_node(gcr, ['container'])
+
+    table = comp_manager.create_entity({
+       'names': {'name': 'chair', 'identifiers':'chair'},
+       'material': {'material_id':materials.wood},
+       'container': {'parent_id': gcr_node.container.id}
+    }) 
     
     
     

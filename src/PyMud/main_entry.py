@@ -7,16 +7,16 @@ Created on 2011-08-14
 import tornado.ioloop
 import os.path
 from tornado.options import options, parse_command_line
-from PyMud.network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler
+from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler
 
 
-from PyMud.Systems.AnnoyingTickSystem import AnnoyingTickSystem
+from Systems.AnnoyingTickSystem import AnnoyingTickSystem
 
 
-from PyMud.objects.components import components, db_components
-from PyMud.room.room_components import db_components as db_room_components, components as room_components
+from objects.components import components, db_components
+from room.room_components import db_components as db_room_components, components as room_components
 
-from PyMud.startup_scripts import register_systems, setup_commands, setup_db, setup_objects
+from startup_scripts import register_systems, setup_commands, setup_db, setup_objects
 
 
 all_db_components = {}
@@ -62,6 +62,7 @@ def main():
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         xsrf_cookies=True,
+        google_oauth={"key": "746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com", "secret": "d83cke8VeztiSl1omiY3Xzw4"}
         )
     app.listen(options.port)
     annoying_tick_callback = tornado.ioloop.PeriodicCallback(ats.send_annoying_tick, 5000, io_loop=tornado.ioloop.IOLoop.instance())

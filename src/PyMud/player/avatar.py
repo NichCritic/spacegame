@@ -4,7 +4,7 @@ Created on 2013-11-18
 @author: Nich
 '''
 
-from PyMud.objects.baseobject import Entity
+from objects.baseobject import Entity
 
 class Avatar(Entity):
     '''
@@ -16,10 +16,10 @@ class Avatar(Entity):
 
     def __init__(self):
         super(Avatar, self).__init__()
-        
-        
-        
-        
+
+
+
+
 class AvatarFactory(object):
     
     def __init__(self, node_factory, component_manager, data = None):
@@ -36,14 +36,14 @@ class AvatarFactory(object):
             loc_data["room"] = data["starting_room"]
         else:
             loc_data["room"] = default_data["starting_room"]
-            
+
         room_container = self.component_manager.get_component(loc_data["room"], "container")
-        
+
         self.component_manager.add_component_to_object("container", avatar.id, {"parent_id":room_container.id})
         self.component_manager.add_component_to_object("location", avatar.id, loc_data)
         self.component_manager.add_component_to_object("description", avatar.id, None)
         self.component_manager.add_component_to_object("names", avatar.id, None)
-        self.component_manager.add_component_to_object("visible_names", avatar) 
+        self.component_manager.add_component_to_object("visible_names", avatar.id) 
         if data and "pid" in data:
             self.component_manager.add_component_to_object("player_controlled", avatar.id, {"pid":data["player_id"]})
         else:

@@ -53,34 +53,27 @@ class NodeFactoryDB(object):
     '''
     @contextmanager   
     def create_node_list_session(self, component_list):
-        
         session = self.Session()
-        
         try:
             yield session, self.create_node_list(component_list, session)
         except:
             raise
-        
         finally:
             session.commit()
             session.close()
-            
     '''
-            
+
     def create_node(self, entity_id, component_list):
         components = {}
-            
         for comp_name in component_list:
-            c= self.component_manager.get_components_for_entities([entity_id], comp_name)
+            c = self.component_manager.get_components_for_entities([entity_id], comp_name)
             if len(c) > 0:
                 components[comp_name] = c[0]
             else:
-                raise AttributeError("No nodes found with comp_name "+comp_name+" and entity_id "+entity_id)
-        
-            
+                raise AttributeError("No nodes found with comp_name " + comp_name + " and entity_id " + entity_id)
         result = Node(entity_id, components, self.component_manager)
         return result
-    '''    
+    '''
     @contextmanager
     def create_node_session(self, entity_id, component_list):
         #feels strange to do this again

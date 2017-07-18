@@ -121,7 +121,7 @@ class CharacterSelectHandler(BaseHandler):
     
     @tornado.web.authenticated
     def get(self):
-        with self.session_manager.get_session() as session:
+        with self.session_manager.get_session() as session: 
             acc_id = self.current_user["acct_id"]
             acc = self.account_utils.get_by_id(acc_id, session)
             avatars = acc.avatars
@@ -174,7 +174,7 @@ class CommandMessageHandler(BaseHandler):
     def post(self):
         message = {
             "id": str(uuid.uuid4()),
-            "from": self.current_user["first_name"],
+            "from": self.current_user["given_name"],
             "body": self.get_argument("body"),
         }
         logging.info(self.current_user)
@@ -194,36 +194,9 @@ class CommandMessageHandler(BaseHandler):
             self.redirect(self.get_argument("next"))
         else:
             self.write(message)
-        self.player_factory.players[self.current_user["claimed_id"]].message_buffer.new_messages([message])
+        self.player_factory.players[self.current_user["id"]].message_buffer.new_messages([message])
         self.finish()
         
-     
-
-'''
-class MessageNewHandler(BaseHandler):
-    
-    
-    @tornado.web.authenticated
-    def post(self):
-        message = {
-            "id": str(uuid.uuid4()),
-            "from": self.current_user["first_name"],
-            "body": self.get_argument("body"),
-        }
-        
-        
-        # to_basestring is necessary for Python 3's json encoder,
-        # which doesn't accept byte strings.
-        message["html"] = tornado.escape.to_basestring(
-            self.render_string("message.html", message=message))
-        if self.get_argument("next", None):
-            self.redirect(self.get_argument("next"))
-        else:
-            self.write(message)
-        global_message_buffer.new_messages([message])
-'''
-        
-
 class MessageUpdatesHandler(BaseHandler):
     def initialize(self, player_factory):
         #TODO: This seems strange
@@ -233,9 +206,9 @@ class MessageUpdatesHandler(BaseHandler):
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
-        print(self.current_user["claimed_id"])
+        print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
-        self.player_factory.players[self.current_user["claimed_id"]].message_buffer.wait_for_messages(self.on_new_messages,
+        self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
                                                 cursor=cursor)
         
         
@@ -249,26 +222,32 @@ class MessageUpdatesHandler(BaseHandler):
         self.finish(dict(messages=messages))
 
     def on_connection_close(self):
-        self.player_factory.players[self.current_user["claimed_id"]].message_buffer.cancel_wait(self.on_new_messages)
+        self.player_factory.players[self.current_user["id"]].message_buffer.cancel_wait(self.on_new_messages)
 
 
-class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
+class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
     def initialize(self, account_utils, player_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
         self.session_manager = session_manager
         
     
-    @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        if self.get_argument("openid.mode", None):
-            user = yield self.get_authenticated_user()
-            
+        print(self.get_query_argument("code", False))
+        if self.get_query_argument("code", False):
+
+            access = yield self.get_authenticated_user(
+                redirect_uri='http://127.0.0.1:8888/auth/login',
+                code=self.get_query_argument('code'))
+            user = yield self.oauth2_request(
+                "https://www.googleapis.com/oauth2/v1/userinfo",
+                access_token=access["access_token"])
+            print(user)
             with self.session_manager.get_session() as session:
             
                 acct = self.account_utils.handle_login(user, self.player_factory, session)
-                player = self.player_factory.create_player(MessageBuffer(), user["claimed_id"])
+                player = self.player_factory.create_player(MessageBuffer(), user["id"])
                 
                 
                 user["acct_id"] = acct.id
@@ -284,7 +263,14 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
                 
                 self.redirect("/character_select")
                 return
-        self.authenticate_redirect(ax_attrs=["name", "email"])
+        self.authorize_redirect(
+                redirect_uri='http://127.0.0.1:8888/auth/login',
+                client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
+                scope=['email'],
+                response_type='code',
+                extra_params={'approval_prompt': 'auto'})
+
+
 
 
 class AuthLogoutHandler(BaseHandler):

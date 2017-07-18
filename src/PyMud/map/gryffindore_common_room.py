@@ -3,10 +3,10 @@ Created on 2013-03-13
 
 @author: Nich
 '''
-from PyMud.graph.graphnodes import *
-from PyMud.objects.baseobject import Entity
-from PyMud.objects.component_manager import ComponentManager 
-#import PyMud.data_cache as data_cache
+from graph.graphnodes import *
+from objects.baseobject import Entity
+from objects.component_manager import ComponentManager 
+#import data_cache as data_cache
 
 from collections import defaultdict
 #|0|   ____

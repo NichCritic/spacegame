@@ -4,12 +4,12 @@ Created on Nov 1, 2014
 @author: Nich
 '''
 import unittest
-from PyMud.objects.components import components, db_components
-from PyMud.room.room_components import db_components as db_room_components, components as room_components
+from objects.components import components, db_components
+from room.room_components import db_components as db_room_components, components as room_components
 
-from PyMud.startup_scripts import register_systems, setup_commands, setup_db, setup_objects
-from PyMud.Systems.AVEventSystem import AVEventSystem
-from PyMud.Systems.AVEvent import AVEvent
+from startup_scripts import register_systems, setup_commands, setup_db, setup_objects
+from Systems.AVEventSystem import AVEventSystem
+from Systems.AVEvent import AVEvent
 
 all_db_components = {}
 all_db_components.update(db_components)

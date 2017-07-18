@@ -4,13 +4,13 @@ Created on 2014-02-01
 @author: Nich
 '''
 import unittest
-import PyMud.model.account as account
-import PyMud.model.base as base
-from PyMud.player.avatar import AvatarFactory
-from PyMud.objects.component_manager import ArrayComponentSource, DBComponentSource, ComponentManager
-from PyMud.objects.node_factory import NodeFactoryDB
-from PyMud.objects.components import components, db_components
-from PyMud.room.room_components import components as room_components, db_components as db_room_components
+import model.account as account
+import model.base as base
+from player.avatar import AvatarFactory
+from objects.component_manager import ArrayComponentSource, DBComponentSource, ComponentManager
+from objects.node_factory import NodeFactoryDB
+from objects.components import components, db_components
+from room.room_components import components as room_components, db_components as db_room_components
 
 
 class Test(unittest.TestCase):

@@ -6,7 +6,7 @@ Created on 2013-11-01
 import uuid
 import logging
 
-from PyMud.model.base import Base
+from model.base import Base
 from sqlalchemy import Column, String, Integer
 
 
@@ -29,12 +29,4 @@ class Entity(Base):
     
     def __repr__(self):
         return "<"+str(self.id)+">"
-    
-
- 
-    
-        
-                
-    
-    
     

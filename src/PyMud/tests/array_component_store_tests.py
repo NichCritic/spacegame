@@ -4,7 +4,7 @@ Created on 2014-03-09
 @author: Nich
 '''
 import unittest
-from PyMud.objects.component_manager import ArrayComponentSource
+from objects.component_manager import ArrayComponentSource
 
 class TestComponent0(object):
     __compname__ = "test_component0"

@@ -4,10 +4,10 @@ Created on 2014-02-01
 @author: Nich
 '''
 import unittest
-import PyMud.model.base as base
-from PyMud.objects.component_manager import ComponentManager, DBComponentSource
-from PyMud.objects.components import db_components
-from PyMud.room.room_components import db_components as db_room_components
+import model.base as base
+from objects.component_manager import ComponentManager, DBComponentSource
+from objects.components import db_components
+from room.room_components import db_components as db_room_components
 
 
 
