@@ -6,6 +6,9 @@ Created on 2013-11-27
 
 from collections import defaultdict
 from Systems.NetworkMessageSystem import NetworkMessage
+from description.description import ObjectDescriber
+from pynlg.lexicon import XMLLexicon
+import os
 
 def walk_tree_bf(starting_node):
     queue = []
@@ -29,16 +32,28 @@ class DescriptionSystem(object):
     '''
     def __init__(self, node_factory):
         self.node_factory = node_factory
+        lex = XMLLexicon(os.path.join(os.path.dirname(__file__), '../lexicon/default-lexicon.xml'))
+        self.object_describer = ObjectDescriber(lex)
+
         
     def describe_object(self, object_id):
-        object_node = self.node_factory.create_node(object_id, ["description"])
-        return "{description} \n".format(description = object_node.description.description)
+        object_node = self.node_factory.create_node(object_id, ["names"], ["material"])
+
+        if object_node.material:
+            obj = {'name':object_node.names.name,
+                    'material':object_node.material.get_material(),
+                    'descriptors':[]}
+        else:
+            obj = {'name':object_node.names.name,
+                    'material':None,
+                    'descriptors':[]}
+
+        return self.object_describer.describe_object(obj).realize()
         
         
     def describe_room(self, room_id):
         description = ""
         room_node = self.node_factory.create_node(room_id, ["room", "names", "container"])
-        description += room_node.names.name+"\n"
         for o in room_node.container.children:
             description += self.describe_object(o.entity_id)
                 

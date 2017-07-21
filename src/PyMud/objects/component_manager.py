@@ -145,7 +145,7 @@ class ArrayComponentSource():
             
 
     def has_entity(self, component_name, entity_id):
-        return entity_id in self.component_object[component_name]
+        return self.has(component_name) and entity_id in self.component_object[component_name]
 
     def add_component_to_object(self, component_name, entity_id, data):
         if not self.has_entity(component_name, entity_id):

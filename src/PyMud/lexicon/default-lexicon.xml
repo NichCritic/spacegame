@@ -167,7 +167,7 @@
   <base>academic</base>
   <category>adjective</category>
   <id>E0006658</id>
-  <classifying/>
+ l <classifying/>
   <predicative/>
   <qualitative/>
   <adjectiveType>type</adjectiveType>
@@ -1033,6 +1033,11 @@
   <id>E0007987</id>
   <ditransitive/>
   <transitive/>
+</word>
+<word>
+  <base>alice</base>
+  <category>noun</category>
+  <id>E0008141</id>
 </word>
 <word>
   <base>alien</base>

@@ -63,7 +63,7 @@ class NodeFactoryDB(object):
             session.close()
     '''
 
-    def create_node(self, entity_id, component_list):
+    def create_node(self, entity_id, component_list, optional_component_list = None):
         components = {}
         for comp_name in component_list:
             c = self.component_manager.get_components_for_entities([entity_id], comp_name)
@@ -71,6 +71,13 @@ class NodeFactoryDB(object):
                 components[comp_name] = c[0]
             else:
                 raise AttributeError("No nodes found with comp_name " + comp_name + " and entity_id " + entity_id)
+        if optional_component_list:
+            for comp_name in optional_component_list:
+                if self.component_manager.entity_has_component(entity_id, comp_name):
+                    c = self.component_manager.get_components_for_entities([entity_id], comp_name)
+                    components[comp_name] = c[0]
+                else:
+                    components[comp_name] = None
         result = Node(entity_id, components, self.component_manager)
         return result
     '''

@@ -108,7 +108,7 @@ class CharacterCreateHandler(BaseHandler):
         #print("YESSSS, ALMIGHTYPOWER")
         #print(self.request.body)
         self.write({"result":"ok"})
-        return
+        self.finish()
         #if self.get_argument("next", None):
         #    self.redirect(self.get_argument("next"))
 
@@ -137,6 +137,7 @@ class CharacterSelectHandler(BaseHandler):
     def post(self):
         #print(self.request.body)
         with self.session_manager.get_session() as session:
+            # import pdb; pdb.set_trace()
             player = self.player_factory.get_player(self.current_user["player_id"])
             
             index = self.get_argument("id")
@@ -149,7 +150,7 @@ class CharacterSelectHandler(BaseHandler):
             
             self.av = [{"index": index, "id":av.avatar_id} for index, av in enumerate(avatars)]
             
-            player.set_avatar(self.av[int(index)]["id"])
+            self.player_factory.set_player_avatar(player, self.av[int(index)]["id"])
             #TODO: messy hack
             self.account_utils.set_avatars_pid(self.av[int(index)]["id"], player.id, session)
             

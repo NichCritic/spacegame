@@ -35,12 +35,8 @@ function newMessage(form) {
     var disabled = form.find("input[type=submit]");
     disabled.disable();
     $.postJSON("/character_create", message, function(response) {
-        updater.showMessage(response);
-        if (message.id) {
-            form.parent().remove();
-        } else {
-            form.find("input[type=text]").val("").select();
-            disabled.enable();
+        if (response.result == "ok") {
+            document.location.href = "/character_select";
         }
     });
 }

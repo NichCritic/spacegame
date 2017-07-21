@@ -43,7 +43,7 @@ def setup_objects(all_db_components, all_components, session):
     component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
     player_factory = PlayerFactory(component_manager)
-    default_room = "4179c094-5a7b-4308-8124-f3c4f4112179"
+    default_room = "0d7f0f79-5f1e-4c45-bed7-a938d07ef704"
     avatar_factory = AvatarFactory(node_factory, component_manager, {
             "starting_room": default_room,
             "player_id": 0})

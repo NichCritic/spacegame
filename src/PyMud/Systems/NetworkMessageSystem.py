@@ -51,8 +51,10 @@ class NetworkMessageSystem(object):
             
             p = node.player_controlled.pid
             #Sometimes we have nodes with temporary or false ID's. Don't send messages to those
+
             if p in players:
                 message_buffer = players[p].message_buffer
+                print(node.network_messages.msg)
                 for message in node.network_messages.msg:
                     self.send_message(message_buffer, message)
             node.remove_component("network_messages")

@@ -240,7 +240,9 @@ class Material(Base):
     def __init__(self, entity_id, material_id):
         self.entity_id = entity_id
         self.material_id = material_id
-        self.material = materials.items[self.material_id]
+    
+    def get_material(self):
+        return materials.items[self.material_id]
 
 'Allow the entity to have things placed on top of it'
 class Surface(Base):
