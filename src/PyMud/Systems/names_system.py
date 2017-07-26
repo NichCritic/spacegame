@@ -25,12 +25,19 @@ class NamesSystem(object):
         for node in nodes:
             #for now just dump the ids in a big list
             names = []
+            ids = []
             for name_id in node.visible_objects.objects:
                 name_node = self.node_factory.create_node(name_id, ["names"])
-                names += name_node.names.identifiers
+                #print(name_node.names.identifiers)
+
+                new = name_node.names.identifiers.split()
+                names += new
                 
-                node.add_or_attach_component("visible_names", None)
-                node.visible_names.names = names
+                ids += [name_id] * len(new)
+
+            node.add_or_attach_component("visible_names", None)
+            node.visible_names.names = names
+            node.visible_names.ids = ids
                 
             
         

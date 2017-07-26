@@ -19,6 +19,8 @@ from objects.component_manager import ComponentManager, DBComponentSource, Array
 from Systems.NetworkMessageSystem import NetworkMessageSystem
 from Systems.network_av_system import NetworkAVSystem
 from Systems.SpeakingSystem import SpeakingSystem
+from Systems.TakingSystem import TakingSystem
+from Systems.DroppingSystem import DroppingSystem
 from Systems.AVEventSystem import AVEventSystem
 from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
 from Systems.movement_system import MovementSystem
@@ -26,6 +28,7 @@ from Systems.system_set import DBSystemSet
 from Systems.visible_things_system import VisibleThingsSystem
 from Systems.names_system import NamesSystem
 from Systems.creating_system import CreatingSystem
+from Systems.HoldTriggerSystem import HoldTriggerSystem
 
 
 from command.command_handler import CommandHandler
@@ -43,7 +46,7 @@ def setup_objects(all_db_components, all_components, session):
     component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
     player_factory = PlayerFactory(component_manager)
-    default_room = "0d7f0f79-5f1e-4c45-bed7-a938d07ef704"
+    default_room = "2056b68f-7d43-40a8-83fb-7b55b985c70c"
     avatar_factory = AvatarFactory(node_factory, component_manager, {
             "starting_room": default_room,
             "player_id": 0})
@@ -85,6 +88,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = DBSystemSet(object_db, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
     speaking_system = SpeakingSystem(node_factory)
+    taking_system = TakingSystem(node_factory)
+    dropping_system = DroppingSystem(node_factory)
+    hold_trigger_system = HoldTriggerSystem(node_factory)
     av_event_system = AVEventSystem(node_factory)
     nAVs = NetworkAVSystem(node_factory)
     #loc_sys = LocationSystem(node_factory)
@@ -97,6 +103,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
 
     system_set.register(nms)
     system_set.register(speaking_system)
+    system_set.register(taking_system)
+    system_set.register(hold_trigger_system)
+    system_set.register(dropping_system)
     system_set.register(av_event_system)
     system_set.register(nAVs)
     #system_set.register(loc_sys)
@@ -106,5 +115,10 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(visithing)
     system_set.register(names_sys)
     system_set.register(creating_sys)
+
+    #Todo: Doing these last so that the db components of each node still have a session when this is processed
+    # But it would be best if that weren't the case
+    system_set.register(av_event_system)
+    system_set.register(nAVs)
 
     return system_set

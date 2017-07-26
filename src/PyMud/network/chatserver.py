@@ -26,14 +26,11 @@ from tornado import gen
 from tornado.options import define
 
 
-
-
-
-
 define("port", default=8888, help="run on the given port", type=int)
 
 
 class MessageBuffer(object):
+
     def __init__(self):
         self.waiters = set()
         self.cache = []
@@ -72,104 +69,114 @@ class MessageBuffer(object):
 #user_message_buffers = data_cache.user_message_buffers
 
 
-
 class BaseHandler(tornado.web.RequestHandler):
+
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
-        if not user_json: return None
+        if not user_json:
+            return None
         return tornado.escape.json_decode(user_json)
 
 
 class MainHandler(BaseHandler):
+
     @tornado.web.authenticated
     def get(self):
         self.render("index.html", messages=[])
 
+
 class CharacterCreateHandler(BaseHandler):
-    def initialize(self, account_utils, player_factory, session_manager ):
+
+    def initialize(self, account_utils, player_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
         self.session_manager = session_manager
-        
+
     @tornado.web.authenticated
     def get(self):
         self.render("character_create.html")
-    
+
     @tornado.web.authenticated
     def post(self):
-        #print(self.current_user)
+        # print(self.current_user)
         acct_id = self.current_user["acct_id"]
-        
-        #print(self.current_user)
-        
+
+        # print(self.current_user)
+
         with self.session_manager.get_session() as session:
             self.account_utils.create_new_avatar_for_account(acct_id, session)
-        
-        #print("YESSSS, ALMIGHTYPOWER")
-        #print(self.request.body)
-        self.write({"result":"ok"})
+
+        # print(self.request.body)
+        self.write({"result": "ok"})
         self.finish()
-        #if self.get_argument("next", None):
+        # if self.get_argument("next", None):
         #    self.redirect(self.get_argument("next"))
 
+
 class CharacterSelectHandler(BaseHandler):
+
     def initialize(self, account_utils, player_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
         self.av = None
         self.session_manager = session_manager
-    
+
     @tornado.web.authenticated
     def get(self):
-        with self.session_manager.get_session() as session: 
+        with self.session_manager.get_session() as session:
             acc_id = self.current_user["acct_id"]
             acc = self.account_utils.get_by_id(acc_id, session)
             avatars = acc.avatars
-            
-            #print(avatars)
-            
-            self.av = [{"index": index, "id":av.avatar_id} for index, av in enumerate(avatars)]
-            
+
+            # print(avatars)
+
+            self.av = [{"index": index, "id": av.avatar_id}
+                       for index, av in enumerate(avatars)]
+
             self.render("character_select.html", characters=self.av)
-    
+
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
-        #print(self.request.body)
+        # print(self.request.body)
         with self.session_manager.get_session() as session:
             # import pdb; pdb.set_trace()
-            player = self.player_factory.get_player(self.current_user["player_id"])
-            
+            player = self.player_factory.get_player(
+                self.current_user["player_id"])
+
             index = self.get_argument("id")
-            
+
             acc_id = self.current_user["acct_id"]
             acc = self.account_utils.get_by_id(acc_id, session)
             avatars = self.account_utils.get_avatars_for_account(acc, session)
-            
-            #print(avatars)
-            
-            self.av = [{"index": index, "id":av.avatar_id} for index, av in enumerate(avatars)]
-            
-            self.player_factory.set_player_avatar(player, self.av[int(index)]["id"])
-            #TODO: messy hack
-            self.account_utils.set_avatars_pid(self.av[int(index)]["id"], player.id, session)
-            
+
+            # print(avatars)
+
+            self.av = [{"index": index, "id": av.avatar_id}
+                       for index, av in enumerate(avatars)]
+
+            self.player_factory.set_player_avatar(
+                player, self.av[int(index)]["id"])
+            # TODO: messy hack
+            self.account_utils.set_avatars_pid(
+                self.av[int(index)]["id"], player.id, session)
+
             if self.get_argument("next", None):
                 self.redirect(self.get_argument("next"))
             else:
                 self.write(tornado.escape.to_basestring("ok"))
                 self.finish()
-        
-        #if self.get_argument("next", None):
+
+        # if self.get_argument("next", None):
         #    self.redirect(self.get_argument("next"))
-            
 
 
 class CommandMessageHandler(BaseHandler):
+
     def initialize(self, command_handler, player_factory):
         self.command_handler = command_handler
         self.player_factory = player_factory
-        
+
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
@@ -183,38 +190,40 @@ class CommandMessageHandler(BaseHandler):
         result = self.command_handler.handle_command(player, message["body"])
         logging.info(result)
         if result[0] == "error":
-        # to_basestring is necessary for Python 3's json encoder,
-        # which doesn't accept byte strings.
+            # to_basestring is necessary for Python 3's json encoder,
+            # which doesn't accept byte strings.
             message["body"] = "Sorry, I can't understand that"
         else:
             message["body"] = ""
-        
         message["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=message))
         if self.get_argument("next", None):
             self.redirect(self.get_argument("next"))
         else:
             self.write(message)
-        self.player_factory.players[self.current_user["id"]].message_buffer.new_messages([message])
+        self.player_factory.players[self.current_user[
+            "id"]].message_buffer.new_messages([message])
         self.finish()
-        
+
+
 class MessageUpdatesHandler(BaseHandler):
+
     def initialize(self, player_factory):
-        #TODO: This seems strange
+        # TODO: This seems strange
         self.player_factory = player_factory
-    
-    
+
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
+        if not self.current_user['id'] in self.player_factory.players:
+            player = self.player_factory.create_player(
+                MessageBuffer(), self.current_user["id"])
+            self.current_user["player_id"] = player.id
+
         self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
-                                                cursor=cursor)
-        
-        
-        
-        
+                                                                                              cursor=cursor)
 
     def on_new_messages(self, messages):
         # Closed client connection
@@ -223,16 +232,17 @@ class MessageUpdatesHandler(BaseHandler):
         self.finish(dict(messages=messages))
 
     def on_connection_close(self):
-        self.player_factory.players[self.current_user["id"]].message_buffer.cancel_wait(self.on_new_messages)
+        self.player_factory.players[self.current_user[
+            "id"]].message_buffer.cancel_wait(self.on_new_messages)
 
 
 class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
+
     def initialize(self, account_utils, player_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
         self.session_manager = session_manager
-        
-    
+
     @gen.coroutine
     def get(self):
         print(self.get_query_argument("code", False))
@@ -246,38 +256,30 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
                 access_token=access["access_token"])
             print(user)
             with self.session_manager.get_session() as session:
-            
-                acct = self.account_utils.handle_login(user, self.player_factory, session)
-                player = self.player_factory.create_player(MessageBuffer(), user["id"])
-                
-                
+
+                acct = self.account_utils.handle_login(
+                    user, self.player_factory, session)
+                player = self.player_factory.create_player(
+                    MessageBuffer(), user["id"])
+
                 user["acct_id"] = acct.id
                 user["player_id"] = player.id
-                
-                
+
                 self.set_secure_cookie("chatdemo_user",
                                        tornado.escape.json_encode(user))
-                
-                
-                 
-                
-                
+
                 self.redirect("/character_select")
                 return
         self.authorize_redirect(
-                redirect_uri='http://127.0.0.1:8888/auth/login',
-                client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
-                scope=['email'],
-                response_type='code',
-                extra_params={'approval_prompt': 'auto'})
-
-
+            redirect_uri='http://127.0.0.1:8888/auth/login',
+            client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
+            scope=['email'],
+            response_type='code',
+            extra_params={'approval_prompt': 'auto'})
 
 
 class AuthLogoutHandler(BaseHandler):
+
     def get(self):
         self.clear_cookie("chatdemo_user")
         self.write("You are now logged out")
-
-
-

@@ -10,94 +10,98 @@ from description.description import ObjectDescriber
 from pynlg.lexicon import XMLLexicon
 import os
 
+
 def walk_tree_bf(starting_node):
     queue = []
     visited = set()
-    
+
     queue.append(starting_node)
     visited.add(starting_node)
-    
+
     for n in queue:
         yield n
         for node in n.get_neighbours():
             if node not in visited:
                 queue.append(node)
-                visited.add(node) 
+                visited.add(node)
 
 
 class DescriptionSystem(object):
     '''
     Builds the description of a room from the description of the locations
-    
+
     '''
+
     def __init__(self, node_factory):
         self.node_factory = node_factory
-        lex = XMLLexicon(os.path.join(os.path.dirname(__file__), '../lexicon/default-lexicon.xml'))
+        lex = XMLLexicon(os.path.join(os.path.dirname(
+            __file__), '../lexicon/default-lexicon.xml'))
         self.object_describer = ObjectDescriber(lex)
 
-        
     def describe_object(self, object_id):
-        object_node = self.node_factory.create_node(object_id, ["names"], ["material"])
+        object_node = self.node_factory.create_node(
+            object_id, ["names"], ["material"])
 
         if object_node.material:
-            obj = {'name':object_node.names.name,
-                    'material':object_node.material.get_material(),
-                    'descriptors':[]}
+            obj = {'name': object_node.names.name,
+                   'material': object_node.material.get_material(),
+                   'descriptors': []}
         else:
-            obj = {'name':object_node.names.name,
-                    'material':None,
-                    'descriptors':[]}
+            obj = {'name': object_node.names.name,
+                   'material': None,
+                   'descriptors': []}
 
         return self.object_describer.describe_object(obj).realize()
-        
-        
-    def describe_room(self, room_id):
+
+    def describe_room(self, room_id, node):
         description = ""
-        room_node = self.node_factory.create_node(room_id, ["room", "names", "container"])
+        room_node = self.node_factory.create_node(
+            room_id, ["room", "names", "container"])
+        objects = []
+        description += room_node.names.name + "\n"
+        
         for o in room_node.container.children:
-            description += self.describe_object(o.entity_id)
-                
+            if o.entity_id != node.id:
+                objects.append(self.describe_object(o.entity_id))
+        if len(objects) == 0:
+            description += 'This room is empty'
+        else:
+            description += 'In this room you see '
+            description += ', '.join(objects)
+
         return description
-    
 
 
 class NetworkDescriptionSystem():
-    
+
     def __init__(self, node_factory, desc_system):
         self.node_factory = node_factory
         self.desc_system = desc_system
-        
+
     def get_nodes(self):
         return self.node_factory.create_node_list(["looking", "location"])
-    
+
     def process(self):
-        nodes = self.get_nodes()    
+        nodes = self.get_nodes()
         for node in nodes:
             msg = ""
             if node.looking.target is None:
-                msg = self.desc_system.describe_room(node.location.room)
+                msg = self.desc_system.describe_room(node.location.room, node)
             else:
                 msg = self.desc_system.describe_object(node.looking.target)
             out_msg = NetworkMessage(node.id, msg)
             node.add_or_attach_component("network_messages", {})
             node.network_messages.msg.append(out_msg)
             node.remove_component("looking")
-            
-            
-                
-                    
-                    
-                    
-                    
-                
+
+
 if __name__ == "__main__":
     from startup_scripts import setup_db, ObjectProvider, components
     Session = setup_db()
     op = ObjectProvider(Session)
-    
+
     rds = DescriptionSystem(op.node_factory)
-    
-    
+
 
 '''
 class NetworkRoomDescriptionSystem(object):
@@ -141,7 +145,3 @@ class NetworkRoomDescriptionSystem(object):
             self.messanger_queue.put(out_msg)
                         
 '''
-
-   
-
-        

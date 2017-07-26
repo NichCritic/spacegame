@@ -36,7 +36,7 @@ class NetworkAVSystem(object):
         return dist
             
     def satisfies_requirement(self, node, message, req):
-        
+        print("testing {}".format(req)) 
         if len(req) == 1:
             type = req[0]
             if type == "targeted":
@@ -56,8 +56,10 @@ class NetworkAVSystem(object):
 
                 
     def process(self):
+
         nodes = self.get_nodes()
         for node in nodes:
+            print('Network AV System got message from {}'.format(node.id))
             #TODO: maybe add code to follow exits, but for now just make sure we're in the same room
             for message in node.av_messages.msg:
                 print(message, node)

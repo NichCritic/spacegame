@@ -41,8 +41,12 @@ class CommandPackager(object):
                 verb_definition = self.handle_verb(element)
             if elemtype == "text":
                 reqs["text"] = element
-            if elemtype == "target":
-                reqs["target"] = element
+            if elemtype == "targets":
+                targets = {}
+                for t in element:
+                    i = command_context["names"].names.index(t)
+                    targets[t] = command_context["names"].ids[i]
+                reqs["targets"] = targets
             if elemtype == "num":
                 nums = element.strip().split(" ")
                 reqs["x"] = int(nums[0])

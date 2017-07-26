@@ -38,7 +38,7 @@ def build_grammar(names):
         """
             command = (verb s preposition s coords) / (verb s noun s preposition s noun text) / (verb s preposition s noun text) / (verb s noun text) / (verb text)
             coords = (num s num s num) / (num s num)
-            verb = "say" / "move" / "look" / "create"
+            verb = "say" / "move" / "look" / "create" / "take" / "drop"
             noun = {nouns_format}
             preposition = "to" / "through" / "at"
             text = ~"[A-Z 0-9]*"i
@@ -53,7 +53,7 @@ class CommandTokenMatcher():
         
     
     def map_command(self, command, command_context):
-        names = command_context["names"]
+        names = command_context["names"].names
         command_grammar = build_grammar(names)
         ast = command_grammar.parse(command)
         #print(ast)

@@ -21,6 +21,7 @@ class AVEventSystem(object):
     def process(self):
         for node in self.get_nodes():
             print("AVEvent system got message from "+node.id)
+            print("node.container.children: {}".format(node.container.children))
             for obj in node.container.children:
                 o_node = self.node_factory.create_node(obj.entity_id, [])
                 for event in node.av_events.events:

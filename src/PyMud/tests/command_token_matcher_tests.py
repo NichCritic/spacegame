@@ -14,7 +14,7 @@ class Test(unittest.TestCase):
         
         
         self.command_context = {"names":["julie", "alice", "archway"]}
-        self.command_grammar = command.command_token_matcher.build_grammar(self.command_context["names"])
+        self.command_grammar = command.command_token_matcher.build_grammar(self.command_context["names"].names)
         self.command_matcher = command.command_token_matcher.CommandTokenMatcher(self.command_context)
 
     def tearDown(self):

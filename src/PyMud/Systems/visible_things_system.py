@@ -15,7 +15,7 @@ class VisibleThingsSystem(object):
         
         
     def get_nodes(self):
-        nodes = self.node_factory.create_node_list(["senses", "location"])
+        nodes = self.node_factory.create_node_list(["senses", "location"], ['holding'])
         return nodes
     
     def process(self):
@@ -28,7 +28,12 @@ class VisibleThingsSystem(object):
             node.add_or_attach_component("visible_objects", None)
             objects = list(room_node.container.children)
             object_ids = [o.entity_id for o in objects]
-            object_ids.remove(node.id)
+
+            if node.has('holding'):
+                object_ids.append(node.holding.held_entity_id)
+
+            if node.id in object_ids:
+                object_ids.remove(node.id)
             node.visible_objects.objects = object_ids
             
         

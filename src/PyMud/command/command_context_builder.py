@@ -14,7 +14,7 @@ class CommandContextBuilder(object):
         command_context = {"player_node":node,
                            "calling_player_id":avatar_id,
                                 "calling_player_location": node.location,
-                                "names":node.visible_names.names,
+                                "names":node.visible_names,
                            }
         
         

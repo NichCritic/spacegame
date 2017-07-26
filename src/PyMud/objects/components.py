@@ -5,48 +5,56 @@ Created on 2013-11-03
 '''
 
 from model.base import Base
-from sqlalchemy import Column, String, Integer, ForeignKey 
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, String, Integer, ForeignKey, PickleType
+from sqlalchemy.orm import relationship, backref, reconstructor
 from objects.materials import materials
 
 
 class AVEvents(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.events = []
 
 
 class AVMessages(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.msg = []
 
 
 class NetworkMessages(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.msg = []
 
 
 class VisibleObjects(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.objects = []
 
 
 class VisibleNames(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.names = []
+        self.ids = []
 
 
 class Looking(object):
+
     def __init__(self, entity_id, target=None):
         self.entity_id = entity_id
         self.target = target
 
 
 class Speaking(object):
+
     def __init__(self, entity_id, text, target, format):
         self.entity_id = entity_id
         self.text = text
@@ -55,11 +63,13 @@ class Speaking(object):
 
 
 class Creating(object):
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
 
 class Moving(object):
+
     def __init__(self, entity_id, x, y, z):
         self.entity_id = entity_id
         self.x = x
@@ -68,10 +78,62 @@ class Moving(object):
 
 
 class Exiting(object):
+
     def __init__(self, entity_id, exit_id):
         self.entity_id = entity_id
         self.exit_id = exit_id
 
+
+class Holding(object):
+
+    def __init__(self, entity_id, held_entity_id):
+        self.entity_id = entity_id
+        self.held_entity_id = held_entity_id
+
+
+class HeldBy(object):
+
+    def __init__(self, entity_id, holding_entity_id):
+        self.entity_id = entity_id
+        self.holding_entity_id = holding_entity_id
+
+
+class OnHold(Base):
+    __compname__ = "on_hold"
+    __tablename__ = "on_hold"
+
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    callback = Column(String)
+    timeout = Column(Integer)
+    data = Column(PickleType)
+
+    def __init__(self, entity_id, callback, timeout=0, data=None):
+        self.entity_id = entity_id
+        self.callback = callback
+        self.timeout = timeout
+        self.data = {} if data is None else data
+
+class OnHoldTimeout(object):
+
+    def __init__(self, entity_id, last_trigger):
+        self.entity_id = entity_id
+        self.last_trigger = last_trigger
+
+
+class Taking(object):
+
+    def __init__(self, entity_id, target, format):
+        self.entity_id = entity_id
+        self.target = target
+        self.format = format
+
+class Dropping(object):
+
+    def __init__(self, entity_id, target, format):
+        self.entity_id = entity_id
+        self.target = target
+        self.format = format
 
 class Exit(Base):
     __compname__ = "exit"
@@ -240,11 +302,13 @@ class Material(Base):
     def __init__(self, entity_id, material_id):
         self.entity_id = entity_id
         self.material_id = material_id
-    
+
     def get_material(self):
         return materials.items[self.material_id]
 
 'Allow the entity to have things placed on top of it'
+
+
 class Surface(Base):
     __compname__ = 'surface'
     __tablename__ = 'surface'
@@ -269,7 +333,12 @@ components = {
     "exiting": Exiting,
     "visible_objects": VisibleObjects,
     "visible_names": VisibleNames,
-    "creating": Creating
+    "creating": Creating,
+    "holding": Holding,
+    "held_by": HeldBy,
+    "taking": Taking,
+    "dropping": Dropping,
+    "on_hold_timeout": OnHoldTimeout
 }
 
 db_components = {
@@ -284,5 +353,6 @@ db_components = {
     "space": Space,
     "material": Material,
     "exit": Exit,
+    "on_hold": OnHold,
     "surface": Surface
 }

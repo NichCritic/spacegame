@@ -1,1 +1,4 @@
-<div class="message" id="m{{ message["id"] }}"> {{  message["body"] }}</div>
+{% autoescape None %}
+<div class="message" id="m{{ message["id"] }}"> 
+{{ "<br/>".join(message["body"]) }}
+</div>

@@ -52,6 +52,7 @@ class AvatarFactory(object):
         self.component_manager.add_component_to_object("senses", avatar.id, None)
         
         
+        
         node = self.node_factory.create_node(avatar.id, ["location", "names", "player_controlled"])
         
         
