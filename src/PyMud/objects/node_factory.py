@@ -120,7 +120,7 @@ class Node(object):
         return '\n'.join(lines)
 
     def has(self, component_name):
-        return component_name in self.components
+        return component_name in self.components and not self.components[component_name] is None
 
     def entity_has(self, component_name):
         return self.component_manager.entity_has_component(self.id, component_name)

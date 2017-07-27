@@ -29,7 +29,10 @@ def surround(surrounding_text, text):
     return surrounding_text+text+surrounding_text
 
 def format_objects(object_name_list):
-    return " / ".join([surround('"', text) for text in object_name_list])
+    if len(object_name_list) > 0:
+        return "noun = "+" / ".join([surround('"', text) for text in object_name_list])
+    else:
+        return 'noun = "nothing"'
 
 def build_grammar(names):
     nouns_format = format_objects(names)
@@ -38,8 +41,8 @@ def build_grammar(names):
         """
             command = (verb s preposition s coords) / (verb s noun s preposition s noun text) / (verb s preposition s noun text) / (verb s noun text) / (verb text)
             coords = (num s num s num) / (num s num)
-            verb = "say" / "move" / "look" / "create" / "take" / "drop"
-            noun = {nouns_format}
+            verb = "say" / "move" / "look" / "create" / "take" / "drop" / "help"
+            {nouns_format}
             preposition = "to" / "through" / "at"
             text = ~"[A-Z 0-9]*"i
             num = ~"[0-9]+"i

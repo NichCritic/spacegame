@@ -53,7 +53,7 @@ def main():
             (r"/auth/login", AuthLoginHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             (r"/auth/logout", AuthLogoutHandler),
             (r"/a/message/new", CommandMessageHandler, dict(command_handler = command_handler, player_factory = player_factory)),
-            (r"/a/message/updates", MessageUpdatesHandler, dict(player_factory = player_factory)),
+            (r"/a/message/updates", MessageUpdatesHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             (r"/character_select", CharacterSelectHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             (r"/character_create", CharacterCreateHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             ],
@@ -67,7 +67,7 @@ def main():
     app.listen(options.port)
     annoying_tick_callback = tornado.ioloop.PeriodicCallback(ats.send_annoying_tick, 5000, io_loop=tornado.ioloop.IOLoop.instance())
     system_set_callback = tornado.ioloop.PeriodicCallback(system_set.process, 100, io_loop=tornado.ioloop.IOLoop.instance())
-    annoying_tick_callback.start()
+    # annoying_tick_callback.start()
     system_set_callback.start()
     
     

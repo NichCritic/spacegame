@@ -192,9 +192,9 @@ class CommandMessageHandler(BaseHandler):
         if result[0] == "error":
             # to_basestring is necessary for Python 3's json encoder,
             # which doesn't accept byte strings.
-            message["body"] = "Sorry, I can't understand that"
+            message["body"] = ["Sorry, I can't understand that"]
         else:
-            message["body"] = ""
+            message["body"] = [""]
         message["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=message))
         if self.get_argument("next", None):
@@ -208,9 +208,11 @@ class CommandMessageHandler(BaseHandler):
 
 class MessageUpdatesHandler(BaseHandler):
 
-    def initialize(self, player_factory):
+    def initialize(self, player_factory, account_utils, session_manager):
         # TODO: This seems strange
         self.player_factory = player_factory
+        self.account_utils = account_utils
+        self.session_manager = session_manager
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -218,9 +220,17 @@ class MessageUpdatesHandler(BaseHandler):
         print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
         if not self.current_user['id'] in self.player_factory.players:
-            player = self.player_factory.create_player(
-                MessageBuffer(), self.current_user["id"])
-            self.current_user["player_id"] = player.id
+             
+            with self.session_manager.get_session() as session:
+                player = self.player_factory.create_player(
+                    MessageBuffer(), self.current_user["id"])
+                self.current_user["player_id"] = player.id
+                avatar_id = self.account_utils.get_previous_avatar_for_player(player.id, session)
+                if avatar_id is None:
+                    self.redirect("/charater_select")
+                    return
+                self.player_factory.set_player_avatar(player, avatar_id)
+
 
         self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
                                                                                               cursor=cursor)
@@ -249,7 +259,7 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
         if self.get_query_argument("code", False):
 
             access = yield self.get_authenticated_user(
-                redirect_uri='http://127.0.0.1:8888/auth/login',
+                redirect_uri='http://naelick.com:8888/auth/login',
                 code=self.get_query_argument('code'))
             user = yield self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v1/userinfo",
@@ -271,7 +281,7 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
                 self.redirect("/character_select")
                 return
         self.authorize_redirect(
-            redirect_uri='http://127.0.0.1:8888/auth/login',
+            redirect_uri='http://naelick.com:8888/auth/login',
             client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
             scope=['email'],
             response_type='code',
@@ -282,4 +292,4 @@ class AuthLogoutHandler(BaseHandler):
 
     def get(self):
         self.clear_cookie("chatdemo_user")
-        self.write("You are now logged out")
+        self.render('logout.html')

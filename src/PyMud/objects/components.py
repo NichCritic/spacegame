@@ -64,8 +64,9 @@ class Speaking(object):
 
 class Creating(object):
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, format):
         self.entity_id = entity_id
+        self.format = format
 
 
 class Moving(object):
@@ -157,6 +158,16 @@ class Exit(Base):
         self.dest_z = z
 
 
+class DetatchedLocation(object):
+
+    def __init__(self, entity_id, room, x, y, z):
+        self.entity_id = entity_id
+        self.room = room
+
+        self.x = x
+        self.y = y
+        self.z = z
+
 class Location(Base):
     __compname__ = "location"
     __tablename__ = "location"
@@ -176,6 +187,9 @@ class Location(Base):
         self.x = x
         self.y = y
         self.z = z
+
+    def detach(self):
+        return DetatchedLocation(self.entity_id, self.room, self.x, self.y, self.z)
 
 
 class Space(Base):

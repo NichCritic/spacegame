@@ -1,11 +1,25 @@
+Jade's suggestions
 
-Commands
-	Come up with better names for parser/handler - not clear
-	Write the actual execution code for a command. 
-	Write the glue code to handle command targeting
-	
-Rooms
-	Write support systems
-	Decide once and for all - Rooms with nsew movement, or 3d world?
-	Dynamic description engine (lol)
-	
+List of commands
+Proper avatar names
+List of previous commands
+prevalidate objects against lexicon
+
+
+able to create things other than chairs
+
+grammatical room descriptions
+group like objects
+
+Casting spells
+
+inspect/investigate
+logout screen css
+
+investigate self (view what you're holding)
+No response if you aren't holding
+
+Only one avatar logged in at a time
+
+500 errors when taking or dropping something that doesn't exist (More robust commands)
+

@@ -53,7 +53,21 @@ class NetworkAVSystem(object):
             if type == "visibility":
                 return node.senses.sight+value > node_dist
                 
+    def create_network_message(self, message, text):
+        print('The message is {}'.format(text))
+        if message.source_id is None:
+            source = "No one"
+        else:
+            source_node = self.node_factory.create_node(message.source_id, ['names'])
+            source = source_node.names.name
 
+        if message.target_id is None:
+            target = "Nothing"
+        else:
+            target_node = self.node_factory.create_node(message.target_id, ['names'])
+            target = source_node.names.name
+
+        return NetworkMessage(source_node.id, text.format(player = source, target = target, text = message.text))
                 
     def process(self):
 
@@ -69,12 +83,13 @@ class NetworkAVSystem(object):
                     continue
                 
                 print("testing requirements")
-                for requirements, messages in message.message_templates:
+                for requirements, texts in message.message_templates:
                     reqs_satisfied = [self.satisfies_requirement(node, message, req) for req in requirements]
                     
                     if(all(reqs_satisfied)):
-                        for msg in messages:
-                            out_msg = NetworkMessage(node.id, msg.format(player = message.source_id, target = message.target_id, text = message.text))
+                        for text in texts:
+
+                            out_msg = self.create_network_message(message, text)
                             network_msg_nodes = nodes.subset(["network_messages"])
                             if not (node in network_msg_nodes):
                                 node.add_component("network_messages", {})

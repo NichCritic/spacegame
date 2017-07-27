@@ -40,7 +40,7 @@ class CommandPackager(object):
             if elemtype == "verb":
                 verb_definition = self.handle_verb(element)
             if elemtype == "text":
-                reqs["text"] = element
+                reqs["text"] = element.strip()
             if elemtype == "targets":
                 targets = {}
                 for t in element:

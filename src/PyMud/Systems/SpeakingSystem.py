@@ -14,7 +14,11 @@ class SpeakingSystem(object):
         return self.node_factory.create_node_list(["location", "speaking"])
             
     def create_av_event_data(self, location, speaking):
-        event = AVEvent("speaking", speaking.text, location, speaking.entity_id, speaking.format, speaking.target)
+        if speaking.target:
+            target = speaking.target.keys()[0]
+        else:
+            target = None
+        event = AVEvent("speaking", speaking.text, location.detach(), speaking.entity_id, speaking.format, target)
         return event
         
     def process(self):

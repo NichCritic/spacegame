@@ -14,8 +14,8 @@ class DroppingSystem(object):
         return self.node_factory.create_node_list(["location", "dropping", "container"], ["holding"])
 
     def create_av_event_data(self, location, dropping):
-        event = AVEvent("dropping", None, location,
-                        dropping.entity_id, dropping.format, dropping.target)
+        event = AVEvent("dropping", None, location.detach(),
+                        dropping.entity_id, dropping.format, dropping.target.keys()[0])
         return event
 
     def object_is_held_by(self, object, held_by):
@@ -55,10 +55,11 @@ class DroppingSystem(object):
                     dropped_object.container.parent_id = node.container.parent_id
 
                 else:
-                    dropped_object.add_or_attach_component('held_by', None)
-                    out_msg = NetworkMessage(node.id, "You can't drop the {thing}".format(
-                        thing=dropped_object.names.name))
-                    node.add_or_attach_component("network_messages", {})
-                    node.network_messages.msg.append(out_msg)
+                    if dropped_object.has('held_by'):
+                        dropped_object.add_or_attach_component('held_by', None)
+                        out_msg = NetworkMessage(node.id, "You can't drop the {thing}".format(
+                            thing=dropped_object.names.name))
+                        node.add_or_attach_component("network_messages", {})
+                        node.network_messages.msg.append(out_msg)
 
             node.remove_component("dropping")

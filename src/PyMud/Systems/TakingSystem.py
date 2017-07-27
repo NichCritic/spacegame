@@ -13,9 +13,9 @@ class TakingSystem(object):
     def get_nodes(self):
         return self.node_factory.create_node_list(["location", "taking", "container"])
 
-    def create_av_event_data(self, location, taking):
-        event = AVEvent("taking", None, location,
-                        taking.entity_id, taking.format, taking.target)
+    def create_av_event_data(self, location, taking, target):
+        event = AVEvent("taking", None, location.detach(),
+                        taking.entity_id, taking.format, target)
         return event
 
     def object_is_held(self, node):
@@ -54,7 +54,7 @@ class TakingSystem(object):
                     room_node = self.node_factory.create_node(
                         node.location.room, [])
                     av_event_data = self.create_av_event_data(
-                        node.location, node.taking)
+                        node.location, node.taking, t_id)
                     print("Taking system got message from "+node.id)
                     room_node.add_or_attach_component("av_events", None)
                     room_node.av_events.events.append(av_event_data)
