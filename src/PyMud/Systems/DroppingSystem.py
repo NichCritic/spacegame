@@ -13,9 +13,9 @@ class DroppingSystem(object):
     def get_nodes(self):
         return self.node_factory.create_node_list(["location", "dropping", "container"], ["holding"])
 
-    def create_av_event_data(self, location, dropping):
+    def create_av_event_data(self, location, dropping, target):
         event = AVEvent("dropping", None, location.detach(),
-                        dropping.entity_id, dropping.format, dropping.target.keys()[0])
+                        dropping.entity_id, dropping.format, target)
         return event
 
     def object_is_held_by(self, object, held_by):
@@ -45,7 +45,7 @@ class DroppingSystem(object):
                     room_node = self.node_factory.create_node(
                         node.location.room, [])
                     av_event_data = self.create_av_event_data(
-                        node.location, node.dropping)
+                        node.location, node.dropping, t_id)
                     print("Dropping system got message from "+node.id)
                     room_node.add_or_attach_component("av_events", None)
                     room_node.av_events.events.append(av_event_data)

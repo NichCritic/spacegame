@@ -5,6 +5,9 @@ Created on 2013-11-12
 '''
 from Systems.NetworkMessageSystem import NetworkMessage
 
+def isa(player_node, targets, text, **kwargs):
+    player_node.add_component("changing", {"target": targets, "text":text})
+
 def take(player_node, targets, **kwargs):
     player_node.add_component("taking", {"target": targets, "format": verbs["take"]["messages"]})
 
@@ -60,7 +63,7 @@ verbs = {"say": {
     "look": {
     "function": look,
 },
-    "move": {
+    "move to": {
     "function": move,
 },
     "create": {"function": create, "messages":[([("visibility",60), ("is_caller")], ["You create a {target}"]),
@@ -74,7 +77,8 @@ verbs = {"say": {
     "drop": {"function": drop, "messages":[([("visibility",60), ("is_caller")], ["You drop {target}"]),
                                            ([("visibility",60)], ["{player} dropped {target}"])
                                           ]},
-    "help": {"function": help}
+    "help": {"function": help},
+    "isa": {"function":isa}
 
 
 

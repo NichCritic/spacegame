@@ -1,4 +1,5 @@
 from pynlg.realizer import NounPhrase, VerbPhrase, PrepositionalPhrase, Clause
+from pynlg.lexicon import Noun, Adjective, Verb
 
 
 class ObjectDescriber(object):
@@ -57,10 +58,29 @@ class ObjectDescriber(object):
             'descriptors': descriptors
         }
 
+    def get_noun(self, word):
+        ret = None
+        try:
+            ret = self.lex.getWord(word, 'NOUN')
+        except Exception:
+            ret = Noun(word, features=['proper'])
+        return ret
+
+    def get_adjective(self, word):
+        ret = None
+        try:
+            ret = self.lex.get_word(word, 'ADJECTIVE')
+        except Exception:
+            ret = Adjective(word, category='ADJECTIVE')
+        return ret
+
+
     def describe_object(self, obj):
         pp = self.preprocess(obj)
-        ads = [self.lex.getWord(desc, 'ADJECTIVE')
+        ads = [self.get_adjective(desc)
                for desc in pp['descriptors']]
-        noun = NounPhrase(self.lex.getWord(pp['noun'], 'NOUN'), adjectives=ads)
-        noun.add_determiner(self.lex.getWord('a'))
+        subject = self.get_noun(pp['noun'])
+        noun = NounPhrase(subject, adjectives=ads)
+        if not 'proper' in subject.features:
+            noun.add_determiner(self.lex.getWord('a'))
         return noun

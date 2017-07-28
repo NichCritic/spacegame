@@ -15,9 +15,10 @@ CommandPackage = namedtuple("CommandPackage", "verb_function reqs_dict")
 
 class CommandPackager(object):
 
-    def __init__(self, verbs):
+    def __init__(self, verbs, spells):
         
         self.verbs = verbs
+        self.spells = spells
     
     
         
@@ -28,7 +29,10 @@ class CommandPackager(object):
             
                 
     def handle_verb(self, verb):
-        return self.verbs[verb]    
+        return self.verbs[verb]
+
+    def handle_spells(self, spell):
+        return self.spells[spell]    
         
     
     def find_command(self, parsed_elements, command_context):
@@ -37,6 +41,9 @@ class CommandPackager(object):
         #reqs["calling_player"] = calling_player_object
         print(parsed_elements)
         for elemtype, element in parsed_elements.items():
+            if elemtype == "command_type":
+                if element == 'isa':
+                    verb_definition = self.handle_verb('isa')
             if elemtype == "verb":
                 verb_definition = self.handle_verb(element)
             if elemtype == "text":
@@ -47,14 +54,6 @@ class CommandPackager(object):
                     i = command_context["names"].names.index(t)
                     targets[t] = command_context["names"].ids[i]
                 reqs["targets"] = targets
-            if elemtype == "num":
-                nums = element.strip().split(" ")
-                reqs["x"] = int(nums[0])
-                reqs["y"] = int(nums[1])
-                if len(nums) == 3:
-                    reqs["z"] = int(nums[2])
-                else:
-                    reqs["z"] = None
             
             #handle more elemtypes
         

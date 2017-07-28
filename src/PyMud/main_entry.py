@@ -54,7 +54,7 @@ def main():
             (r"/auth/logout", AuthLogoutHandler),
             (r"/a/message/new", CommandMessageHandler, dict(command_handler = command_handler, player_factory = player_factory)),
             (r"/a/message/updates", MessageUpdatesHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
-            (r"/character_select", CharacterSelectHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
+            (r"/character_select", CharacterSelectHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager, node_factory = node_factory)),
             (r"/character_create", CharacterCreateHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             ],
         cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",

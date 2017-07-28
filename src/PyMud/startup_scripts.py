@@ -28,6 +28,7 @@ from Systems.system_set import DBSystemSet
 from Systems.visible_things_system import VisibleThingsSystem
 from Systems.names_system import NamesSystem
 from Systems.creating_system import CreatingSystem
+from Systems.ChangingSystem import ChangingSystem
 from Systems.HoldTriggerSystem import HoldTriggerSystem
 
 
@@ -46,7 +47,7 @@ def setup_objects(all_db_components, all_components, session):
     component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
     player_factory = PlayerFactory(component_manager)
-    default_room = "2056b68f-7d43-40a8-83fb-7b55b985c70c"
+    default_room = "9c8f1b9c-8c3e-4f59-8add-e385e7742fde"
     avatar_factory = AvatarFactory(node_factory, component_manager, {
             "starting_room": default_room,
             "player_id": 0})
@@ -100,6 +101,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     visithing = VisibleThingsSystem(node_factory)
     names_sys = NamesSystem(node_factory)
     creating_sys = CreatingSystem(node_factory)
+    changing_sys = ChangingSystem(node_factory)
 
     system_set.register(nms)
     system_set.register(speaking_system)
@@ -115,9 +117,11 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(visithing)
     system_set.register(names_sys)
     system_set.register(creating_sys)
+    system_set.register(changing_sys)
 
     #Todo: Doing these last so that the db components of each node still have a session when this is processed
     # But it would be best if that weren't the case
+    #And it turns out that this doesn't consistently work anyways, so realistically you can't store references to db objects
     system_set.register(av_event_system)
     system_set.register(nAVs)
 

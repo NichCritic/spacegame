@@ -21,13 +21,11 @@ class CommandHandler():
         try: 
             command_context = self.command_context_builder.build_command_context(source)
             
-            print(command_context)
             command_mapping = self.command_token_matcher.map_command(command, command_context)
             
             print(command_mapping)
             command_package = self.command_packager.find_command(command_mapping, command_context)
             
-            print(command_package)
             self.command_executor.execute(command_package)
             
             return ("success",)
