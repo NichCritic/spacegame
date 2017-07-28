@@ -39,13 +39,16 @@ def build_grammar(names):
     
     command_grammar = Grammar(
         """
-            command = (verb s preposition s coords) / (verb s noun s preposition s noun text) / (verb s preposition s noun text) / (verb s noun text) / (verb text)
-            coords = (num s num s num) / (num s num)
-            verb = "say" / "move" / "look" / "create" / "take" / "drop" / "help"
+            command = isa / vpn
+            isa = (noun s "is" s text)
+            vpn = (say s preposition s noun s text) / (say s text) / (create s text) / (verb s noun s preposition s noun) / (verb s preposition s noun) / (verb s noun) / (verb)
+            say = "say"
+            create = "create"
+            verb = (adverb s verb) / "look" / "take" / "drop" / "move" / "help"
             {nouns_format}
             preposition = "to" / "through" / "at"
-            text = ~"[A-Z 0-9]*"i
-            num = ~"[0-9]+"i
+            adverb = "quickly"
+            text = ~".*"
             s = " "
         """.format(nouns_format=nouns_format))
     return command_grammar
@@ -82,11 +85,32 @@ class CommandVisitor(NodeVisitor):
         
         
         return self.matched_dict
+
+    def visit_isa(self, node, visited_children):
+        self.matched_dict["command_type"]  = 'isa'
+
+    def visit_vpn(self, node, visited_children):
+        self.matched_dict["command_type"]  = 'vpn'
     
     def visit_verb(self, node, visited_children):
         
         self.matched_dict["verb"] = node.text
         
+        return node
+
+    def visit_say(self, node, visited_children):
+        self.matched_dict["verb"] = node.text
+
+        return node
+
+    def visit_create(self, node, visited_children):
+        self.matched_dict["verb"] = node.text
+
+        return node
+
+    def visit_move(self, node, visited_children):
+        self.matched_dict["verb"] = node.text
+
         return node
     
     def visit_text(self, node, visited_children):
@@ -99,13 +123,6 @@ class CommandVisitor(NodeVisitor):
         if not "targets" in self.matched_dict:
             self.matched_dict["targets"] = []
         self.matched_dict["targets"].append(node.text)
-        return node
-    
-    def visit_coords(self, node, visited_children):
-        nums = tuple([int(n) for n in node.text.split(" ")])
-        self.matched_dict["coords"] = nums
-        
-        
         return node
     
     def visit_preposition(self, node, visited_children):

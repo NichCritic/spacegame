@@ -42,6 +42,7 @@ class DescriptionSystem(object):
         object_node = self.node_factory.create_node(
             object_id, ["names"], ["material"])
 
+        print(object_node)
         if object_node.material:
             obj = {'name': object_node.names.name,
                    'material': object_node.material.get_material(),

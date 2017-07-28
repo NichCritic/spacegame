@@ -17,14 +17,13 @@
 body {
   background: black;
   margin: 10px;
-  
+  color:white;  
 }
 
 body,
 input {
   font-family: sans-serif;
   font-size: 10pt;
-  color: white;
 }
 
 table {

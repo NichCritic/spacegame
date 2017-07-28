@@ -102,9 +102,18 @@ class CharacterCreateHandler(BaseHandler):
         acct_id = self.current_user["acct_id"]
 
         # print(self.current_user)
+        print(self.request.body)
+
+        post_data = self.request.body.decode('utf-8')
+
+        post_data = post_data.split('&')
+
+        post_data = dict([p.split('=') for p in post_data])
+
+        data = {"name":post_data['character_name']}
 
         with self.session_manager.get_session() as session:
-            self.account_utils.create_new_avatar_for_account(acct_id, session)
+            self.account_utils.create_new_avatar_for_account(acct_id, data, session)
 
         # print(self.request.body)
         self.write({"result": "ok"})
@@ -115,9 +124,10 @@ class CharacterCreateHandler(BaseHandler):
 
 class CharacterSelectHandler(BaseHandler):
 
-    def initialize(self, account_utils, player_factory, session_manager):
+    def initialize(self, account_utils, player_factory, node_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
+        self.node_factory = node_factory
         self.av = None
         self.session_manager = session_manager
 
@@ -128,10 +138,22 @@ class CharacterSelectHandler(BaseHandler):
             acc = self.account_utils.get_by_id(acc_id, session)
             avatars = acc.avatars
 
-            # print(avatars)
+            self.av = []
 
-            self.av = [{"index": index, "id": av.avatar_id}
-                       for index, av in enumerate(avatars)]
+            for i, avatar in enumerate(avatars):
+                id = avatar.avatar_id
+                avatar_node = self.node_factory.create_node(id, ['names', 'location', 'description'])
+                name = avatar_node.names.name
+                location_node = self.node_factory.create_node(avatar_node.location.room, ['names'])
+                location = location_node.names.name
+                description = avatar_node.description.description
+                self.av.append({
+                    "index": i,
+                    "id": id,
+                    "name": name,
+                    "location": location,
+                    "description": description
+                    })
 
             self.render("character_select.html", characters=self.av)
 

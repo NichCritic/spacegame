@@ -68,10 +68,10 @@ class AccountUtils():
         session.add(a)
         return a
     
-    def create_new_avatar_for_account(self, account_id, session):
+    def create_new_avatar_for_account(self, account_id, data, session):
         
         
-        a = self.avatar_factory.create_default_avatar()
+        a = self.avatar_factory.create_default_avatar(data)
         account = session.query(Account).filter(Account.id==account_id).one()
         
         ac_av = AccountAvatar()

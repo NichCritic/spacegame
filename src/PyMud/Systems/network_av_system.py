@@ -65,9 +65,9 @@ class NetworkAVSystem(object):
             target = "Nothing"
         else:
             target_node = self.node_factory.create_node(message.target_id, ['names'])
-            target = source_node.names.name
+            target = target_node.names.name
 
-        return NetworkMessage(source_node.id, text.format(player = source, target = target, text = message.text))
+        return NetworkMessage(message.source_id, text.format(player = source, target = target, text = message.text))
                 
     def process(self):
 

@@ -1,7 +1,5 @@
 Jade's suggestions
 
-List of commands
-Proper avatar names
 List of previous commands
 prevalidate objects against lexicon
 
@@ -22,4 +20,15 @@ No response if you aren't holding
 Only one avatar logged in at a time
 
 500 errors when taking or dropping something that doesn't exist (More robust commands)
+
+player entry exit methods
+
+able to press up arrow to access command history
+
+move to
+
+alohamora
+lumos
+
+
 

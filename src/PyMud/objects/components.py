@@ -53,6 +53,12 @@ class Looking(object):
         self.target = target
 
 
+class Changing(object):
+    def __init__(self, entity_id, text, target):
+        self.entity_id = entity_id
+        self.text = text
+        self.target = target
+
 class Speaking(object):
 
     def __init__(self, entity_id, text, target, format):
@@ -348,6 +354,7 @@ components = {
     "visible_objects": VisibleObjects,
     "visible_names": VisibleNames,
     "creating": Creating,
+    "changing": Changing,
     "holding": Holding,
     "held_by": HeldBy,
     "taking": Taking,
