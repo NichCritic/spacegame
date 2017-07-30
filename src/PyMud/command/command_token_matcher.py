@@ -34,23 +34,26 @@ def format_objects(object_name_list):
     else:
         return 'noun = "nothing"'
 
-def build_grammar(names):
+def build_grammar(names, spells):
     nouns_format = format_objects(names)
+    spells_format = format_objects(spells)
     
     command_grammar = Grammar(
         """
             command = isa / vpn
             isa = (noun s "is" s text)
-            vpn = (say s preposition s noun s text) / (say s text) / (create s text) / (verb s noun s preposition s noun) / (verb s preposition s noun) / (verb s noun) / (verb)
+            vpn = (say s preposition s noun s text) / (say s text) / (create s text) / (cast s spell s preposition s noun) / (cast s spell) / (verb s noun s preposition s noun) / (verb s preposition s noun) / (verb s noun) / (verb)
             say = "say"
             create = "create"
+            cast = "cast"
             verb = (adverb s verb) / "look" / "take" / "drop" / "move" / "help"
             {nouns_format}
-            preposition = "to" / "through" / "at"
+            preposition = "to" / "through" / "at" / "on"
             adverb = "quickly"
             text = ~".*"
+            spell = "destructo"
             s = " "
-        """.format(nouns_format=nouns_format))
+        """.format(nouns_format=nouns_format, spells_format = spells_format))
     return command_grammar
 
 class CommandTokenMatcher():
@@ -60,7 +63,8 @@ class CommandTokenMatcher():
     
     def map_command(self, command, command_context):
         names = command_context["names"].names
-        command_grammar = build_grammar(names)
+        spells = command_context["spells"]
+        command_grammar = build_grammar(names, spells)
         ast = command_grammar.parse(command)
         #print(ast)
         mapping = CommandVisitor().visit(ast)
@@ -108,7 +112,7 @@ class CommandVisitor(NodeVisitor):
 
         return node
 
-    def visit_move(self, node, visited_children):
+    def visit_cast(self, node, visited_children):
         self.matched_dict["verb"] = node.text
 
         return node
@@ -117,6 +121,10 @@ class CommandVisitor(NodeVisitor):
         if node.text != '':
             self.matched_dict["text"] = node.text
         
+        return node
+
+    def visit_spell(self, node, visited_children):
+        self.matched_dict["spell"] = node.text
         return node
         
     def visit_noun(self, node, visited_children):

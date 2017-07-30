@@ -150,7 +150,9 @@ class Node(object):
 
     def remove_component(self, component_name):
         self.component_manager.remove_component(component_name, self.id)
-        del self.components[component_name]
+        if component_name in self.components:
+            del self.components[component_name]
+
 
 
 class NodeList(list):

@@ -15,7 +15,7 @@ class SpeakingSystem(object):
             
     def create_av_event_data(self, location, speaking):
         if speaking.target:
-            target = speaking.target.keys()[0]
+            target = list(speaking.target.items())[0][1]
         else:
             target = None
         event = AVEvent("speaking", speaking.text, location.detach(), speaking.entity_id, speaking.format, target)

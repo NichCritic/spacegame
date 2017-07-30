@@ -9,7 +9,7 @@ able to create things other than chairs
 grammatical room descriptions
 group like objects
 
-Casting spells
+More spells
 
 inspect/investigate
 logout screen css

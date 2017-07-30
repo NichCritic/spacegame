@@ -27,7 +27,6 @@ function select_character(form) {
 	var message = form.formToDict();
 	message.id = form[0].id
     $.postJSON("/character_select", message, function(response) {
-        alert(response)
     	if (response == "ok") {
         	document.location.href = "/";
         }});
