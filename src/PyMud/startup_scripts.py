@@ -19,11 +19,13 @@ from objects.component_manager import ComponentManager, DBComponentSource, Array
 from Systems.NetworkMessageSystem import NetworkMessageSystem
 from Systems.network_av_system import NetworkAVSystem
 from Systems.SpeakingSystem import SpeakingSystem
+from Systems.CastingSystem import CastingSystem
 from Systems.TakingSystem import TakingSystem
 from Systems.DroppingSystem import DroppingSystem
 from Systems.AVEventSystem import AVEventSystem
 from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
 from Systems.movement_system import MovementSystem
+from Systems.exit_system import ExitSystem
 from Systems.system_set import DBSystemSet
 from Systems.visible_things_system import VisibleThingsSystem
 from Systems.names_system import NamesSystem
@@ -39,6 +41,7 @@ from command.command_executor import CommandExecutor
 from command.command_context_builder import CommandContextBuilder
 from command.commands import verbs
 
+from spells.spells import spells
 
 
 def setup_objects(all_db_components, all_components, session):
@@ -47,7 +50,7 @@ def setup_objects(all_db_components, all_components, session):
     component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
     player_factory = PlayerFactory(component_manager)
-    default_room = "9c8f1b9c-8c3e-4f59-8add-e385e7742fde"
+    default_room = "f6fcdd97-29a7-4537-9ced-b463eb32d445"
     avatar_factory = AvatarFactory(node_factory, component_manager, {
             "starting_room": default_room,
             "player_id": 0})
@@ -78,8 +81,8 @@ class ObjectProvider(object):
 
 def setup_commands(node_factory):
     command_token_matcher = CommandTokenMatcher()
-    command_packager = CommandPackager(verbs)
-    command_context_builder = CommandContextBuilder(node_factory)
+    command_packager = CommandPackager(verbs, spells)
+    command_context_builder = CommandContextBuilder(node_factory, spells)
     command_executor = CommandExecutor()
     command_handler = CommandHandler(command_token_matcher, command_packager, command_executor, command_context_builder)
     return command_handler
@@ -89,6 +92,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = DBSystemSet(object_db, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
     speaking_system = SpeakingSystem(node_factory)
+    casting_system = CastingSystem(node_factory, spells)
     taking_system = TakingSystem(node_factory)
     dropping_system = DroppingSystem(node_factory)
     hold_trigger_system = HoldTriggerSystem(node_factory)
@@ -98,6 +102,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     desc_sys = DescriptionSystem(node_factory)
     net_desc_sys = NetworkDescriptionSystem(node_factory, desc_sys)
     move_sys = MovementSystem(node_factory)
+    exit_sys = ExitSystem(node_factory)
     visithing = VisibleThingsSystem(node_factory)
     names_sys = NamesSystem(node_factory)
     creating_sys = CreatingSystem(node_factory)
@@ -105,6 +110,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
 
     system_set.register(nms)
     system_set.register(speaking_system)
+    system_set.register(casting_system)
     system_set.register(taking_system)
     system_set.register(hold_trigger_system)
     system_set.register(dropping_system)
@@ -114,6 +120,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     #system_set.register(desc_sys)
     system_set.register(net_desc_sys)
     system_set.register(move_sys)
+    system_set.register(exit_sys)
     system_set.register(visithing)
     system_set.register(names_sys)
     system_set.register(creating_sys)

@@ -59,10 +59,10 @@ class AvatarFactory(object):
         
         if data and "name" in data:          
             node.names.name = data["name"]
-            node.names.identifiers = [data["name"]]
+            node.names.identifiers = data["name"]
         else:
             node.names.name = "alice"
-            node.names.identifiers = ["alice"]
+            node.names.identifiers = "alice"
                 
         print(data)
         print(default_data)

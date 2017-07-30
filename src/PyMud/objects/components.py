@@ -67,6 +67,14 @@ class Speaking(object):
         self.target = target
         self.format = format
 
+class Casting(object):
+
+    def __init__(self, entity_id, spell, target, format):
+        self.entity_id = entity_id
+        self.spell = spell
+        self.target = target
+        self.format = format
+
 
 class Creating(object):
 
@@ -86,9 +94,9 @@ class Moving(object):
 
 class Exiting(object):
 
-    def __init__(self, entity_id, exit_id):
+    def __init__(self, entity_id, target):
         self.entity_id = entity_id
-        self.exit_id = exit_id
+        self.target = target
 
 
 class Holding(object):
@@ -148,20 +156,12 @@ class Exit(Base):
 
     id = Column(Integer, primary_key=True)
     entity_id = Column(String, ForeignKey("entity.id"))
-    exit = Column(String)
+    dest_id = Column(String)
 
-    dest_room = Column(String)
-    dest_x = Column(Integer)
-    dest_y = Column(Integer)
-    dest_z = Column(Integer)
-
-    def __init__(self, entity_id, room=0, x=0, y=0, z=0):
+    def __init__(self, entity_id, dest_id):
         self.entity_id = entity_id
-        self.dest_room = room
+        self.dest_id = dest_id
 
-        self.dest_x = x
-        self.dest_y = y
-        self.dest_z = z
 
 
 class DetatchedLocation(object):
@@ -346,6 +346,7 @@ class Surface(Base):
 components = {
     "network_messages": NetworkMessages,
     "speaking": Speaking,
+    "casting": Casting,
     "looking": Looking,
     "av_events": AVEvents,
     "av_messages": AVMessages,

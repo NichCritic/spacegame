@@ -67,11 +67,23 @@ def main():
         'on_hold': {'callback': 'teleport', 'data': {'new_location': rcr}, 'timeout':5}
     })
 
+    door1 = comp_manager.create_entity({
+        'names': {'name': 'door', 'identifiers': 'door'},
+        'container': {'parent_id': gcr_node.container.id},
+        'exit': {'dest_id' : rcr}
+    })
+
     table = comp_manager.create_entity({
         'names': {'name': 'table', 'identifiers': 'table'},
         'material': {'material_id': materials.crystal},
         'container': {'parent_id': rcr_node.container.id},
         'on_hold': {'callback': 'teleport', 'data': {'new_location': gcr}, 'timeout':5}
+    })
+
+    door1 = comp_manager.create_entity({
+        'names': {'name': 'door', 'identifiers': 'door'},
+        'container': {'parent_id': rcr_node.container.id},
+        'exit': {'dest_id' : gcr}
     })
 
     session.commit()

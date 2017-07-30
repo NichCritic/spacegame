@@ -46,8 +46,12 @@ class CommandPackager(object):
                     verb_definition = self.handle_verb('isa')
             if elemtype == "verb":
                 verb_definition = self.handle_verb(element)
+            if elemtype == "spell":
+                reqs["spell"] = element
             if elemtype == "text":
                 reqs["text"] = element.strip()
+            if elemtype == "p_type":
+                reqs["p_type"] = element
             if elemtype == "targets":
                 targets = {}
                 for t in element:
