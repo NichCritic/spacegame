@@ -39,6 +39,7 @@ def main():
     })
 
     castle_node = node_factory.create_new_node({
+        "names": {"name":"Castle", "identifiers":"castle"},
         "container": {"parent_id": world_node.container.id}
     }
 

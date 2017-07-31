@@ -21,6 +21,8 @@ from Systems.network_av_system import NetworkAVSystem
 from Systems.SpeakingSystem import SpeakingSystem
 from Systems.CastingSystem import CastingSystem
 from Systems.TakingSystem import TakingSystem
+from Systems.EnteringSystem import EnteringSystem
+from Systems.AscendingSystem import AscendingSystem
 from Systems.DroppingSystem import DroppingSystem
 from Systems.AVEventSystem import AVEventSystem
 from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
@@ -82,7 +84,7 @@ class ObjectProvider(object):
 def setup_commands(node_factory):
     command_token_matcher = CommandTokenMatcher()
     command_packager = CommandPackager(verbs, spells)
-    command_context_builder = CommandContextBuilder(node_factory, spells)
+    command_context_builder = CommandContextBuilder(node_factory, spells, verbs.keys())
     command_executor = CommandExecutor()
     command_handler = CommandHandler(command_token_matcher, command_packager, command_executor, command_context_builder)
     return command_handler
@@ -103,6 +105,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     net_desc_sys = NetworkDescriptionSystem(node_factory, desc_sys)
     move_sys = MovementSystem(node_factory)
     exit_sys = ExitSystem(node_factory)
+    entering_sys = EnteringSystem(node_factory)
+    ascending_sys = AscendingSystem(node_factory)
     visithing = VisibleThingsSystem(node_factory)
     names_sys = NamesSystem(node_factory)
     creating_sys = CreatingSystem(node_factory)
@@ -121,6 +125,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(net_desc_sys)
     system_set.register(move_sys)
     system_set.register(exit_sys)
+    system_set.register(entering_sys)
+    system_set.register(ascending_sys)
     system_set.register(visithing)
     system_set.register(names_sys)
     system_set.register(creating_sys)

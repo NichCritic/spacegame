@@ -29,6 +29,14 @@ def look(player_node, targets=None, **kwargs):
     player_node.add_component("looking", {"target": targets})
 
 
+def enter(player_node, targets, **kwargs):
+    player_node.add_component("entering", {"target": targets})
+
+
+def ascend(player_node, **kwargs):
+    player_node.add_component("ascending", {})
+
+
 def move(player_node, targets, p_type, **kwargs):
     if p_type == 'to':
         move_to(player_node, targets, **kwargs)
@@ -40,19 +48,19 @@ def move_to(player_node, target, **kwargs):
     player_node.add_component(
         "moving", {"x": kwargs["x"], "y": kwargs["y"], "z": kwargs["z"]})
 
-def move_through(player_node, targets, **kwargs):
-    player_node.add_component("exiting", {"target":targets})
 
+def move_through(player_node, targets, **kwargs):
+    player_node.add_component("exiting", {"target": targets})
 
 
 def cast(spell, player_node, targets=None, **kwargs):
     player_node.add_component(
-        'casting', {"spell": spell, "target": targets, "format":verbs["cast"]["messages"]})
+        'casting', {"spell": spell, "target": targets, "format": verbs["cast"]["messages"]})
 
 
-def create(player_node, **kwargs):
+def create(player_node, text, **kwargs):
     player_node.add_component(
-        "creating", {"format": verbs["create"]["messages"]})
+        "creating", {"format": verbs["create"]["messages"], "new_name": text})
 
 
 def help(player_node, **kwargs):
@@ -82,7 +90,7 @@ verbs = {"say": {
                  ],
 
 },
-"cast": {
+    "cast": {
 
     "function": cast,
 
@@ -96,8 +104,13 @@ verbs = {"say": {
 },
     "look": {
     "function": look,
+
+
 },
-  
+    "go": {
+      "function": move
+},
+
     "move": {
     "function": move,
 },
@@ -109,19 +122,25 @@ verbs = {"say": {
     "function": move_through,
 },
 
+    "enter": {
+    "function": enter,
+},
+    "ascend": {
+    "function": ascend,
+},
     "create": {"function": create, "messages": [([("visibility", 60), ("is_caller")], ["You create a {target}"]),
-                                           ([("visibility", 60)], [
-                                            "{player} created a {target}"])
-                                          ]},
+                                                ([("visibility", 60)], [
+                                                    "{player} created a {target}"])
+                                                ]},
     "take": {"function": take, "messages": [([("visibility", 60), ("is_caller")], ["You take {target}"]),
-                                           ([("visibility", 60)], [
-                                            "{player} took {target}"])
-                                          ]},
+                                            ([("visibility", 60)], [
+                                                "{player} took {target}"])
+                                            ]},
 
     "drop": {"function": drop, "messages": [([("visibility", 60), ("is_caller")], ["You drop {target}"]),
-                                           ([("visibility", 60)], [
-                                            "{player} dropped {target}"])
-                                          ]},
+                                            ([("visibility", 60)], [
+                                                "{player} dropped {target}"])
+                                            ]},
     "help": {"function": help},
     "isa": {"function": isa}
 

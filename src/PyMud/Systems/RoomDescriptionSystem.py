@@ -57,7 +57,7 @@ class DescriptionSystem(object):
     def describe_room(self, room_id, node):
         description = ""
         room_node = self.node_factory.create_node(
-            room_id, ["room", "names", "container"])
+            room_id, ["names", "container"])
         objects = []
         description += room_node.names.name + "\n"
         

@@ -78,9 +78,10 @@ class Casting(object):
 
 class Creating(object):
 
-    def __init__(self, entity_id, format):
+    def __init__(self, entity_id, format, new_name):
         self.entity_id = entity_id
         self.format = format
+        self.name = new_name
 
 
 class Moving(object):
@@ -98,6 +99,16 @@ class Exiting(object):
         self.entity_id = entity_id
         self.target = target
 
+class Entering(object):
+
+    def __init__(self, entity_id, target):
+        self.entity_id = entity_id
+        self.target = target
+
+class Ascending(object):
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
 
 class Holding(object):
 
@@ -352,6 +363,8 @@ components = {
     "av_messages": AVMessages,
     "moving": Moving,
     "exiting": Exiting,
+    "entering": Entering,
+    "ascending": Ascending,
     "visible_objects": VisibleObjects,
     "visible_names": VisibleNames,
     "creating": Creating,

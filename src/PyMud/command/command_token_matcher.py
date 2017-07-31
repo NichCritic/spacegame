@@ -30,13 +30,16 @@ def surround(surrounding_text, text):
 
 def format_objects(object_name_list):
     if len(object_name_list) > 0:
-        return "noun = "+" / ".join([surround('"', text) for text in object_name_list])
+        return " / ".join([surround('"', text) for text in object_name_list])
     else:
-        return 'noun = "nothing"'
+        return '"nothing"'
 
-def build_grammar(names, spells):
+def build_grammar(names, spells, verbs):
     nouns_format = format_objects(names)
     spells_format = format_objects(spells)
+    verbs_format = format_objects(verbs)
+
+    print(spells_format)
     
     command_grammar = Grammar(
         """
@@ -46,14 +49,14 @@ def build_grammar(names, spells):
             say = "say"
             create = "create"
             cast = "cast"
-            verb = (adverb s verb) / "look" / "take" / "drop" / "move" / "help"
-            {nouns_format}
+            verb = (adverb s verb) / {verbs_format}
+            noun = {nouns_format}
             preposition = "to" / "through" / "at" / "on"
             adverb = "quickly"
             text = ~".*"
-            spell = "destructo"
+            spell = {spells_format}
             s = " "
-        """.format(nouns_format=nouns_format, spells_format = spells_format))
+        """.format(nouns_format=nouns_format, spells_format = spells_format, verbs_format = verbs_format))
     return command_grammar
 
 class CommandTokenMatcher():
@@ -64,13 +67,11 @@ class CommandTokenMatcher():
     def map_command(self, command, command_context):
         names = command_context["names"].names
         spells = command_context["spells"]
-        command_grammar = build_grammar(names, spells)
+        verbs = command_context["verbs"]
+        command_grammar = build_grammar(names, spells, verbs)
         ast = command_grammar.parse(command)
-        #print(ast)
+        import pdb; pdb.set_trace()
         mapping = CommandVisitor().visit(ast)
-        
-        
-        
         return mapping
 
 

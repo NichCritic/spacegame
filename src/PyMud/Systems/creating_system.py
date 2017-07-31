@@ -37,7 +37,7 @@ class CreatingSystem(object):
                 "container": {"parent_id": room_node.container.id},
                 "location": {"room": room, "x": x, "y": y, "z": z},
                 "description": {"description": "A new glowing entity"},
-                "names": {'name': 'chair', 'identifiers': 'chair'},
+                "names": {'name': node.creating.name, 'identifiers': node.creating.name},
 
             })
 
