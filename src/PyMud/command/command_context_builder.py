@@ -5,9 +5,9 @@ Created on 2013-11-18
 '''
 class CommandContextBuilder(object):
     
-    def __init__(self, node_factory, spells, verbs):
+    def __init__(self, node_factory, runes, verbs):
         self.node_factory = node_factory
-        self.spells = spells
+        self.runes = runes
         self.verbs = verbs
     
     def build_command_context(self, source):
@@ -17,7 +17,7 @@ class CommandContextBuilder(object):
                            "calling_player_id":avatar_id,
                                 "calling_player_location": node.location,
                                 "names":node.visible_names,
-                                "spells": self.spells,
+                                "runes": self.runes,
                                 "verbs": self.verbs
                            }
         

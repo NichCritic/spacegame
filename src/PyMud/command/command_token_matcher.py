@@ -34,29 +34,28 @@ def format_objects(object_name_list):
     else:
         return '"nothing"'
 
-def build_grammar(names, spells, verbs):
+def build_grammar(names, runes, verbs):
     nouns_format = format_objects(names)
-    spells_format = format_objects(spells)
+    runes_format = format_objects(runes)
     verbs_format = format_objects(verbs)
 
-    print(spells_format)
     
     command_grammar = Grammar(
         """
             command = isa / vpn
             isa = (noun s "is" s text)
-            vpn = (say s preposition s noun s text) / (say s text) / (create s text) / (cast s spell s preposition s noun) / (cast s spell) / (verb s noun s preposition s noun) / (verb s preposition s noun) / (verb s noun) / (verb)
+            vpn = (say s preposition s noun s text) / (say s text) / (create s text) / (write s rune s preposition s noun) / (verb s noun s preposition s noun) / (verb s preposition s noun) / (verb s noun) / (verb)
             say = "say"
             create = "create"
-            cast = "cast"
+            write = "write"
             verb = (adverb s verb) / {verbs_format}
             noun = {nouns_format}
             preposition = "to" / "through" / "at" / "on"
             adverb = "quickly"
             text = ~".*"
-            spell = {spells_format}
+            rune = {runes_format}
             s = " "
-        """.format(nouns_format=nouns_format, spells_format = spells_format, verbs_format = verbs_format))
+        """.format(nouns_format=nouns_format, runes_format = runes_format, verbs_format = verbs_format))
     return command_grammar
 
 class CommandTokenMatcher():
@@ -66,11 +65,10 @@ class CommandTokenMatcher():
     
     def map_command(self, command, command_context):
         names = command_context["names"].names
-        spells = command_context["spells"]
+        runes = command_context["runes"]
         verbs = command_context["verbs"]
-        command_grammar = build_grammar(names, spells, verbs)
+        command_grammar = build_grammar(names, runes, verbs)
         ast = command_grammar.parse(command)
-        import pdb; pdb.set_trace()
         mapping = CommandVisitor().visit(ast)
         return mapping
 
@@ -113,7 +111,7 @@ class CommandVisitor(NodeVisitor):
 
         return node
 
-    def visit_cast(self, node, visited_children):
+    def visit_write(self, node, visited_children):
         self.matched_dict["verb"] = node.text
 
         return node
@@ -124,8 +122,8 @@ class CommandVisitor(NodeVisitor):
         
         return node
 
-    def visit_spell(self, node, visited_children):
-        self.matched_dict["spell"] = node.text
+    def visit_rune(self, node, visited_children):
+        self.matched_dict["rune"] = node.text
         return node
         
     def visit_noun(self, node, visited_children):

@@ -53,11 +53,6 @@ def move_through(player_node, targets, **kwargs):
     player_node.add_component("exiting", {"target": targets})
 
 
-def cast(spell, player_node, targets=None, **kwargs):
-    player_node.add_component(
-        'casting', {"spell": spell, "target": targets, "format": verbs["cast"]["messages"]})
-
-
 def create(player_node, text, **kwargs):
     player_node.add_component(
         "creating", {"format": verbs["create"]["messages"], "new_name": text})
@@ -67,6 +62,9 @@ def help(player_node, **kwargs):
     out_msg = NetworkMessage(player_node.id, '\n'.join(verbs.keys()))
     player_node.add_or_attach_component("network_messages", {})
     player_node.network_messages.msg.append(out_msg)
+
+def write(player_node, rune, targets, **kwargs):
+    player_node.add_or_attach_component("writing", {"target":targets, "rune":rune, "format":verbs["write"]["messages"]})
 
 
 verbs = {"say": {
@@ -90,27 +88,19 @@ verbs = {"say": {
                  ],
 
 },
-    "cast": {
 
-    "function": cast,
-
-    "messages": [([("loudness", 50), ("targeted",), ("is_caller",)], ['You cast {text} on {target}.']),
-                 ([("loudness", 50), ("targeted",), ("is_target",)], [
-                     '{player} casts {text} on you.']),
-                 ([("loudness", 50), ("targeted",), ],
-                  ['{player} casts {text} on target.']),
-                 ([("loudness", 50), ("is_caller",)],
-                  ['You cast {text}'])]
-},
     "look": {
     "function": look,
-
-
+},
+"write": {
+    "function": write, "messages": [([("visibility", 60), ("is_caller")], ["You inscribe a rune on {target}"]),
+                                            ([("visibility", 60)], [
+                                                "{player} inscribes a rune on {target}"])
+                                            ]
 },
     "go": {
       "function": move
 },
-
     "move": {
     "function": move,
 },

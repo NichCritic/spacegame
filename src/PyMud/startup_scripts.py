@@ -19,7 +19,7 @@ from objects.component_manager import ComponentManager, DBComponentSource, Array
 from Systems.NetworkMessageSystem import NetworkMessageSystem
 from Systems.network_av_system import NetworkAVSystem
 from Systems.SpeakingSystem import SpeakingSystem
-from Systems.CastingSystem import CastingSystem
+from Systems.WritingSystem import WritingSystem
 from Systems.TakingSystem import TakingSystem
 from Systems.EnteringSystem import EnteringSystem
 from Systems.AscendingSystem import AscendingSystem
@@ -43,7 +43,7 @@ from command.command_executor import CommandExecutor
 from command.command_context_builder import CommandContextBuilder
 from command.commands import verbs
 
-from spells.spells import spells
+from spells.runes import runes
 
 
 def setup_objects(all_db_components, all_components, session):
@@ -83,8 +83,8 @@ class ObjectProvider(object):
 
 def setup_commands(node_factory):
     command_token_matcher = CommandTokenMatcher()
-    command_packager = CommandPackager(verbs, spells)
-    command_context_builder = CommandContextBuilder(node_factory, spells, verbs.keys())
+    command_packager = CommandPackager(verbs, runes)
+    command_context_builder = CommandContextBuilder(node_factory, runes, verbs.keys())
     command_executor = CommandExecutor()
     command_handler = CommandHandler(command_token_matcher, command_packager, command_executor, command_context_builder)
     return command_handler
@@ -94,7 +94,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = DBSystemSet(object_db, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
     speaking_system = SpeakingSystem(node_factory)
-    casting_system = CastingSystem(node_factory, spells)
+    writing_system = WritingSystem(node_factory)
     taking_system = TakingSystem(node_factory)
     dropping_system = DroppingSystem(node_factory)
     hold_trigger_system = HoldTriggerSystem(node_factory)
@@ -114,7 +114,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
 
     system_set.register(nms)
     system_set.register(speaking_system)
-    system_set.register(casting_system)
+    system_set.register(writing_system)
     system_set.register(taking_system)
     system_set.register(hold_trigger_system)
     system_set.register(dropping_system)

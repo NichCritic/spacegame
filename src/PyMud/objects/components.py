@@ -5,7 +5,7 @@ Created on 2013-11-03
 '''
 
 from model.base import Base
-from sqlalchemy import Column, String, Integer, ForeignKey, PickleType
+from sqlalchemy import Column, String, Integer, ForeignKey, PickleType, Boolean
 from sqlalchemy.orm import relationship, backref, reconstructor
 from objects.materials import materials
 
@@ -83,6 +83,14 @@ class Creating(object):
         self.format = format
         self.name = new_name
 
+class Writing(object):
+
+    def __init__(self, entity_id, format, target, rune):
+        self.entity_id = entity_id
+        self.format = format
+        self.rune = rune
+        self.target = target
+
 
 class Moving(object):
 
@@ -123,6 +131,20 @@ class HeldBy(object):
         self.entity_id = entity_id
         self.holding_entity_id = holding_entity_id
 
+
+class Runes(Base):
+    __compname__ = "runes"
+    __tablename__ = "runes"
+
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    active = Column(Boolean)
+    runes_list = Column(PickleType)
+
+    def __init__(self, entity_id, active, runes_list=None):
+        self.entity_id = entity_id
+        self.active = active
+        self.runes_list = [] if runes_list is None else runes_list
 
 class OnHold(Base):
     __compname__ = "on_hold"
@@ -362,6 +384,7 @@ components = {
     "av_events": AVEvents,
     "av_messages": AVMessages,
     "moving": Moving,
+    "writing": Writing,
     "exiting": Exiting,
     "entering": Entering,
     "ascending": Ascending,
@@ -389,5 +412,6 @@ db_components = {
     "material": Material,
     "exit": Exit,
     "on_hold": OnHold,
-    "surface": Surface
+    "surface": Surface, 
+    "runes": Runes
 }

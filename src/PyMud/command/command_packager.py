@@ -15,10 +15,10 @@ CommandPackage = namedtuple("CommandPackage", "verb_function reqs_dict")
 
 class CommandPackager(object):
 
-    def __init__(self, verbs, spells):
+    def __init__(self, verbs, runes):
         
         self.verbs = verbs
-        self.spells = spells
+        self.runes = runes
     
     
         
@@ -31,8 +31,8 @@ class CommandPackager(object):
     def handle_verb(self, verb):
         return self.verbs[verb]
 
-    def handle_spells(self, spell):
-        return self.spells[spell]    
+    def handle_runes(self, rune):
+        return self.runes[rune]    
         
     
     def find_command(self, parsed_elements, command_context):
@@ -46,8 +46,8 @@ class CommandPackager(object):
                     verb_definition = self.handle_verb('isa')
             if elemtype == "verb":
                 verb_definition = self.handle_verb(element)
-            if elemtype == "spell":
-                reqs["spell"] = element
+            if elemtype == "rune":
+                reqs["rune"] = element
             if elemtype == "text":
                 reqs["text"] = element.strip()
             if elemtype == "p_type":
