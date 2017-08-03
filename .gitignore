@@ -101,3 +101,6 @@ ENV/
 #databases
 *.db
 *.sql
+
+#keys
+keys.py

@@ -6,6 +6,7 @@ Created on 2011-08-14
 '''
 import tornado.ioloop
 import os.path
+import keys
 from tornado.options import options, parse_command_line
 from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler
 
@@ -57,12 +58,12 @@ def main():
             (r"/character_select", CharacterSelectHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager, node_factory = node_factory)),
             (r"/character_create", CharacterCreateHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             ],
-        cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
+        cookie_secret=keys.cookie_secret,
         login_url="/auth/login",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         xsrf_cookies=True,
-        google_oauth={"key": "746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com", "secret": "d83cke8VeztiSl1omiY3Xzw4"}
+        google_oauth={"key": keys.google_oauth_key, "secret": keys.google_oauth_secret}
         )
     app.listen(options.port)
     annoying_tick_callback = tornado.ioloop.PeriodicCallback(ats.send_annoying_tick, 5000, io_loop=tornado.ioloop.IOLoop.instance())
