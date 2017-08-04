@@ -74,13 +74,13 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
         if not user_json:
-            return None
+            return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id": "11111", "given_name": 'Nicholas', "acct_id": "1d9867d5-9b90-4fab-bf3e-1c1c99d1bf55", "player_id": "11111"}
         return tornado.escape.json_decode(user_json)
 
 
 class MainHandler(BaseHandler):
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def get(self):
         self.render("index.html", messages=[])
 
@@ -92,11 +92,11 @@ class CharacterCreateHandler(BaseHandler):
         self.player_factory = player_factory
         self.session_manager = session_manager
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def get(self):
         self.render("character_create.html")
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def post(self):
         # print(self.current_user)
         acct_id = self.current_user["acct_id"]
@@ -110,10 +110,11 @@ class CharacterCreateHandler(BaseHandler):
 
         post_data = dict([p.split('=') for p in post_data])
 
-        data = {"name":post_data['character_name']}
+        data = {"name": post_data['character_name']}
 
         with self.session_manager.get_session() as session:
-            self.account_utils.create_new_avatar_for_account(acct_id, data, session)
+            self.account_utils.create_new_avatar_for_account(
+                acct_id, data, session)
 
         # print(self.request.body)
         self.write({"result": "ok"})
@@ -131,33 +132,44 @@ class CharacterSelectHandler(BaseHandler):
         self.av = None
         self.session_manager = session_manager
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def get(self):
         with self.session_manager.get_session() as session:
             acc_id = self.current_user["acct_id"]
             acc = self.account_utils.get_by_id(acc_id, session)
             avatars = acc.avatars
 
+            if not self.current_user['id'] in self.player_factory.players:
+                player = self.player_factory.create_player(
+                    MessageBuffer(), self.current_user["id"])
+                self.current_user["player_id"] = player.id
+
             self.av = []
 
             for i, avatar in enumerate(avatars):
                 id = avatar.avatar_id
-                avatar_node = self.node_factory.create_node(id, ['names', 'location', 'description'])
+                avatar_node = self.node_factory.create_node(
+                    id, ['names', 'location', 'description'], ['player_controlled'])
                 name = avatar_node.names.name
-                location_node = self.node_factory.create_node(avatar_node.location.room, ['names'])
+                location_node = self.node_factory.create_node(
+                    avatar_node.location.room, ['names'])
                 location = location_node.names.name
                 description = avatar_node.description.description
+
+                if avatar_node.has('player_controlled'):
+                    avatar_node.remove_component('player_controlled')
+
                 self.av.append({
                     "index": i,
                     "id": id,
                     "name": name,
                     "location": location,
                     "description": description
-                    })
+                })
 
             self.render("character_select.html", characters=self.av)
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         # print(self.request.body)
@@ -199,7 +211,7 @@ class CommandMessageHandler(BaseHandler):
         self.command_handler = command_handler
         self.player_factory = player_factory
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         message = {
@@ -236,23 +248,23 @@ class MessageUpdatesHandler(BaseHandler):
         self.account_utils = account_utils
         self.session_manager = session_manager
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
         if not self.current_user['id'] in self.player_factory.players:
-             
+
             with self.session_manager.get_session() as session:
                 player = self.player_factory.create_player(
                     MessageBuffer(), self.current_user["id"])
                 self.current_user["player_id"] = player.id
-                avatar_id = self.account_utils.get_previous_avatar_for_player(player.id, session)
+                avatar_id = self.account_utils.get_previous_avatar_for_player(
+                    player.id, session)
                 if avatar_id is None:
                     self.redirect("/charater_select")
                     return
                 self.player_factory.set_player_avatar(player, avatar_id)
-
 
         self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
                                                                                               cursor=cursor)

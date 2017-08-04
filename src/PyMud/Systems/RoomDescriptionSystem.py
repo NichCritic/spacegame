@@ -38,19 +38,21 @@ class DescriptionSystem(object):
             __file__), '../lexicon/default-lexicon.xml'))
         self.object_describer = ObjectDescriber(lex)
 
-    def describe_object(self, object_id):
+    def get_object_data(self, object_id):
         object_node = self.node_factory.create_node(
-            object_id, ["names"], ["material"])
+            object_id, ["names"])
 
-        print(object_node)
-        if object_node.material:
-            obj = {'name': object_node.names.name,
-                   'material': object_node.material.get_material(),
-                   'descriptors': []}
-        else:
-            obj = {'name': object_node.names.name,
-                   'material': None,
-                   'descriptors': []}
+        obj = {}
+        obj['name'] = object_node.names.name
+        obj['material'] = object_node.material.get_material() if object_node.entity_has("material") else None
+        
+        return obj
+        
+
+        
+
+    def describe_object(self, object_id):
+        obj = self.get_object_data(object_id)
 
         return self.object_describer.describe_object(obj).realize()
 
@@ -61,7 +63,7 @@ class DescriptionSystem(object):
         objects = []
         description += room_node.names.name + "\n"
         
-        for o in room_node.container.children:
+        for o in self.group_by_name(room_node.container.children):
             if o.entity_id != node.id:
                 objects.append(self.describe_object(o.entity_id))
         if len(objects) == 0:

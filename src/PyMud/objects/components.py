@@ -315,6 +315,15 @@ class Type(Base):
         self.entity_id = entity_id
         self.type = type
 
+class Avatar(Base):
+    __compname__ = "avatar"
+    __tablename__ = "avatar"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 class PlayerControlled(Base):
     __compname__ = "player_controlled"
@@ -377,41 +386,42 @@ class Surface(Base):
         self.parent_id = parent_id
 
 components = {
-    "network_messages": NetworkMessages,
-    "speaking": Speaking,
-    "casting": Casting,
-    "looking": Looking,
+    "ascending": Ascending,
     "av_events": AVEvents,
     "av_messages": AVMessages,
-    "moving": Moving,
-    "writing": Writing,
-    "exiting": Exiting,
-    "entering": Entering,
-    "ascending": Ascending,
-    "visible_objects": VisibleObjects,
-    "visible_names": VisibleNames,
-    "creating": Creating,
+    "casting": Casting,
     "changing": Changing,
-    "holding": Holding,
-    "held_by": HeldBy,
-    "taking": Taking,
+    "creating": Creating,
     "dropping": Dropping,
-    "on_hold_timeout": OnHoldTimeout
+    "entering": Entering,
+    "exiting": Exiting,
+    "held_by": HeldBy,
+    "holding": Holding,
+    "looking": Looking,
+    "moving": Moving,
+    "network_messages": NetworkMessages,
+    "on_hold_timeout": OnHoldTimeout,
+    "speaking": Speaking,
+    "taking": Taking,
+    "visible_names": VisibleNames,
+    "visible_objects": VisibleObjects,
+    "writing": Writing,
 }
 
 db_components = {
-    "temperature": Temperature,
-    "location": Location,
-    "description": Description,
-    "type": Type,
-    "names": Names,
-    "player_controlled": PlayerControlled,
-    "senses": Senses,
     "aliases": Aliases,
-    "space": Space,
-    "material": Material,
+    "avatar": Avatar,
+    "description": Description,
     "exit": Exit,
+    "location": Location,
+    "material": Material,
+    "names": Names,
     "on_hold": OnHold,
-    "surface": Surface, 
+    "player_controlled": PlayerControlled,
     "runes": Runes
+    "senses": Senses,
+    "space": Space,
+    "surface": Surface, 
+    "temperature": Temperature,
+    "type": Type,
 }

@@ -1,0 +1,95 @@
+Get all the data for all of the objects in the area being described
+
+(graph walk. Note that graph can have multiple exits and these matter. Some descriptions can be handled recursively)
+
+Group the data in a logical manner
+
+First by location
+
+In the middle of the room there are 3 chairs. By the fireplace there is another chair
+
+
+--by name--
+[chair, chair, chair, chair]
+
+There are four chairs
+
+--by color--
+[red chair, green chair, blue chair]
+
+There is a red, a green, and a blue chair
+
+-- by inner location --
+
+In the middle of the room there are 3 chairs. By the fireplace there is another chair
+
+Describe people first
+Describe active objects
+Describe inactive objects
+
+
+Don't describe objects if they've already been described
+
+Actions should be ordered by most recent
+Group only literally identical objects
+
+
+Griffindore common room
+
+(Jules) is sitting in a (chair by the fireplace). (Alice) is reading ("Hogwarts, a history") on (the couch by the window). The lamps on the walls flicker. There is a painting of a flower, and another painting of a boat on the wall. In the middle of the room there is a table with a vase containing a rose, and four chairs.
+
+
+GCR: {
+	People: [{
+			name:Jules,
+			actions:[sitting],
+			inner_location: in (chair by fireplace)
+			},
+
+			{name: Alice,
+actions:[sitting, reading],
+			 inner_location: in (couch by window)
+			}
+
+			]
+	Objects:[
+		{
+			name: lamp
+			action: [flicker]
+			inner_location: on (wall)
+		},
+		{
+			name: lamp
+			action: [flicker]
+			inner_location: on (wall)
+		},
+		{
+			name: lamp
+			action: [flicker]
+			inner_location: on (wall)
+		},
+		{name: table,
+		 surface: {name: vase, open_container: {name:rose}}},
+		{name: chair},
+		{name: chair},
+		{name: chair},
+		{name: chair},
+		{name: wall,
+		 visibility:implicit},
+		{name: wall,
+		 visibility:implicit},
+		{name: wall,
+		 visibility:implicit},
+		{name: wall,
+		 visibility:implicit}
+		
+
+
+		
+	]
+
+
+
+}
+
+

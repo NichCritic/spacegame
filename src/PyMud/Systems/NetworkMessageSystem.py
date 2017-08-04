@@ -50,8 +50,12 @@ class NetworkMessageSystem(object):
             '''Sometimes we have nodes with temporary or false ID's. Don't send
              messages to those'''
 
+            print("network messages {}".format(type(p)))
             if p in players:
+                print("happens")
                 message_buffer = players[p].message_buffer
+                print("also happens")
+                print(node.network_messages.msg)
                 for message in node.network_messages.msg:
                     self.send_message(message_buffer, message)
             node.remove_component("network_messages")
