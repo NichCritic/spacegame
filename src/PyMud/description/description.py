@@ -48,22 +48,21 @@ class ObjectDescriber(object):
             return clause.realize()
 
     def preprocess(self, obj):
-        noun = obj['name']
+        noun = obj.names.name
         descriptors = []
-        if obj['material']:
-            descriptors.append(obj['material']['descriptor'])
-        descriptors.extend(obj['descriptors'])
+        if obj.has('material'):
+            descriptors.append(obj.material.get_material()['descriptor'])
         return {
             'noun': noun,
             'descriptors': descriptors
         }
 
-    def get_noun(self, word):
+    def get_noun(self, word, is_name):
         ret = None
         try:
             ret = self.lex.getWord(word, 'NOUN')
         except Exception:
-            ret = Noun(word, features=['proper'])
+            ret = Noun(word, features=['proper'] if is_name else [])
         return ret
 
     def get_adjective(self, word):
@@ -79,7 +78,7 @@ class ObjectDescriber(object):
         pp = self.preprocess(obj)
         ads = [self.get_adjective(desc)
                for desc in pp['descriptors']]
-        subject = self.get_noun(pp['noun'])
+        subject = self.get_noun(pp['noun'], obj.has('avatar_type'))
         noun = NounPhrase(subject, adjectives=ads)
         if not 'proper' in subject.features:
             noun.add_determiner(self.lex.getWord('a'))

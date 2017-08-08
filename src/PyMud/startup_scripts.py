@@ -26,7 +26,7 @@ from Systems.AscendingSystem import AscendingSystem
 from Systems.DroppingSystem import DroppingSystem
 from Systems.AVEventSystem import AVEventSystem
 from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
-from Systems.movement_system import MovementSystem
+from Systems.movement_system import MovingSystem
 from Systems.exit_system import ExitSystem
 from Systems.system_set import DBSystemSet
 from Systems.visible_things_system import VisibleThingsSystem
@@ -103,7 +103,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     #loc_sys = LocationSystem(node_factory)
     desc_sys = DescriptionSystem(node_factory)
     net_desc_sys = NetworkDescriptionSystem(node_factory, desc_sys)
-    move_sys = MovementSystem(node_factory)
+    move_sys = MovingSystem(node_factory)
     exit_sys = ExitSystem(node_factory)
     entering_sys = EnteringSystem(node_factory)
     ascending_sys = AscendingSystem(node_factory)

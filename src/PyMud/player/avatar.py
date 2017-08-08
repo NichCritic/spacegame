@@ -50,7 +50,7 @@ class AvatarFactory(object):
             self.component_manager.add_component_to_object("player_controlled", avatar.id, {"pid":default_data["player_id"]})
             
         self.component_manager.add_component_to_object("senses", avatar.id, None)
-        self.component_manager.add_component_to_object("avatar", avatar.id, None)
+        self.component_manager.add_component_to_object("avatar_type", avatar.id, None)
         
         
         

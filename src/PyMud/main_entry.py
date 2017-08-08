@@ -53,7 +53,7 @@ def main():
             (r"/", MainHandler),
             (r"/auth/login", AuthLoginHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             (r"/auth/logout", AuthLogoutHandler),
-            (r"/a/message/new", CommandMessageHandler, dict(command_handler = command_handler, player_factory = player_factory)),
+            (r"/a/message/new", CommandMessageHandler, dict(account_utils = account_utils, command_handler = command_handler, player_factory = player_factory, session_manager = session_manager)),
             (r"/a/message/updates", MessageUpdatesHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),
             (r"/character_select", CharacterSelectHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager, node_factory = node_factory)),
             (r"/character_create", CharacterCreateHandler, dict(account_utils = account_utils, player_factory = player_factory, session_manager = session_manager)),

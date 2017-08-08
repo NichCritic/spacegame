@@ -44,9 +44,9 @@ def move(player_node, targets, p_type, **kwargs):
         move_through(player_node, targets, **kwargs)
 
 
-def move_to(player_node, target, **kwargs):
+def move_to(player_node, targets, **kwargs):
     player_node.add_component(
-        "moving", {"x": kwargs["x"], "y": kwargs["y"], "z": kwargs["z"]})
+        "moving", {"target":targets, "format":verbs["move to"]["messages"]})
 
 
 def move_through(player_node, targets, **kwargs):
@@ -107,6 +107,10 @@ verbs = {"say": {
 
     "move to": {
     "function": move_to,
+    "messages": [([("visibility", 60), ("is_caller")], ["You move to {target}"]),
+                                            ([("visibility", 60)], [
+                                                "{player} moves by {target}"])
+                                            ]
 },
     "move through": {
     "function": move_through,

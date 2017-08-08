@@ -40,37 +40,69 @@ class DescriptionSystem(object):
 
     def get_object_data(self, object_id):
         object_node = self.node_factory.create_node(
-            object_id, ["names"])
+            object_id, ["names"], ["material", "avatar",
+                                   "actions", "inner_location",
+                                   "container", "surface",
+                                   "open_container", "holding"])
 
-        obj = {}
-        obj['name'] = object_node.names.name
-        obj['material'] = object_node.material.get_material() if object_node.entity_has("material") else None
-        
-        return obj
-        
+        return object_node
 
-        
-
-    def describe_object(self, object_id):
-        obj = self.get_object_data(object_id)
-
+    def describe_object(self, obj):
         return self.object_describer.describe_object(obj).realize()
 
     def describe_room(self, room_id, node):
+        described = []
         description = ""
         room_node = self.node_factory.create_node(
             room_id, ["names", "container"])
-        objects = []
-        description += room_node.names.name + "\n"
+
+        objects = self.node_factory.create_node_list(["names"], ["material", "avatar_type",
+                                   "actions", "close_to",
+                                   "container", "surface",
+                                   "open_container", "holding"], entity_ids = [e.entity_id for e in room_node.container.children])
+
+        print(objects)
+
+        #Handle avatars
+        av_descs = []
+        avatars = objects.subset(["avatar_type"])
+        for av in avatars:
+            av_desc = self.describe_object(av)
+            if av.id == node.id:
+                av_desc = "You"
+            described.append(av.id)
+            if av.has("close_to"):
+                prox = self.get_object_data(av.close_to.n_id)
+                prox_desc = self.describe_object(prox)
+                av_desc = "{} is standing by {}".format(av_desc, prox_desc)
+                described.append(prox.id)
+            else:
+                av_desc = "{} is here".format(av_desc)
+            av_descs.append(av_desc)
         
-        for o in self.group_by_name(room_node.container.children):
-            if o.entity_id != node.id:
-                objects.append(self.describe_object(o.entity_id))
-        if len(objects) == 0:
-            description += 'This room is empty'
-        else:
-            description += 'In this room you see '
-            description += ', '.join(objects)
+        description += room_node.names.name + "\n"
+
+        objects = [o for o in objects if not o.id in described]
+
+        lc_descs = []
+        o_descs = []
+
+        for o in objects:
+            o_desc = self.describe_object(o)
+            described.append(o.id)
+            if o.has("close_to"):
+                prox = self.get_object_data(o.close_to.n_id)
+                prox_desc = self.describe_object(prox)
+                av_desc = "There is {} by {}".format(o_desc, prox_desc)
+                described.append(prox.id)
+                lc_descs.append(o_desc)
+            else:
+                o_descs.append(o_desc)
+        
+
+        o_desc = ". There is a {}.".format(", ".join(o_descs))
+
+        description += '. '.join(av_descs + lc_descs) + o_desc
 
         return description
 

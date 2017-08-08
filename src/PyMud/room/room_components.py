@@ -20,6 +20,9 @@ class Container(Base):
     def __init__(self, entity_id, parent_id=0):
         self.entity_id = entity_id
         self.parent_id = parent_id
+
+    def __repr__(self):
+        return "{}".format(self.children)
         
     
 class Room(Base):

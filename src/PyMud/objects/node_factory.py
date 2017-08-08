@@ -19,7 +19,7 @@ class NodeFactoryDB(object):
         entity = self.component_manager.create_entity(entity_spec)
         return self.create_node(entity.id, components_list)
 
-    def create_node_list(self, component_list, optional=None):
+    def create_node_list(self, component_list, optional=None, entity_ids=None):
         '''
             Create a list of all entities matching the given components. 
             Return a list of Node objects, which contain references to the given components
@@ -43,7 +43,7 @@ class NodeFactoryDB(object):
                 components[c.entity_id][comp_name] = c
 
         results = NodeList(
-            [Node(e, components[e], self.component_manager) for e in entities])
+            [Node(e, components[e], self.component_manager) for e in entities if entity_ids is None or e in entity_ids])
 
         return results
 

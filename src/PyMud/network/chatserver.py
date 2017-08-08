@@ -71,6 +71,18 @@ class MessageBuffer(object):
 
 class BaseHandler(tornado.web.RequestHandler):
 
+    def create_player(self):
+        with self.session_manager.get_session() as session:
+            player = self.player_factory.create_player(
+                MessageBuffer(), self.current_user["id"])
+            self.current_user["player_id"] = player.id
+            avatar_id = self.account_utils.get_previous_avatar_for_player(
+                player.id, session)
+            if avatar_id is None:
+                self.redirect("/charater_select")
+                return
+            self.player_factory.set_player_avatar(player, avatar_id)
+
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
         if not user_json:
@@ -207,9 +219,11 @@ class CharacterSelectHandler(BaseHandler):
 
 class CommandMessageHandler(BaseHandler):
 
-    def initialize(self, command_handler, player_factory):
+    def initialize(self, command_handler, player_factory, session_manager, account_utils):
         self.command_handler = command_handler
         self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.account_utils = account_utils
 
     # @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -220,6 +234,8 @@ class CommandMessageHandler(BaseHandler):
             "body": self.get_argument("body"),
         }
         logging.info(self.current_user)
+        if not self.current_user['id'] in self.player_factory.players:
+            self.create_player()
         player = self.player_factory.get_player(self.current_user["player_id"])
         result = self.command_handler.handle_command(player, message["body"])
         logging.info(result)
@@ -254,17 +270,7 @@ class MessageUpdatesHandler(BaseHandler):
         print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
         if not self.current_user['id'] in self.player_factory.players:
-
-            with self.session_manager.get_session() as session:
-                player = self.player_factory.create_player(
-                    MessageBuffer(), self.current_user["id"])
-                self.current_user["player_id"] = player.id
-                avatar_id = self.account_utils.get_previous_avatar_for_player(
-                    player.id, session)
-                if avatar_id is None:
-                    self.redirect("/charater_select")
-                    return
-                self.player_factory.set_player_avatar(player, avatar_id)
+            self.create_player()
 
         self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
                                                                                               cursor=cursor)

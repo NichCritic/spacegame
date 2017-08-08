@@ -94,11 +94,10 @@ class Writing(object):
 
 class Moving(object):
 
-    def __init__(self, entity_id, x, y, z):
+    def __init__(self, entity_id, target, format):
         self.entity_id = entity_id
-        self.x = x
-        self.y = y
-        self.z = z
+        self.target = target
+        self.format = format
 
 
 class Exiting(object):
@@ -315,9 +314,20 @@ class Type(Base):
         self.entity_id = entity_id
         self.type = type
 
-class Avatar(Base):
-    __compname__ = "avatar"
-    __tablename__ = "avatar"
+class CloseTo(Base):
+    __compname__ = "close_to"
+    __tablename__ = "close_to"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    n_id = Column(String, ForeignKey("entity.id"))
+
+    def __init__(self, entity_id, n_id):
+        self.entity_id = entity_id
+        self.n_id = n_id
+
+class AvatarType(Base):
+    __compname__ = "avatar_type"
+    __tablename__ = "avatar_type"
     id = Column(Integer, primary_key=True)
     entity_id = Column(String, ForeignKey("entity.id"))
 
@@ -368,6 +378,9 @@ class Material(Base):
     def get_material(self):
         return materials.items[self.material_id]
 
+    def __repr__(self):
+        return str(self.get_material())
+
 'Allow the entity to have things placed on top of it'
 
 
@@ -410,7 +423,8 @@ components = {
 
 db_components = {
     "aliases": Aliases,
-    "avatar": Avatar,
+    "avatar_type": AvatarType,
+    "close_to": CloseTo,
     "description": Description,
     "exit": Exit,
     "location": Location,
@@ -418,10 +432,10 @@ db_components = {
     "names": Names,
     "on_hold": OnHold,
     "player_controlled": PlayerControlled,
-    "runes": Runes
+    "runes": Runes,
     "senses": Senses,
     "space": Space,
-    "surface": Surface, 
+    "surface": Surface,
     "temperature": Temperature,
     "type": Type,
 }

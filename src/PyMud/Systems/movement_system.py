@@ -1,37 +1,37 @@
-'''
-Created on 2014-03-22
+from Systems.AVEvent import AVEvent
+from Systems.NetworkMessageSystem import NetworkMessage
 
-@author: Nich
-'''
 
-class MovementSystem(object):
+class MovingSystem(object):
     '''
-    classdocs
+    Generates annoying ticks that everyone with a network connection gets (Debug)
     '''
-
 
     def __init__(self, node_factory):
-        '''
-        Constructor
-        '''
         self.node_factory = node_factory
-    
+
     def get_nodes(self):
-        return self.node_factory.create_node_list(["location", "moving"])
-    
-    def get_path(self):
-        pass
-    def path_clear(self, path):
-        return True
-    
+        return self.node_factory.create_node_list(["location", "moving", "container"])
+
+    def create_av_event_data(self, location, moving, target):
+        event = AVEvent("moving", None, location.detach(),
+                        moving.entity_id, moving.format, target)
+        return event
+
+
     def process(self):
-        nodes = self.get_nodes()
-        for node in nodes:
-            path = self.get_path()
-            if self.path_clear(path):
-                node.location.x = node.moving.x
-                node.location.y = node.moving.y
-                if node.moving.z:
-                    node.location.z = node.moving.z
+        self.nodes = self.get_nodes()
+        for node in self.nodes:
+            for t_name, t_id in node.moving.target.items():
+                node.add_or_update_component(
+                    "close_to", {"n_id": t_id})
+
+                room_node = self.node_factory.create_node(
+                    node.location.room, [])
+                av_event_data = self.create_av_event_data(
+                    node.location, node.moving, t_id)
+                print("Moving system got message from "+node.id)
+                room_node.add_or_attach_component("av_events", None)
+                room_node.av_events.events.append(av_event_data)
+
             node.remove_component("moving")
-                
