@@ -6,7 +6,7 @@ Created on 2013-11-23
 
 
 from contextlib import contextmanager
-
+from itertools import groupby
 
 class NodeFactoryDB(object):
 
@@ -159,3 +159,11 @@ class NodeList(list):
 
     def subset(self, component_list):
         return NodeList([n for n in self if all([n.has(c) for c in component_list])])
+
+
+    def group_by(self, group_fn):
+        groups = []
+        data = sorted(self, key=group_fn, reverse=True)
+        items = [(k, NodeList(v)) for k, v in groupby(data, group_fn)]
+        
+        return dict(items)

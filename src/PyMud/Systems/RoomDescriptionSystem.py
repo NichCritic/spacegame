@@ -7,6 +7,7 @@ Created on 2013-11-27
 from collections import defaultdict
 from Systems.NetworkMessageSystem import NetworkMessage
 from description.description import ObjectDescriber
+import description.description_planner as dp
 from pynlg.lexicon import XMLLexicon
 import os
 
@@ -50,6 +51,23 @@ class DescriptionSystem(object):
     def describe_object(self, obj):
         return self.object_describer.describe_object(obj).realize()
 
+    def describe_room_2(self, room_id, node):
+        described = []
+        description = ""
+        room_node = self.node_factory.create_node(
+            room_id, ["names", "container"])
+
+        objects = self.node_factory.create_node_list(["names"], ["material", "avatar_type",
+                                                                 "actions", "close_to",
+                                                                 "container", "surface",
+                                                                 "open_container", "holding"], entity_ids=[e.entity_id for e in room_node.container.children])
+
+        ss = dp.subdivide(objects, ["material","actions","close_to"])
+
+        print(ss)
+
+        return ""
+
     def describe_room(self, room_id, node):
         described = []
         description = ""
@@ -57,13 +75,13 @@ class DescriptionSystem(object):
             room_id, ["names", "container"])
 
         objects = self.node_factory.create_node_list(["names"], ["material", "avatar_type",
-                                   "actions", "close_to",
-                                   "container", "surface",
-                                   "open_container", "holding"], entity_ids = [e.entity_id for e in room_node.container.children])
+                                                                 "actions", "close_to",
+                                                                 "container", "surface",
+                                                                 "open_container", "holding"], entity_ids=[e.entity_id for e in room_node.container.children])
 
         print(objects)
 
-        #Handle avatars
+        # Handle avatars
         av_descs = []
         avatars = objects.subset(["avatar_type"])
         for av in avatars:
@@ -79,7 +97,7 @@ class DescriptionSystem(object):
             else:
                 av_desc = "{} is here".format(av_desc)
             av_descs.append(av_desc)
-        
+
         description += room_node.names.name + "\n"
 
         objects = [o for o in objects if not o.id in described]
@@ -98,7 +116,6 @@ class DescriptionSystem(object):
                 lc_descs.append(o_desc)
             else:
                 o_descs.append(o_desc)
-        
 
         o_desc = ". There is a {}.".format(", ".join(o_descs))
 
@@ -121,7 +138,8 @@ class NetworkDescriptionSystem():
         for node in nodes:
             msg = ""
             if node.looking.target is None:
-                msg = self.desc_system.describe_room(node.location.room, node)
+                msg = self.desc_system.describe_room(
+                    node.location.room, node)
             else:
                 msg = self.desc_system.describe_object(node.looking.target)
             out_msg = NetworkMessage(node.id, msg)

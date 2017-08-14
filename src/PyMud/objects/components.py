@@ -289,6 +289,9 @@ class Names(Base):
         self.entity_id = entity_id
         self.identifiers = identifiers
 
+    def __repr__(self):
+        return "<"+self.name+">"
+
 
 class Aliases(Base):
     __compname__ = "aliases"

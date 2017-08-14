@@ -1,4 +1,4 @@
-from pynlg.realizer import NounPhrase, VerbPhrase, PrepositionalPhrase, Clause
+from pynlg.realizer import NounConjunction, NounPhrase, VerbPhrase, PrepositionalPhrase, Clause
 from pynlg.lexicon import Noun, Adjective, Verb
 
 
@@ -72,6 +72,33 @@ class ObjectDescriber(object):
         except Exception:
             ret = Adjective(word, category='ADJECTIVE')
         return ret
+
+    def describe(self, data):
+        dtype, groups = data
+        
+        #This code has to exist somewhere...
+        group_nps = []
+
+        for g in groups:
+            first = g[0]
+            material_desc = g[0].material.get_material()['descriptor']
+            material_adj = self.get_adjective(material_desc)
+            nouns = [NounPhrase(self.get_noun(n.names.name, False)) for n in g]
+            nc = NounConjunction(nouns)
+            np = NounPhrase(nc, adjectives=[material_adj])
+            np.add_determiner(self.lex.getWord('the'))
+            group_nps.append(np)
+
+        group_conj = NounConjunction(group_nps)
+        res = NounPhrase(group_conj)
+        
+
+        return res
+
+
+
+
+
 
 
     def describe_object(self, obj):
