@@ -1,0 +1,9 @@
+Lighting
+
+Maybe there's like, two sources, representing the two directions light can travel
+
+Object -> room or room -> object
+
+Scratch that
+
+Have a light component. Objects with the light component generate light. Light works kind of like AV events, where it travels out to the room it's in, then propagates down to the contents of that room

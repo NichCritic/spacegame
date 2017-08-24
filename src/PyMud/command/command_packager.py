@@ -8,7 +8,7 @@ Not sure what I'm doing here yet. The packager needs to be able to find the reso
 @author: Nich
 '''
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 CommandPackage = namedtuple("CommandPackage", "verb_function reqs_dict")
 
@@ -53,7 +53,7 @@ class CommandPackager(object):
             if elemtype == "p_type":
                 reqs["p_type"] = element
             if elemtype == "targets":
-                targets = {}
+                targets = OrderedDict()
                 for t in element:
                     i = command_context["names"].names.index(t)
                     targets[t] = command_context["names"].ids[i]

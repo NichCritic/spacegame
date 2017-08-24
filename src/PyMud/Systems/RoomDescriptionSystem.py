@@ -96,6 +96,16 @@ class DescriptionSystem(object):
                 described.append(prox.id)
             else:
                 av_desc = "{} is here".format(av_desc)
+            if av.container:
+                print('one')
+                for o in av.container.children:
+                    print('two')
+                    o_n = self.get_object_data(o.entity_id)
+                    o_d = self.describe_object(o_n)
+                    if o_n.container.type == 'held':
+                        print("three")
+                        av_desc += " holding {}".format(o_d)
+
             av_descs.append(av_desc)
 
         description += room_node.names.name + "\n"
@@ -117,7 +127,10 @@ class DescriptionSystem(object):
             else:
                 o_descs.append(o_desc)
 
-        o_desc = ". There is a {}.".format(", ".join(o_descs))
+        if o_descs: 
+            o_desc = ". There is a {}.".format(", ".join(o_descs))
+        else:
+            o_desc = "."
 
         description += '. '.join(av_descs + lc_descs) + o_desc
 

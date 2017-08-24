@@ -6,7 +6,7 @@ Created on 2013-11-03
 
 from model.base import Base
 from sqlalchemy import Column, String, Integer, ForeignKey, PickleType, Boolean
-from sqlalchemy.orm import relationship, backref, reconstructor
+from sqlalchemy.orm import relationship, backref
 from objects.materials import materials
 
 
@@ -54,24 +54,18 @@ class Looking(object):
 
 
 class Changing(object):
+
     def __init__(self, entity_id, text, target):
         self.entity_id = entity_id
         self.text = text
         self.target = target
+
 
 class Speaking(object):
 
     def __init__(self, entity_id, text, target, format):
         self.entity_id = entity_id
         self.text = text
-        self.target = target
-        self.format = format
-
-class Casting(object):
-
-    def __init__(self, entity_id, spell, target, format):
-        self.entity_id = entity_id
-        self.spell = spell
         self.target = target
         self.format = format
 
@@ -82,6 +76,7 @@ class Creating(object):
         self.entity_id = entity_id
         self.format = format
         self.name = new_name
+
 
 class Writing(object):
 
@@ -106,29 +101,18 @@ class Exiting(object):
         self.entity_id = entity_id
         self.target = target
 
+
 class Entering(object):
 
     def __init__(self, entity_id, target):
         self.entity_id = entity_id
         self.target = target
 
+
 class Ascending(object):
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
-
-class Holding(object):
-
-    def __init__(self, entity_id, held_entity_id):
-        self.entity_id = entity_id
-        self.held_entity_id = held_entity_id
-
-
-class HeldBy(object):
-
-    def __init__(self, entity_id, holding_entity_id):
-        self.entity_id = entity_id
-        self.holding_entity_id = holding_entity_id
 
 
 class Runes(Base):
@@ -144,6 +128,15 @@ class Runes(Base):
         self.entity_id = entity_id
         self.active = active
         self.runes_list = [] if runes_list is None else runes_list
+
+
+class RuneData():
+
+    def __init__(self, entity_id, rune, covered):
+        self.entity_id = entity_id
+        self.rune = rune
+        self.covered = covered
+
 
 class OnHold(Base):
     __compname__ = "on_hold"
@@ -161,6 +154,7 @@ class OnHold(Base):
         self.timeout = timeout
         self.data = {} if data is None else data
 
+
 class OnHoldTimeout(object):
 
     def __init__(self, entity_id, last_trigger):
@@ -175,12 +169,23 @@ class Taking(object):
         self.target = target
         self.format = format
 
+
+class Putting(object):
+
+    def __init__(self, entity_id, targets, type, format):
+        self.entity_id = entity_id
+        self.targets = targets
+        self.format = format
+        self.type = type
+
+
 class Dropping(object):
 
     def __init__(self, entity_id, target, format):
         self.entity_id = entity_id
         self.target = target
         self.format = format
+
 
 class Exit(Base):
     __compname__ = "exit"
@@ -195,16 +200,12 @@ class Exit(Base):
         self.dest_id = dest_id
 
 
-
 class DetatchedLocation(object):
 
-    def __init__(self, entity_id, room, x, y, z):
+    def __init__(self, entity_id, room):
         self.entity_id = entity_id
         self.room = room
 
-        self.x = x
-        self.y = y
-        self.z = z
 
 class Location(Base):
     __compname__ = "location"
@@ -218,35 +219,42 @@ class Location(Base):
     y = Column(Integer)
     z = Column(Integer)
 
-    def __init__(self, entity_id, room=0, x=0, y=0, z=0):
+    def __init__(self, entity_id, room=0):
         self.entity_id = entity_id
         self.room = room
 
-        self.x = x
-        self.y = y
-        self.z = z
-
     def detach(self):
-        return DetatchedLocation(self.entity_id, self.room, self.x, self.y, self.z)
+        return DetatchedLocation(self.entity_id, self.room)
 
 
-class Space(Base):
-    __compname__ = "space"
-    __tablename__ = "space"
+class Size(Base):
+    __compname__ = "size"
+    __tablename__ = "size"
 
     id = Column(Integer, primary_key=True)
     entity_id = Column(String, ForeignKey("entity.id"))
+    qty = Column(Integer)
 
-    width = Column(Integer)
-    length = Column(Integer)
-    height = Column(Integer)
-
-    def __init__(self, entity_id, width, length, height):
+    def __init__(self, entity_id, qty):
         self.entity_id = entity_id
+        self.qty = qty
 
-        self.width = width
-        self.length = length
-        self.height = height
+
+class Capacity(Base):
+    __compname__ = "capacity"
+    __tablename__ = "capacity"
+
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    n_in = Column(Integer)
+    n_on = Column(Integer)
+    n_under = Column(Integer)
+
+    def __init__(self, entity_id, n_in=0, n_on=0, n_under=0):
+        self.entity_id = entity_id
+        self.n_in = n_in
+        self.n_on = n_on
+        self.n_under = n_under
 
 
 class Temperature(Base):
@@ -260,20 +268,6 @@ class Temperature(Base):
     def __init__(self, entity_id, temperature=0):
         self.entity_id = entity_id
         self.temperature = temperature
-
-
-class Description(Base):
-    __compname__ = "description"
-    __tablename__ = "description"
-
-    id = Column(Integer, primary_key=True)
-    entity_id = Column(String, ForeignKey("entity.id"))
-    description = Column(String)
-
-    def __init__(self, entity_id, description="temp_description"):
-        # todo will have to be replaced with something more robust
-        self.entity_id = entity_id
-        self.description = description
 
 
 class Names(Base):
@@ -290,20 +284,7 @@ class Names(Base):
         self.identifiers = identifiers
 
     def __repr__(self):
-        return "<"+self.name+">"
-
-
-class Aliases(Base):
-    __compname__ = "aliases"
-    __tablename__ = "aliases"
-    id = Column(Integer, primary_key=True)
-    entity_id = Column(String, ForeignKey("entity.id"))
-    alias_id = Column(String)
-
-    def __init__(self, entity_id, alias_id=0):
-        self.name = "temp_name"
-        self.entity_id = entity_id
-        self.alias_id = alias_id
+        return "<" + self.name + ">"
 
 
 class Type(Base):
@@ -317,6 +298,7 @@ class Type(Base):
         self.entity_id = entity_id
         self.type = type
 
+
 class CloseTo(Base):
     __compname__ = "close_to"
     __tablename__ = "close_to"
@@ -327,6 +309,7 @@ class CloseTo(Base):
     def __init__(self, entity_id, n_id):
         self.entity_id = entity_id
         self.n_id = n_id
+
 
 class AvatarType(Base):
     __compname__ = "avatar_type"
@@ -340,9 +323,9 @@ class AvatarType(Base):
 
 class PlayerControlled(Base):
     __compname__ = "player_controlled"
-
     __tablename__ = "player_controlled"
     id = Column(Integer, primary_key=True)
+
     entity_id = Column(String, ForeignKey("entity.id"))
     pid = Column(String)
 
@@ -384,39 +367,80 @@ class Material(Base):
     def __repr__(self):
         return str(self.get_material())
 
-'Allow the entity to have things placed on top of it'
 
+class Health(Base):
+    __compname__ = "health"
+    __tablename__ = "health"
 
-class Surface(Base):
-    __compname__ = 'surface'
-    __tablename__ = 'surface'
     id = Column(Integer, primary_key=True)
-    parent_id = Column(Integer, ForeignKey('surface.id'))
     entity_id = Column(String, ForeignKey("entity.id"))
-    children = relationship("Surface",
+    health = Column(Integer)
+    max_health = Column(Integer)
+
+    def __init__(self, entity_id, health, max_health=100):
+        self.entity_id = entity_id
+        self.health = health
+        self.max_health = max_health
+
+
+class Mana(Base):
+    __compname__ = "mana"
+    __tablename__ = "mana"
+
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    mana = Column(Integer)
+    max_mana = Column(Integer)
+
+    def __init__(self, entity_id, mana, max_mana=100):
+        self.entity_id = entity_id
+        self.mana = mana
+        self.max_mana = max_mana
+
+
+class ChangeHealth(object):
+
+    def __init__(self, entity_id, amount):
+        self.entity_id = entity_id
+        self.amount = amount
+
+
+class Container(Base):
+
+    __tablename__ = 'container'
+    id = Column(Integer, primary_key=True)
+    parent_id = Column(Integer, ForeignKey('container.id'))
+    entity_id = Column(String, ForeignKey("entity.id"))
+    type = Column(String)  # in, on, under
+    children = relationship("Container",
                             backref=backref('parent', remote_side=[id])
                             )
 
-    def __init__(self, entity_id, parent_id=0):
+    def __init__(self, entity_id, parent_id=0, type="in"):
         self.entity_id = entity_id
         self.parent_id = parent_id
+        self.type = type
+
+    def __repr__(self):
+        return "{}: {}".format(self.id, self.children)
+
 
 components = {
     "ascending": Ascending,
     "av_events": AVEvents,
     "av_messages": AVMessages,
-    "casting": Casting,
     "changing": Changing,
+    "change_health": ChangeHealth,
     "creating": Creating,
     "dropping": Dropping,
     "entering": Entering,
     "exiting": Exiting,
-    "held_by": HeldBy,
-    "holding": Holding,
     "looking": Looking,
     "moving": Moving,
     "network_messages": NetworkMessages,
     "on_hold_timeout": OnHoldTimeout,
+    "putting": Putting,
+    "rune_data": RuneData,
     "speaking": Speaking,
     "taking": Taking,
     "visible_names": VisibleNames,
@@ -425,20 +449,19 @@ components = {
 }
 
 db_components = {
-    "aliases": Aliases,
     "avatar_type": AvatarType,
     "close_to": CloseTo,
-    "description": Description,
+    "container": Container,
     "exit": Exit,
+    "health": Health,
     "location": Location,
+    "mana": Mana,
     "material": Material,
     "names": Names,
     "on_hold": OnHold,
     "player_controlled": PlayerControlled,
     "runes": Runes,
     "senses": Senses,
-    "space": Space,
-    "surface": Surface,
     "temperature": Temperature,
     "type": Type,
 }

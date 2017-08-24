@@ -30,13 +30,9 @@ class CreatingSystem(object):
         for node in nodes:
             room = node.location.room
             room_node = self.node_factory.create_node(room, ["container"])
-            x = node.location.x
-            y = node.location.y
-            z = node.location.z
             obj = self.node_factory.create_new_node({
                 "container": {"parent_id": room_node.container.id},
-                "location": {"room": room, "x": x, "y": y, "z": z},
-                "description": {"description": "A new glowing entity"},
+                "location": {"room": room},
                 "names": {'name': node.creating.name, 'identifiers': node.creating.name},
 
             })

@@ -50,7 +50,7 @@ def build_grammar(names, runes, verbs):
             write = "write"
             verb = (adverb s verb) / {verbs_format}
             noun = {nouns_format}
-            preposition = "to" / "through" / "at" / "on"
+            preposition = "to" / "through" / "at" / "on" / "in"
             adverb = "quickly"
             text = ~".*"
             rune = {runes_format}

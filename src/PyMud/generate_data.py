@@ -35,57 +35,11 @@ def main():
     node_factory = NodeFactoryDB(comp_manager)
 
     world_node = node_factory.create_new_node({
+        "names":{"name":"world", "identifiers":"world"},
         "container": {}
     })
 
-    castle_node = node_factory.create_new_node({
-        "names": {"name":"Castle", "identifiers":"castle"},
-        "container": {"parent_id": world_node.container.id}
-    }
-
-    )
-
-    room_factory = RoomFactory(comp_manager)
-
-    gcr = room_factory.create_room(name="Gryffindor Common Room",
-                                   width=20,
-                                   length=20,
-                                   height=20, container_id=castle_node.container.id)
-
-    gcr_node = node_factory.create_node(gcr, ['container'])
-
-    rcr = room_factory.create_room(name="Ravenclaw Common Room",
-                                   width=20,
-                                   length=20,
-                                   height=20, container_id=castle_node.container.id)
-
-    rcr_node = node_factory.create_node(rcr, ['container'])
-
-    chair = comp_manager.create_entity({
-        'names': {'name': 'chair', 'identifiers': 'chair'},
-        'material': {'material_id': materials.wood},
-        'container': {'parent_id': gcr_node.container.id},
-        'on_hold': {'callback': 'teleport', 'data': {'new_location': rcr}, 'timeout':5}
-    })
-
-    door1 = comp_manager.create_entity({
-        'names': {'name': 'door', 'identifiers': 'door'},
-        'container': {'parent_id': gcr_node.container.id},
-        'exit': {'dest_id' : rcr}
-    })
-
-    table = comp_manager.create_entity({
-        'names': {'name': 'table', 'identifiers': 'table'},
-        'material': {'material_id': materials.crystal},
-        'container': {'parent_id': rcr_node.container.id},
-        'on_hold': {'callback': 'teleport', 'data': {'new_location': gcr}, 'timeout':5}
-    })
-
-    door1 = comp_manager.create_entity({
-        'names': {'name': 'door', 'identifiers': 'door'},
-        'container': {'parent_id': rcr_node.container.id},
-        'exit': {'dest_id' : gcr}
-    })
+    
 
     session.commit()
     session.close()

@@ -86,7 +86,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
         if not user_json:
-            return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id": "11111", "given_name": 'Nicholas', "acct_id": "1d9867d5-9b90-4fab-bf3e-1c1c99d1bf55", "player_id": "11111"}
+            return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id": "11111", "given_name": 'Nicholas', "acct_id": 1, "player_id": "11111"}
         return tornado.escape.json_decode(user_json)
 
 
@@ -161,12 +161,12 @@ class CharacterSelectHandler(BaseHandler):
             for i, avatar in enumerate(avatars):
                 id = avatar.avatar_id
                 avatar_node = self.node_factory.create_node(
-                    id, ['names', 'location', 'description'], ['player_controlled'])
+                    id, ['names', 'location'], ['player_controlled'])
                 name = avatar_node.names.name
                 location_node = self.node_factory.create_node(
                     avatar_node.location.room, ['names'])
                 location = location_node.names.name
-                description = avatar_node.description.description
+                description = "temp_description"
 
                 if avatar_node.has('player_controlled'):
                     avatar_node.remove_component('player_controlled')

@@ -67,6 +67,26 @@ def write(player_node, rune, targets, **kwargs):
     player_node.add_or_attach_component("writing", {"target":targets, "rune":rune, "format":verbs["write"]["messages"]})
 
 
+def put_in(player_node, targets, p_type, **kwargs):
+    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put in"]["messages"]})
+
+
+def put_on(player_node, targets, p_type, **kwargs):
+    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put on"]["messages"]})
+
+
+def put_under(player_node, targets, p_type, **kwargs):
+    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put under"]["messages"]})
+
+
+def put(player_node, targets, p_type, **kwargs):
+    if p_type == 'in':
+        put_in(player_node, targets, p_type, **kwargs)
+    if p_type == 'on':
+        put_on(player_node, targets, p_type, **kwargs)
+    if p_type == 'under':
+        put_under(player_node, targets, p_type, **kwargs)
+
 verbs = {"say": {
 
     "function": say,
@@ -136,7 +156,20 @@ verbs = {"say": {
                                                 "{player} dropped {target}"])
                                             ]},
     "help": {"function": help},
-    "isa": {"function": isa}
+    "isa": {"function": isa},
+    "put": {"function": put},
+    "put in": {"messages":[([("visibility", 60), ("is_caller")], ["You put the {subject} in the {object}"]),
+                                            ([("visibility", 60)], [
+                                                "{player} put the {subject} in the {object}"])
+                                            ]},
+    "put on": {"messages": [([("visibility", 60), ("is_caller")], ["You put the {subject} on the {object}"]),
+                                            ([("visibility", 60)], [
+                                                "{player} put the {subject} on the {object}"])
+                                            ]},
+    "put under": {"messages": [([("visibility", 60), ("is_caller")], ["You put the {subject} under the {object}"]),
+                                            ([("visibility", 60)], [
+                                                "{player} put the {subject} under the {object}"])
+                                            ]},
 
 
 

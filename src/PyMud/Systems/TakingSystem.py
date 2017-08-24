@@ -19,10 +19,7 @@ class TakingSystem(object):
         return event
 
     def object_is_held(self, node):
-        return node.entity_has('held_by')
-
-    def player_is_holding(self, node):
-        return node.entity_has('holding')
+        return node.container.type == 'held'
 
     def process(self):
         self.nodes = self.get_nodes()
@@ -32,37 +29,25 @@ class TakingSystem(object):
                 taken_object = self.node_factory.create_node(
                     t_id, ['names', 'container'])
                 if self.object_is_held(taken_object):
-                    taken_object.add_or_attach_component('held_by', None)
-                    out_msg = NetworkMessage(node.id, "You can't pick up the {thing} because it's held by {person}".format(thing=taken_object.names.name, person=taken_object.held_by.holding_entity_id))
+                    out_msg = NetworkMessage(node.id, "You can't pick up the {thing} because it's held by {person}".format(
+                        thing=taken_object.names.name, person=taken_object.container.parent.entity_id))
                     node.add_or_attach_component("network_messages", {})
                     node.network_messages.msg.append(out_msg)
 
-                elif self.player_is_holding(node):
-
-                    node.add_or_attach_component('holding', None)
-                    out_msg = NetworkMessage(node.id, "You can't pick up the {thing} because you are already holding {thing2}".format(thing=taken_object.names.name, thing2 = node.holding.held_entity_id))
-                    node.add_or_attach_component("network_messages", {})
-                    node.network_messages.msg.append(out_msg)
+                # Todo: Capacity
 
                 else:
-                    taken_object.add_or_update_component(
-                        "held_by", {"holding_entity_id": node.id})
-
-                    #Pick up the object so that it moves with the player and doesn't appear in the room
+                    # Pick up the object so that it moves with the player and
+                    # doesn't appear in the room
                     taken_object.container.parent_id = node.container.id
+                    taken_object.container.type = "held"
 
                     room_node = self.node_factory.create_node(
                         node.location.room, [])
                     av_event_data = self.create_av_event_data(
                         node.location, node.taking, t_id)
-                    print("Taking system got message from "+node.id)
+                    print("Taking system got message from " + node.id)
                     room_node.add_or_attach_component("av_events", None)
                     room_node.av_events.events.append(av_event_data)
-
-                    node.add_or_update_component(
-                        "holding", {"held_entity_id": t_id})
-
-            
-                    
 
             node.remove_component("taking")

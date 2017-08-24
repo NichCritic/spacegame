@@ -31,8 +31,18 @@ class AscendingSystem(object):
         nodes = self.get_nodes()
         for node in nodes:
 
+            print("node.location.room before: {}".format(node.location.room))
+            print("node.container.parent_id before: {}".format(node.container.parent_id))
+
+            print(node.container.parent.id)
+            print(node.container.parent.parent.id)
+            print(node.container.parent.parent.parent.id)
+
             node.location.room = node.container.parent.parent.entity_id
-            node.container.parent_id = node.container.parent.id
+            node.container.parent_id = node.container.parent.parent_id
+
+            print("node.location.room after: {}".format(node.location.room))
+            print("node.container.parent_id after: {}".format(node.container.parent_id))
 
             room_node = self.node_factory.create_node(
                 node.location.room, ["names"])

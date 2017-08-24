@@ -11,7 +11,7 @@ class DroppingSystem(object):
         self.node_factory = node_factory
 
     def get_nodes(self):
-        return self.node_factory.create_node_list(["location", "dropping", "container"], ["holding"])
+        return self.node_factory.create_node_list(["location", "dropping", "container"])
 
     def create_av_event_data(self, location, dropping, target):
         event = AVEvent("dropping", None, location.detach(),
@@ -19,16 +19,10 @@ class DroppingSystem(object):
         return event
 
     def object_is_held_by(self, object, held_by):
-        print('Checking heldby')
-        print('--object--')
-        print(object)
-        print('--held_by--')
-        print(held_by)
-        if object.has('held_by') and held_by.has('holding'):
-            print("components are in place")
-            if object.held_by.holding_entity_id == held_by.id and held_by.holding.held_entity_id == object.id:
+        if object.container.type == 'held':
+            if object.container.parent_id == held_by.container.id:
                 return True
-            print("{0} {1}".format(object.held_by.holding_entity_id, held_by.holding.held_entity_id))
+        return False
 
 
     def process(self):
@@ -37,10 +31,8 @@ class DroppingSystem(object):
             for t_name, t_id in node.dropping.target.items():
                 print(t_id)
 
-                dropped_object = self.node_factory.create_node(t_id, ['names', 'container'], ['held_by'])
+                dropped_object = self.node_factory.create_node(t_id, ['names', 'container'])
                 if self.object_is_held_by(dropped_object, node):
-
-                    dropped_object.remove_component("held_by")
 
                     room_node = self.node_factory.create_node(
                         node.location.room, [])
@@ -50,16 +42,9 @@ class DroppingSystem(object):
                     room_node.add_or_attach_component("av_events", None)
                     room_node.av_events.events.append(av_event_data)
 
-                    node.remove_component("holding")
                     #Put the object in the same room as the node
                     dropped_object.container.parent_id = node.container.parent_id
+                    dropped_object.container.type = 'in'
 
-                else:
-                    if dropped_object.has('held_by'):
-                        dropped_object.add_or_attach_component('held_by', None)
-                        out_msg = NetworkMessage(node.id, "You can't drop the {thing}".format(
-                            thing=dropped_object.names.name))
-                        node.add_or_attach_component("network_messages", {})
-                        node.network_messages.msg.append(out_msg)
 
             node.remove_component("dropping")
