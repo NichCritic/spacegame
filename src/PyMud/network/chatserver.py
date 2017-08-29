@@ -86,13 +86,16 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
         if not user_json:
-            return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id": "11111", "given_name": 'Nicholas', "acct_id": 1, "player_id": "11111"}
+            return None
+        # return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id":
+        # "11111", "given_name": 'Nicholas', "acct_id": 1, "player_id":
+        # "11111"}
         return tornado.escape.json_decode(user_json)
 
 
 class MainHandler(BaseHandler):
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     def get(self):
         self.render("index.html", messages=[])
 
@@ -104,11 +107,11 @@ class CharacterCreateHandler(BaseHandler):
         self.player_factory = player_factory
         self.session_manager = session_manager
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     def get(self):
         self.render("character_create.html")
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     def post(self):
         # print(self.current_user)
         acct_id = self.current_user["acct_id"]
@@ -144,7 +147,7 @@ class CharacterSelectHandler(BaseHandler):
         self.av = None
         self.session_manager = session_manager
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     def get(self):
         with self.session_manager.get_session() as session:
             acc_id = self.current_user["acct_id"]
@@ -181,7 +184,7 @@ class CharacterSelectHandler(BaseHandler):
 
             self.render("character_select.html", characters=self.av)
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         # print(self.request.body)
@@ -225,7 +228,7 @@ class CommandMessageHandler(BaseHandler):
         self.session_manager = session_manager
         self.account_utils = account_utils
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         message = {
@@ -265,7 +268,7 @@ class MessageUpdatesHandler(BaseHandler):
         self.session_manager = session_manager
         self.node_factory = node_factory
 
-    # @tornado.web.authenticated
+    @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
         print(self.current_user["id"])

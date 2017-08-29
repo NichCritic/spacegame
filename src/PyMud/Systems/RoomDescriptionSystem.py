@@ -62,7 +62,7 @@ class DescriptionSystem(object):
                                                                  "container", "surface",
                                                                  "open_container", "holding"], entity_ids=[e.entity_id for e in room_node.container.children])
 
-        ss = dp.subdivide(objects, ["material","actions","close_to"])
+        ss = dp.subdivide(objects, ["material", "actions", "close_to"])
 
         print(ss)
 
@@ -85,25 +85,22 @@ class DescriptionSystem(object):
         av_descs = []
         avatars = objects.subset(["avatar_type"])
         for av in avatars:
-            av_desc = self.describe_object(av)
+            av_desc = self.describe_object(av) + ' is'
             if av.id == node.id:
-                av_desc = "You"
+                av_desc = "You are"
             described.append(av.id)
             if av.has("close_to"):
                 prox = self.get_object_data(av.close_to.n_id)
                 prox_desc = self.describe_object(prox)
-                av_desc = "{} is standing by {}".format(av_desc, prox_desc)
+                av_desc = "{} standing by {}".format(av_desc, prox_desc)
                 described.append(prox.id)
             else:
-                av_desc = "{} is here".format(av_desc)
+                av_desc = "{} here".format(av_desc)
             if av.container:
-                print('one')
                 for o in av.container.children:
-                    print('two')
                     o_n = self.get_object_data(o.entity_id)
                     o_d = self.describe_object(o_n)
                     if o_n.container.type == 'held':
-                        print("three")
                         av_desc += " holding {}".format(o_d)
 
             av_descs.append(av_desc)
@@ -127,7 +124,7 @@ class DescriptionSystem(object):
             else:
                 o_descs.append(o_desc)
 
-        if o_descs: 
+        if o_descs:
             o_desc = ". There is a {}.".format(", ".join(o_descs))
         else:
             o_desc = "."
