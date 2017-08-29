@@ -7,10 +7,11 @@ import unittest
 from command.command_packager import CommandPackager
 from command.commands import verbs
 
+
 class CommandPackagerTest(unittest.TestCase):
 
     def setUp(self):
-        self.command_packager = CommandPackager(verbs)
+        self.command_packager = CommandPackager(verbs, {})
 
     def tearDown(self):
         pass

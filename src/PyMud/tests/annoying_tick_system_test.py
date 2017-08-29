@@ -13,19 +13,16 @@ from objects.component_manager import ComponentManager
 
 class AnnoyingTickSystemTest(unittest.TestCase):
 
-
     def setUp(self):
         component_manager = ComponentManager([])
         node_factory = NodeFactoryDB({}, component_manager, None)
         self.ats = AnnoyingTickSystem(Queue(), node_factory)
 
-
     def tearDown(self):
         pass
 
-
-    #def testGetNodes(self):
-    #   self.ats.get_ids() 
+    # def testGetNodes(self):
+    #   self.ats.get_ids()
 
 
 if __name__ == "__main__":
