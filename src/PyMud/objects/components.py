@@ -46,6 +46,14 @@ class VisibleNames(object):
         self.ids = []
 
 
+class Activating(object):
+
+    def __init__(self, entity_id, format, target=None):
+        self.entity_id = entity_id
+        self.target = target
+        self.format = format
+
+
 class Looking(object):
 
     def __init__(self, entity_id, target=None):
@@ -132,10 +140,19 @@ class Runes(Base):
 
 class RuneData():
 
-    def __init__(self, entity_id, rune, covered):
+    def __init__(self, entity_id, runes, covered):
         self.entity_id = entity_id
-        self.rune = rune
+        self.runes = runes
+        self.rune_position = 0
+        self.rune_number = 0
         self.covered = covered
+        self.context = {}
+
+
+class RuneActive():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
 
 
 class OnHold(Base):
@@ -377,9 +394,9 @@ class Health(Base):
     health = Column(Integer)
     max_health = Column(Integer)
 
-    def __init__(self, entity_id, health, max_health=100):
+    def __init__(self, entity_id, health=None, max_health=100):
         self.entity_id = entity_id
-        self.health = health
+        self.health = max_health if health is None else health
         self.max_health = max_health
 
 
@@ -392,15 +409,15 @@ class Mana(Base):
     mana = Column(Integer)
     max_mana = Column(Integer)
 
-    def __init__(self, entity_id, mana, max_mana=100):
+    def __init__(self, entity_id, mana=None, max_mana=100):
         self.entity_id = entity_id
-        self.mana = mana
+        self.mana = max_mana if mana is None else mana
         self.max_mana = max_mana
 
 
 class ChangeHealth(object):
 
-    def __init__(self, entity_id, amount):
+    def __init__(self, entity_id, amount=0):
         self.entity_id = entity_id
         self.amount = amount
 
@@ -426,6 +443,7 @@ class Container(Base):
 
 
 components = {
+    "activating": Activating,
     "ascending": Ascending,
     "av_events": AVEvents,
     "av_messages": AVMessages,
@@ -440,6 +458,7 @@ components = {
     "network_messages": NetworkMessages,
     "on_hold_timeout": OnHoldTimeout,
     "putting": Putting,
+    "rune_active": RuneActive,
     "rune_data": RuneData,
     "speaking": Speaking,
     "taking": Taking,

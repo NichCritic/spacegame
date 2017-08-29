@@ -57,3 +57,31 @@ td {
   z-index: 99;
   color:white;
 }
+
+.progress-bar {
+  background-color: whiteSmoke;
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+
+  width: 125px;
+  height: 10px;
+  
+  position: relative;
+  display: inline-block;
+}
+  
+.progress-bar > span {
+  border-radius: 2px;
+  height:100%;
+
+  display: block;
+  text-indent: -9999px;
+}
+
+.health-bar > span {
+  background-color: red
+}
+
+.mana-bar > span {
+  background-color: blue
+}

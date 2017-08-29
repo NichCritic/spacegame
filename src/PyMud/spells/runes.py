@@ -1,46 +1,69 @@
+from Systems.AVEvent import AVEvent
+from Systems.NetworkMessageSystem import NetworkMessage
 
 
 class Rune(object):
 
-    def __init__(self, node, next=None):
-        self.mana = 0
-        self.max_mana = 100
-        self.next = next
-        self.active = False
-        self.node = node
-
-    def on_charged(self):
-        print("Oncharged calleds")
-        if self.next:
-            self.next.mana = self.mana
-            self.mana = 0
-            self.next.release()
-
-    def add_next(self, n):
-        if self.next:
-            self.next.add_next(n)
-        else:
-            self.next = n
-
-    def activate(self):
-        if not self.active:
-            self.active = True
-            if self.mana > 0:
-                self.release()
-            else:
-                self.acquire()
+    def __init__(self, node_factory):
+        self.node_factory = node_factory
 
 
 class Luv(Rune):
 
-    def acquire(self):
-        self.node.add_or_attach_component(
-            'on_hold', {'callback': 'luv_aq', 'data': {}, 'timeout': 5})
+    def top(self, node_id, ctx):
+        print("Top")
+        if 'target' not in ctx:
+            node = self.node_factory.create_node(node_id, [], ['container'])
+            if node.has('container') and node.container.type == 'held':
+                ctx['target'] = node.container.parent.entity_id
+                return ('down')
+            else:
+                return ('stay')
+        else:
+            return ('down')
 
-    def release(self):
-        print('Luv release {}'.format(self.node))
-        self.node.add_or_attach_component(
-            'on_hold', {'callback': 'luv_rel', 'data': {}, 'timeout': 5})
+    def mid(self, node_id, ctx):
+        print("Mid")
+        if 'target' not in ctx:
+            return ('up')
+        target = self.node_factory.create_node(ctx['target'], [], ['mana'])
+        node = self.node_factory.create_node(node_id, ['names'])
+
+        node.add_or_attach_component('mana', {})
+
+        if target.has('mana'):
+            amt = max(target.mana.mana, 5)
+            target.mana.mana -= amt
+            node.mana.mana += amt
+
+            out_msg = NetworkMessage(
+                target.id, f"A luv rune on {node.names.name} flickers and you lose {amt} mana")
+            target.add_or_attach_component("network_messages", {})
+            target.network_messages.msg.append(out_msg)
+            return ('left')
+        del ctx['target']
+        return ('up')
+
+    def bottom(self, node_id, ctx):
+        if 'target' not in ctx:
+            return ('down')
+
+        target = self.node_factory.create_node(ctx['target'], [], ['health'])
+        node = self.node_factory.create_node(ctx['target'], [], ['mana'])
+
+        if not target.has('health') or not node.has('mana'):
+            del ctx['target']
+            return ('down')
+
+        amt = min(node.mana.mana, 10)
+        node.mana.mana -= amt
+        target.add_or_attach_component('change_health', {})
+        target.change_health.amount += amt
+        out_msg = NetworkMessage(
+            target.id, f"A luv rune on {held_node.names.name} glows green for a brief moment")
+        target.add_or_attach_component("network_messages", {})
+        target.network_messages.msg.append(out_msg)
+        return ('right')
 
 
 class Tir(Rune):

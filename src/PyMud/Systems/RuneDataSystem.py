@@ -15,21 +15,17 @@ class CreateRuneData(System):
 
     def handle(self, node):
         if not node.has('rune_data'):
-            head = None
+            runes = []
             for id in node.runes.runes_list:
                 rn_cls = self.lookup(id)
-                rn = rn_cls(node)
-                if head is None:
-                    head = rn
-                    head.activate()
-                else:
-                    head.add_next(rn)
+                rn = rn_cls(self.node_factory)
+                runes.append(rn)
             node.add_component(
-                'rune_data', {'rune': head, 'covered': node.runes.runes_list})
+                'rune_data', {'runes': runes, 'covered': node.runes.runes_list})
         else:
             # print(node.rune_data.covered, node.runes.runes_list)
             for new, _ in self.newest(node.rune_data.covered, node.runes.runes_list):
                 rn_cls = self.lookup(new)
-                rn = rn_cls(node)
-                node.rune_data.rune.add_next(rn)
+                rn = rn_cls(self.node_factory)
+                node.rune_data.runes.append(rn)
             node.rune_data.covered = node.runes.runes_list

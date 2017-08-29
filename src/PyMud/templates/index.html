@@ -16,6 +16,16 @@
           {% module Template("message.html", message=message) %}
         {% end %}
       </div>
+      <div>
+        <div class="health-bar progress-bar">
+          <span style="width: 80%;">Progress: 80%</span>
+        </div>
+        
+        <div class="mana-bar progress-bar">
+          <span style="width: 80%;">Progress: 80%</span>
+        </div>
+
+      </div>
       <div id="input">
         <form action="/a/message/new" method="post" id="messageform">
           <table>

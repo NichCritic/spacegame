@@ -46,7 +46,7 @@ def move(player_node, targets, p_type, **kwargs):
 
 def move_to(player_node, targets, **kwargs):
     player_node.add_component(
-        "moving", {"target":targets, "format":verbs["move to"]["messages"]})
+        "moving", {"target": targets, "format": verbs["move to"]["messages"]})
 
 
 def move_through(player_node, targets, **kwargs):
@@ -63,20 +63,25 @@ def help(player_node, **kwargs):
     player_node.add_or_attach_component("network_messages", {})
     player_node.network_messages.msg.append(out_msg)
 
+
 def write(player_node, rune, targets, **kwargs):
-    player_node.add_or_attach_component("writing", {"target":targets, "rune":rune, "format":verbs["write"]["messages"]})
+    player_node.add_or_attach_component(
+        "writing", {"target": targets, "rune": rune, "format": verbs["write"]["messages"]})
 
 
 def put_in(player_node, targets, p_type, **kwargs):
-    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put in"]["messages"]})
+    player_node.add_or_attach_component("putting", {
+                                        "targets": targets, "type": p_type, "format": verbs["put in"]["messages"]})
 
 
 def put_on(player_node, targets, p_type, **kwargs):
-    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put on"]["messages"]})
+    player_node.add_or_attach_component("putting", {
+                                        "targets": targets, "type": p_type, "format": verbs["put on"]["messages"]})
 
 
 def put_under(player_node, targets, p_type, **kwargs):
-    player_node.add_or_attach_component("putting", {"targets":targets, "type":p_type, "format":verbs["put under"]["messages"]})
+    player_node.add_or_attach_component("putting", {
+                                        "targets": targets, "type": p_type, "format": verbs["put under"]["messages"]})
 
 
 def put(player_node, targets, p_type, **kwargs):
@@ -86,6 +91,11 @@ def put(player_node, targets, p_type, **kwargs):
         put_on(player_node, targets, p_type, **kwargs)
     if p_type == 'under':
         put_under(player_node, targets, p_type, **kwargs)
+
+
+def activate(player_node, targets, **kwargs):
+    player_node.add_or_attach_component(
+        "activating", {"target": targets, "format": verbs["activate"]["messages"]})
 
 verbs = {"say": {
 
@@ -112,14 +122,14 @@ verbs = {"say": {
     "look": {
     "function": look,
 },
-"write": {
+    "write": {
     "function": write, "messages": [([("visibility", 60), ("is_caller")], ["You inscribe a rune on {target}"]),
-                                            ([("visibility", 60)], [
-                                                "{player} inscribes a rune on {target}"])
-                                            ]
+                                    ([("visibility", 60)], [
+                                        "{player} inscribes a rune on {target}"])
+                                    ]
 },
     "go": {
-      "function": move
+    "function": move
 },
     "move": {
     "function": move,
@@ -128,9 +138,9 @@ verbs = {"say": {
     "move to": {
     "function": move_to,
     "messages": [([("visibility", 60), ("is_caller")], ["You move to {target}"]),
-                                            ([("visibility", 60)], [
-                                                "{player} moves by {target}"])
-                                            ]
+                 ([("visibility", 60)], [
+                     "{player} moves by {target}"])
+                 ]
 },
     "move through": {
     "function": move_through,
@@ -158,19 +168,25 @@ verbs = {"say": {
     "help": {"function": help},
     "isa": {"function": isa},
     "put": {"function": put},
-    "put in": {"messages":[([("visibility", 60), ("is_caller")], ["You put the {subject} in the {object}"]),
-                                            ([("visibility", 60)], [
-                                                "{player} put the {subject} in the {object}"])
-                                            ]},
+    "put in": {"messages": [([("visibility", 60), ("is_caller")], ["You put the {subject} in the {object}"]),
+                            ([("visibility", 60)], [
+                                "{player} put the {subject} in the {object}"])
+                            ]},
     "put on": {"messages": [([("visibility", 60), ("is_caller")], ["You put the {subject} on the {object}"]),
-                                            ([("visibility", 60)], [
-                                                "{player} put the {subject} on the {object}"])
-                                            ]},
+                            ([("visibility", 60)], [
+                                "{player} put the {subject} on the {object}"])
+                            ]},
     "put under": {"messages": [([("visibility", 60), ("is_caller")], ["You put the {subject} under the {object}"]),
-                                            ([("visibility", 60)], [
-                                                "{player} put the {subject} under the {object}"])
-                                            ]},
+                               ([("visibility", 60)], [
+                                   "{player} put the {subject} under the {object}"])
+                               ]},
 
+    "activate": {
+    "function": activate,
+    "messages": [([("visibility", 60), ("is_caller")], ["You activate the {target}"]),
+                 ([("visibility", 60)], [
+                     "{player} activates the {target}"])
+                 ]},
 
 
 

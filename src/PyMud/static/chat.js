@@ -118,11 +118,46 @@ var updater = {
         if (!response.messages) return;
         updater.cursor = response.cursor;
         var messages = response.messages;
+        var health = response.health;
+        var max_health= response.max_health;
+        var mana = response.mana;
+        var max_mana= response.max_mana;
         updater.cursor = messages[messages.length - 1].id;
         console.log(messages.length, "new messages, cursor:", updater.cursor);
         for (var i = 0; i < messages.length; i++) {
             updater.showMessage(messages[i]);
         }
+        updater.updateHealth(health, max_health);
+        updater.updateMana(mana, max_mana);
+    },
+
+    updateHealth: function(health, max_health) {
+        var min = Math.min;
+        var max = Math.max;
+        var ratio;
+        if(max_health === 0){
+            ratio = 0
+        } else {
+            ratio = health / max_health
+        }
+        ratio = max(min(ratio, 1), 0);
+        var bar = $(".health-bar > span")
+        bar.animate({width: Math.floor(ratio*100)+'%'}, 500)
+    },
+
+    updateMana: function(mana, max_mana){
+        var min = Math.min;
+        var max = Math.max;
+        var ratio;
+        if(max_mana === 0){
+            ratio = 0
+        } else {
+            ratio = mana / max_mana
+        }
+        ratio = max(min(ratio, 1), 0);
+        var bar = $(".mana-bar > span")
+        bar.animate({width: Math.floor(ratio*100)+'%'}, 500)
+        
     },
 
     showMessage: function(message) {

@@ -258,11 +258,12 @@ class CommandMessageHandler(BaseHandler):
 
 class MessageUpdatesHandler(BaseHandler):
 
-    def initialize(self, player_factory, account_utils, session_manager):
+    def initialize(self, player_factory, account_utils, session_manager, node_factory):
         # TODO: This seems strange
         self.player_factory = player_factory
         self.account_utils = account_utils
         self.session_manager = session_manager
+        self.node_factory = node_factory
 
     # @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -279,7 +280,23 @@ class MessageUpdatesHandler(BaseHandler):
         # Closed client connection
         if self.request.connection.stream.closed():
             return
-        self.finish(dict(messages=messages))
+        with self.session_manager.get_session():
+            avatar_id = self.player_factory.players[
+                self.current_user["id"]].avatar_id
+            avatar = self.node_factory.create_node(
+                avatar_id, ["health", "mana"])
+            health = avatar.health.health
+            max_health = avatar.health.max_health
+            mana = avatar.mana.mana
+            max_mana = avatar.mana.max_mana
+
+        self.finish(dict(
+            messages=messages,
+            health=health,
+            max_health=max_health,
+            mana=mana,
+            max_mana=max_mana
+        ))
 
     def on_connection_close(self):
         self.player_factory.players[self.current_user[
