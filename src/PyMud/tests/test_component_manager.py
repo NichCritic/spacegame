@@ -57,6 +57,32 @@ class TestComponent5(object):
         self.some_string = some_string
 
 
+class TestComponent7(object):
+    __compname__ = "test_component7"
+
+    def __init__(self, entity_id, some_string=None):
+        self.entity_id = entity_id
+        self.some_string = some_string
+
+
+class TestComponent8(object):
+
+    __compname__ = "test_component8"
+
+    def __init__(self, entity_id, some_string=None):
+        self.entity_id = entity_id
+        self.some_string = some_string
+
+
+class TestComponent9(object):
+
+    __compname__ = "test_component9"
+
+    def __init__(self, entity_id, some_string=None):
+        self.entity_id = entity_id
+        self.some_string = some_string
+
+
 class Test(unittest.TestCase):
 
     def setUp(self):
@@ -65,10 +91,14 @@ class Test(unittest.TestCase):
                             "test_component1": TestComponent1,
                             "test_component2": TestComponent2,
                             "test_component3": TestComponent3,
+                            "test_component8": TestComponent8,
+
                             }
         self.components2 = {
             "test_component4": TestComponent4,
             "test_component5": TestComponent5,
+            "test_component7": TestComponent7,
+            "test_component9": TestComponent9,
         }
 
         self.component_source1 = ArrayComponentSource(self.components1)
@@ -113,8 +143,54 @@ class Test(unittest.TestCase):
                                                                   "test_component4": {"some_string": "E5C4"},
                                                                   })
 
+        # Component only in second source
+        self.test_entity6 = self.component_manager.create_entity(
+            {'test_component7': {"some_string": "E6C7"}})
+
+        self.test_entity7 = self.component_manager.create_entity(
+            {'test_component3': {"some_string": "E7C7"}, 'test_component7': {'some_string': "E7C3"}})
+
     def tearDown(self):
         pass
+
+    def testGetComponentWithNoEntitiesReturnsNone(self):
+        es = self.component_manager.get_entities_with_components(
+            ["test_component8"])
+        self.assertEqual(len(es), 0)
+
+        es = self.component_manager.get_entities_with_components(
+            ["test_component9"])
+        self.assertEqual(len(es), 0)
+
+        es = self.component_manager.get_entities_with_components(
+            ["test_component8", 'test_component7'])
+        self.assertEqual(len(es), 0)
+
+        es = self.component_manager.get_entities_with_components(
+            ["test_component7", 'test_component8'])
+        self.assertEqual(len(es), 0)
+
+        es = self.component_manager.get_entities_with_components(
+            ["test_component3", 'test_component9'])
+        self.assertEqual(len(es), 0)
+
+        es = self.component_manager.get_entities_with_components(
+            ["test_component9", 'test_component3'])
+        self.assertEqual(len(es), 0)
+
+    def testGetEntityFromOneComponent(self):
+        es = self.component_manager.get_entities_with_components(
+            ["test_component7"])
+        self.assertEqual(len(es), 2)
+
+    def testGetEntityFromDifferentSources(self):
+        es = self.component_manager.get_entities_with_components(
+            ['test_component7', 'test_component3'])
+        self.assertEqual(len(es), 1)
+
+        es2 = self.component_manager.get_entities_with_components(
+            ['test_component3', 'test_component7'])
+        self.assertEqual(len(es2), 1)
 
     def testAddGetComponent(self):
         self.component_manager.add_component_to_object(

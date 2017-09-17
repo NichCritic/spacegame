@@ -34,6 +34,7 @@ class Test(unittest.TestCase):
         })
 
         self.p1 = node_factory.create_new_node({
+            "names": {'name': 'p1'},
             "container": {"parent_id": self.room.container.id},
             "location": {"room": self.room.id}
         })
@@ -54,6 +55,13 @@ class Test(unittest.TestCase):
             "creating", {"format": '', "new_name": "foo"})
         self.creating_system.process()
         self.assertEqual(len(self.room.container.children), 2)
+
+    def testCreationSystemHandlesCreating(self):
+        self.p1.add_or_attach_component(
+            "creating", {"format": '', "new_name": "foo"})
+        self.creating_system.process()
+
+        self.assertFalse(self.p1.entity_has('creating'))
 
 
 if __name__ == "__main__":

@@ -3,49 +3,118 @@
 	{
 		"selected_items":
 		[
+			[
+				"asse",
+				"assertTrue"
+			],
+			[
+				"dod",
+				"dodge_sys"
+			],
+			[
+				"Proj",
+				"ProjectileBlockingSystem"
+			],
+			[
+				"Test",
+				"TestCase"
+			],
+			[
+				"pro",
+				"projectile"
+			],
+			[
+				"en",
+				"entity_list"
+			],
+			[
+				"com",
+				"component_manager"
+			],
+			[
+				"test_en",
+				"test_entity5"
+			],
+			[
+				"proj",
+				"proj_sys"
+			],
+			[
+				"ent",
+				"entity_id"
+			],
+			[
+				"node",
+				"node_factory"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/PyMud/tests/command_packager_tests.py",
+			"file": "src/PyMud/tests/test_projectile.py",
 			"settings":
 			{
-				"buffer_size": 726,
+				"buffer_size": 3664,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "PyMud.sublime-project",
+			"file": "src/PyMud/Systems/system.py",
 			"settings":
 			{
-				"buffer_size": 420,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/PyMud/startup_scripts.py",
-			"settings":
-			{
-				"buffer_size": 4296,
+				"buffer_size": 977,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/PyMud/tests/array_component_store_tests.py",
+			"file": "src/PyMud/main_entry.py",
 			"settings":
 			{
-				"buffer_size": 4835,
+				"buffer_size": 3432,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/PyMud/Systems/ProjectileSystem.py",
+			"settings":
+			{
+				"buffer_size": 859,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/PyMud/objects/components.py",
+			"settings":
+			{
+				"buffer_size": 12213,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
 	],
 	"build_system": "Anaconda Python Builder",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
 	"command_palette":
 	{
-		"height": 81.0,
+		"height": 915.0,
+		"last_filter": "packageres",
 		"selected_items":
 		[
+			[
+				"packageres",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -71,7 +140,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 400.0
+		"width": 1040.0
 	},
 	"console":
 	{
@@ -94,12 +163,35 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Projects/PyMud",
-		"/C/Projects/PyMud/src",
-		"/C/Projects/PyMud/src/PyMud"
+		"/C/Users/Nicholas/Projects/pymud",
+		"/C/Users/Nicholas/Projects/pymud/src",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/Systems"
 	],
 	"file_history":
 	[
+		"/C/DevEnv/Sublime3/Data/Packages/Default/exec.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_component_manager.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_description.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_node_factory.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_creation_system.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_command_packager.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_command_token_matcher.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/startup_scripts.py",
+		"/C/DevEnv/Sublime3/Data/Packages/SublimeOnSaveBuild/README.md",
+		"/C/DevEnv/Sublime3/Data/Packages/User/SublimeOnSaveBuild.sublime-settings",
+		"/C/DevEnv/Sublime3/Data/Packages/SublimeOnSaveBuild/SublimeOnSaveBuild.sublime-settings",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/command/command_packager.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/annoying_tick_system_test.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/command/command_token_matcher.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/Systems/system.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/Systems/ProjectileSystem.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/objects/node_factory.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/objects/components.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/objects/component_manager.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_projectile.py",
+		"/C/Users/Nicholas/Projects/pymud/src/PyMud/tests/test_av_event_system.py",
+		"/C/Users/Nicholas/Projects/pymud/PyMud.sublime-project",
 		"/C/Projects/PyMud/PyMud.sublime-project",
 		"/C/Users/Nich/Desktop/Sublime Text Build 3065 x64/Data/Packages/Anaconda/Anaconda.sublime-settings",
 		"/C/Users/Nich/Desktop/Sublime Text Build 3065 x64/Data/Packages/SublimePyunit/SublimePyunit.sublime-settings",
@@ -110,7 +202,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 80.0
 	},
 	"find_in_files":
 	{
@@ -145,35 +237,109 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/PyMud/tests/command_packager_tests.py",
+					"file": "src/PyMud/tests/test_projectile.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 726,
+						"buffer_size": 3664,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								161,
-								161
+								1526,
+								1526
 							]
 						],
 						"settings":
 						{
-							"highlight_line": false,
-							"syntax": "Packages/Python/Python.tmLanguage",
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": true,
+								"_vintageous_non_interactive": false,
+								"_vintageous_processing_notation": false,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_insert",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"sequence": "",
+								"xpos": 24
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 1261.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/PyMud/Systems/system.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 977,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								769,
+								769
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
 							"vintage":
 							{
 								"_vintageous_glue_until_normal_mode": false,
-								"_vintageous_non_interactive": false,
-								"_vintageous_processing_notation": false,
 								"action": null,
 								"action_count": "",
 								"mode": "mode_normal",
@@ -183,15 +349,8 @@
 								"normal_insert_count": "1",
 								"partial_sequence": "",
 								"register": "\"",
-								"repeat_data":
-								[
-									"vi",
-									"dd",
-									"mode_internal_normal",
-									null
-								],
 								"sequence": "",
-								"xpos": 0
+								"xpos": 21
 							}
 						},
 						"translation.x": 0.0,
@@ -202,741 +361,145 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "PyMud.sublime-project",
+					"buffer": 2,
+					"file": "src/PyMud/main_entry.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 3432,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								373,
-								373
+								760,
+								760
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false,
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
 							"vintage":
 							{
-								"_vintageous_glue_until_normal_mode": false,
 								"action": null,
 								"action_count": "",
 								"mode": "mode_normal",
 								"motion": null,
 								"motion_count": "",
 								"must_capture_register_name": false,
-								"normal_insert_count": "1",
 								"partial_sequence": "",
 								"register": "\"",
-								"repeat_data":
-								[
-									"native",
-									[
-										"sequence",
-										{
-											"commands":
-											[
-												[
-													"_vi_s",
-													{
-														"count": 1,
-														"mode": "mode_visual",
-														"register": "\""
-													}
-												],
-												[
-													"paste",
-													null
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"insert",
-													{
-														"characters": "\\"
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"insert",
-													{
-														"characters": "\\"
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"insert",
-													{
-														"characters": "\\"
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": false
-													}
-												],
-												[
-													"insert",
-													{
-														"characters": "\\"
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"move",
-													{
-														"by": "characters",
-														"forward": true
-													}
-												],
-												[
-													"insert",
-													{
-														"characters": "\\\\python"
-													}
-												]
-											]
-										}
-									],
-									"mode_insert",
-									null
-								],
 								"sequence": "",
-								"xpos": 84
+								"xpos": 18
 							}
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 2106.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "src/PyMud/startup_scripts.py",
+					"buffer": 3,
+					"file": "src/PyMud/Systems/ProjectileSystem.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4296,
+						"buffer_size": 859,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4296,
-								4296
+								859,
+								859
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"_vintageous_glue_until_normal_mode": true,
+								"action": null,
+								"action_count": "",
+								"mode": "mode_insert",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"normal_insert_count": "1",
+								"partial_sequence": "",
+								"register": "\"",
+								"sequence": "",
+								"xpos": 0
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 310.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/PyMud/objects/components.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12213,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2798,
+								2798
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"vintage":
@@ -951,79 +514,12 @@
 								"normal_insert_count": "1",
 								"partial_sequence": "",
 								"register": "\"",
-								"repeat_data":
-								[
-									"native",
-									[
-										"sequence",
-										{
-											"commands":
-											[
-												[
-													"insert",
-													{
-														"characters": "\n"
-													}
-												],
-												[
-													"left_delete",
-													null
-												]
-											]
-										}
-									],
-									"mode_insert",
-									null
-								],
 								"sequence": "",
-								"xpos": 0
+								"xpos": 29
 							}
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/PyMud/tests/array_component_store_tests.py",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4835,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								462,
-								462
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true,
-							"vintage":
-							{
-								"action": null,
-								"action_count": "",
-								"mode": "mode_normal",
-								"motion": null,
-								"motion_count": "",
-								"must_capture_register_name": false,
-								"partial_sequence": "",
-								"register": "\"",
-								"sequence": "",
-								"xpos": 0
-							}
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4366.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1038,7 +534,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 69.0
 	},
 	"layout":
 	{
@@ -1065,29 +561,56 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 476.0
+		"height": 355.0
 	},
 	"output.find_results":
 	{
 		"height": 0.0
 	},
+	"pinned_build_system": "Packages/User/pymud.sublime-build",
 	"project": "PyMud.sublime-project",
 	"replace":
 	{
 		"height": 42.0
 	},
-	"save_all_on_build": true,
+	"save_all_on_build": false,
 	"select_file":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"proj",
+				"src\\PyMud\\Systems\\ProjectileSystem.py"
+			],
+			[
+				"com",
+				"src\\PyMud\\objects\\components.py"
+			],
+			[
+				"node",
+				"src\\PyMud\\objects\\node_factory.py"
+			],
+			[
+				"system",
+				"src\\PyMud\\Systems\\system.py"
+			],
+			[
+				"compo",
+				"src\\PyMud\\objects\\components.py"
+			],
+			[
+				"command_tope",
+				"src\\PyMud\\command\\command_token_matcher.py"
+			]
 		],
 		"width": 0.0
 	},
 	"select_project":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
@@ -1096,6 +619,7 @@
 	"select_symbol":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
@@ -1109,14 +633,14 @@
 		"_vintageous_reset_during_init": true,
 		"vintage":
 		{
-			"_cmdline_cd": "C:\\Projects\\PyMud"
+			"_cmdline_cd": "C:\\Users\\Nicholas\\Projects\\pymud\\src\\PyMud\\tests"
 		}
 	},
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 427.0,
+	"side_bar_width": 658.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

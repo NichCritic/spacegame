@@ -113,7 +113,7 @@ verbs = {"say": {
                  ([("visibility", 60), ("is_caller")],
                   ["You can't hear your own voice!"]),
 
-                 ([("visibility", 60), ("is_caller")], [
+                 ([("visibility", 60)], [
                      "{player}'s lips move, but you can't make out what they're saying."])
                  ],
 

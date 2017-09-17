@@ -6,6 +6,24 @@ Created on 2014-03-14
 '''
 
 
+class AVEvent2(object):
+
+    def __init__(self, format, data):
+        self.format = format
+        self.data = data
+        self.visited = []
+        self.handled = False
+
+    def mark_visited(self, e_id):
+        self.visited.append(e_id)
+
+    def has_visited(self, e_id):
+        return e_id in self.visited
+
+    def handle(self):
+        self.handled = True
+
+
 class AVEvent(object):
 
     def __init__(self, msg_type, text, location, source_id, message_templates, target_id=None, **kwargs):

@@ -22,6 +22,7 @@ class AVEventExitPropagationSystem(System, Propagator):
     manditory = ["av_events", "exit"]
 
     def handle(self, fro):
+        print(fro)
         to = self.node_factory.create_node(fro.exit.dest_id, [])
         for event in fro.av_events.events:
             self.propagate(event, fro, to)

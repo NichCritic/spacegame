@@ -1,46 +1,27 @@
-from Systems.AVEvent import AVEvent
+from Systems.system import System
+from Systems.av_event_mixin import AVEventMixin
 from Systems.NetworkMessageSystem import NetworkMessage
 
 
-class PuttingSystem(object):
+class PuttingSystem(System, AVEventMixin):
     '''
     Generates annoying ticks that everyone with a network connection gets (Debug)
     '''
+    manditory = ["names", "location", "putting", "container"]
+    handles = ['putting']
 
-    def __init__(self, node_factory):
-        self.node_factory = node_factory
+    def handle(self, node):
+        subject, object = tuple(node.putting.targets.values())
+        sub_node = self.node_factory.create_node(
+            subject, ["names", "container"])
+        obj_node = self.node_factory.create_node(
+            object, ["names", "container"])
 
-    def get_nodes(self):
-        return self.node_factory.create_node_list(["location", "putting", "container"])
+        sub_node.container.parent_id = obj_node.container.id
+        sub_node.container.type = node.putting.type
 
-    def create_av_event_data(self, location, putting, target, **kwargs):
-        event = AVEvent("putting", None, location.detach(),
-                        putting.entity_id, putting.format, target, **kwargs)
-        return event
-
-
-    def process(self):
-        self.nodes = self.get_nodes()
-        for node in self.nodes:
-            subject, object = tuple(node.putting.targets.values())
-            sub_node = self.node_factory.create_node(subject, ["names", "container"])
-            obj_node = self.node_factory.create_node(object, ["names", "container"])
-
-            sub_node.container.parent_id = obj_node.container.id
-            sub_node.container.type = node.putting.type
-
-            room_node = self.node_factory.create_node(
-                        node.location.room, [])
-            av_event_data = self.create_av_event_data(
-                        node.location, node.putting, None, subject = subject, object = object)
-            print("Taking system got message from "+node.id)
-            room_node.add_or_attach_component("av_events", None)
-            room_node.av_events.events.append(av_event_data)
-
-
-
-
-            
-                    
-
-            node.remove_component("putting")
+        self.av_event(node, {
+            "subject": sub_node.names.name,
+            "object": obj_node.names.name,
+            "player": node.names.name
+        }, node.putting.format)

@@ -117,6 +117,25 @@ class Entering(object):
         self.target = target
 
 
+class Projectile(object):
+
+    def __init__(self, entity_id, on_hit, args, timeout=60):
+        self.entity_id = entity_id
+        self.on_hit = on_hit
+        self.args = args
+        self.timeout = timeout
+        self.last_trigger = None
+
+
+class Dodging(object):
+
+    def __init__(self, entity_id, format, timeout=60):
+        self.entity_id = entity_id
+        self.format = format
+        self.timeout = timeout
+        self.last_trigger = None
+
+
 class Ascending(object):
 
     def __init__(self, entity_id):
@@ -450,6 +469,7 @@ components = {
     "changing": Changing,
     "change_health": ChangeHealth,
     "creating": Creating,
+    "dodging": Dodging,
     "dropping": Dropping,
     "entering": Entering,
     "exiting": Exiting,
@@ -457,6 +477,7 @@ components = {
     "moving": Moving,
     "network_messages": NetworkMessages,
     "on_hold_timeout": OnHoldTimeout,
+    "projectile": Projectile,
     "putting": Putting,
     "rune_active": RuneActive,
     "rune_data": RuneData,
