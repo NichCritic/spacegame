@@ -1,18 +1,13 @@
 from Systems.system import System
-from Systems.AVEvent import AVEvent
+from Systems.av_event_mixin import AVEventMixin
 from Systems.NetworkMessageSystem import NetworkMessage
 
 
-class ActivatingSystem(System):
+class ActivatingSystem(System, AVEventMixin):
     '''
     Generates annoying ticks that everyone with a network connection gets (Debug)
     '''
     manditory = ["location", "activating"]
-
-    def create_av_event_data(self, location, activating, target):
-        event = AVEvent("activating", None, location.detach(),
-                        activating.entity_id, activating.format, target)
-        return event
 
     def handle(self, node):
         for t_name, t_id in node.activating.target.items():
