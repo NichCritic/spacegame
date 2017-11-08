@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello pixi!</title>
+        <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
+        <script src="static/js/keyboard.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="static/js/io.js"></script>
+        <script src="static/js/gamestate.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+
+        var bg, stars, ship_textures, gamestate;
+        var frame = 0;
+
+        var keys = {};
+        var camera = {x:0, y:0, w:800, h:600};
+        var sprites = [];
+
+        var serverSyncTimeout = 5000;
+        var lastServerSync = Date.now();
+
+        //Create the renderer
+        var renderer = PIXI.autoDetectRenderer(800, 600);
+
+        //Add the canvas to the HTML document
+        document.body.appendChild(renderer.view);
+
+        PIXI.loader.add('static/assets/parallax-space-background2.png')
+                   .add('static/assets/parallax-space-stars2.png')
+                   .add('static/assets/ship.png')
+                   .add('static/assets/ship_idle.png')
+                   .load(setup)
+
+        //Create a container object called the `stage`
+        var stage; stage = new PIXI.Container();
+
+
+        function getTexturesFromSpritesheet(mySpriteSheetImage, count, rows, imgW, imgH){
+            var textures = [];
+            var countPerRow = Math.floor(count/rows);
+
+            for(var i = 0; i < count; i++) {
+                let x = (i % countPerRow) * imgW;
+                let y = Math.floor(i/countPerRow) * imgH;
+                let frame = new PIXI.Rectangle(x, y, imgW, imgH);
+                let texture = new PIXI.Texture(mySpriteSheetImage, frame);
+                textures.push(texture);
+            }
+            return textures
+        }
+
+        function setup() {
+            bg = new PIXI.Sprite(
+                PIXI.loader.resources["static/assets/parallax-space-background2.png"].texture
+            );
+            stars = new PIXI.extras.TilingSprite(
+                PIXI.loader.resources["static/assets/parallax-space-stars2.png"].texture
+            , 800, 600);
+            
+
+            var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
+            var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png");
+
+            ship_textures = {}
+            ship_textures.player = {}
+            ship_textures.player.accelerating = getTexturesFromSpritesheet(ship_accel, 10, 2, 16, 24);
+            ship_textures.player.idle = getTexturesFromSpritesheet(ship_idle, 10, 2, 16, 24);
+
+            
+
+
+            stage.addChild(bg)
+            stage.addChild(stars)
+            
+            
+            sprites['player'] = new PIXI.Sprite(ship_textures[0]);
+            sprites['player'].x = stage.width/2 - sprites['player'].width/2;
+            sprites['player'].y = stage.height/2 - sprites['player'].height/2;
+            sprites['player'].anchor.x = 0.5;
+            sprites['player'].anchor.y = 0.5;
+            sprites['player'].frame = 0;
+
+            stage.addChild(sprites['player'])
+
+            gamestate = new Gamestate(Date.now());
+            gamestate.entities['player'] = new Entity();
+            gamestate.entities['player'].mass = 200
+
+            keys.up = keyboard(38);
+            keys.left = keyboard(37);
+            keys.right = keyboard(39);
+            keys.d = keyboard(68);
+
+
+            function press(){
+                var controls = {
+                    left: keys.left.isDown,
+                    right:keys.right.isDown,
+                    thrust: keys.up.isDown,
+                    brake: keys.d.isDown
+                };
+                $.postJSON('./a/message/new', controls, function(result){
+                    console.log('Sent message');
+                    console.log(result);
+                });
+            }
+
+            function release(){
+                var controls = {
+                    left: keys.left.isDown,
+                    right:keys.right.isDown,
+                    thrust: keys.up.isDown,
+                    brake: keys.d.isDown
+                };
+                $.postJSON('./a/message/new', controls, function(result){
+                    console.log('Sent message');
+                    console.log(result);
+                });
+            }
+
+
+            keys.up.press = press
+            keys.right.press = press
+            keys.left.press = press
+            keys.d.press = press
+
+            keys.up.release = release
+            keys.right.release = release
+            keys.left.release = release
+            keys.d.release = release
+
+            requestAnimationFrame(update)
+
+            setInterval(function(){
+                $.postJSON('./a/message/updates', {}, function(result){
+                    console.log('received message')
+                    console.log(result)
+                });
+            }, 10000);            
+        }
+
+        function camera_track(camera, entity) {
+            var new_camera = {
+                x: entity.position.x - camera.w /2,
+                y: entity.position.y - camera.h /2,
+                h: camera.h,
+                w: camera.w
+            }
+
+            return new_camera;
+        }
+
+        function render(gamestate, camera, stage){
+            for(var e in gamestate.entities){
+                let entity = gamestate.entities[e];
+                let sprite = sprites[e]
+
+                sprite.x = entity.position.x - camera.x;
+                sprite.y = entity.position.y - camera.y;
+                sprite.rotation = entity.rotation;
+                sprite.texture = ship_textures[e][entity.state][Math.floor(sprite.frame)%10];
+                sprite.frame += 0.5;
+            }
+
+            stars.tilePosition.x = -camera.x;
+            stars.tilePosition.y = -camera.y;
+            
+            renderer.render(stage);
+        }
+
+
+        function update() {
+
+            requestAnimationFrame(update)
+            var time = Date.now();
+
+            controls = {
+                left: keys.left.isDown,
+                right:keys.right.isDown,
+                thrust: keys.up.isDown,
+                brake: keys.d.isDown
+            };
+
+
+
+            
+            gamestate = update_gamestate(gamestate, controls, time);
+
+            camera = camera_track(camera, gamestate.entities['player']);
+
+            render(gamestate, camera, stage);
+            
+        }
+        
+       
+
+    };
+
+    </script>
+
+    </body>
+</html>

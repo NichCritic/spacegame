@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello phaser!</title>
+        <script src="./phaser-ce/build/phaser.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+        var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
+        var cursors;
+
+        function preload () {
+
+            game.load.image('bg', 'assets/parallax-space-background2.png');
+            //game.load.image('bg', 'assets/parallax-space-big-planet.png');
+            //game.load.image('bg', 'assets/parallax-space-far-planets.png');
+            //game.load.image('bg', 'assets/parallax-space-ring-planet.png');
+            game.load.image('bg-stars', 'assets/parallax-space-stars.png');
+            game.load.spritesheet('ship', 'assets/ship.png', 16, 24)
+
+        }
+
+        function create () {
+            game.world.setBounds(-10000, -10000, 20000, 20000);
+            game.physics.startSystem(Phaser.Physics.P2JS);
+
+            // this.rotategroup = game.add.group()
+
+            
+            this.bg = game.add.sprite(0, 0, 'bg');
+            this.bg.fixedToCamera = true;
+            // this.rotategroup.add(this.bg)            
+
+            this.stars = game.add.tileSprite(0, 0, game.width, game.height, 'bg-stars');
+            this.stars.tileScale.x = 2;
+            this.stars.tileScale.y = 4;
+            this.stars.fixedToCamera = true;
+            //this.stars.anchor.setTo(0.5, 0.5)
+
+            // this.rotategroup.add(this.stars)
+
+
+            this.ship = game.add.sprite(game.width/2+8, game.height/2+12, 'ship');
+            this.ship.animations.add('fly');
+            this.ship.animations.play('fly', 50, true);
+            this.ship.anchor.setTo(0.5,0.5);
+
+            // this.rotategroup.add(this.ship)
+
+            
+
+            game.physics.p2.enable(this.ship);
+
+            // game.camera.follow(this.ship)
+            game.camera.deadzone = Phaser.Rectangle(300, 200, 200, 200)
+
+            cursors = game.input.keyboard.createCursorKeys();
+        }
+
+        function update () {
+            // this.ship.body.setZeroVelocity();
+            
+            
+
+            if (cursors.left.isDown)
+            {
+                this.ship.body.setZeroRotation();
+                this.ship.body.rotation -= 0.05;
+                game.camera.rotation += 0.05
+                
+            }
+            else if (cursors.right.isDown)
+            {
+                this.ship.body.setZeroRotation();
+                this.ship.body.rotation += 0.05;
+                game.camera.rotation -= 0.05
+            }
+
+            if (cursors.up.isDown)
+            {
+                this.ship.body.thrust(100)
+
+            }
+            
+            this.stars.tilePosition.set(-this.ship.body.x,-this.ship.body.y);
+            // this.rotategroup.rotation = -1*this.ship.body.rotation;
+
+
+            // this.rotategroup.pivot.x = this.ship.body.x;
+            // this.rotategroup.pivot.y = this.ship.body.y;
+            // this.rotategroup.x = this.rotategroup.pivot.x;
+            // this.rotategroup.y = this.rotategroup.pivot.y;
+            this.game.camera.focusOnXY(this.ship.body.x, this.ship.body.y + this.ship.height);
+
+            
+        }
+
+    };
+
+    </script>
+
+    </body>
+</html>
