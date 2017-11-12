@@ -3,10 +3,8 @@ function getCookie(name) {
     return r ? r[1] : undefined;
 }
 
-jQuery.postJSON = function(url, args, callback) {
+jQuery.postJSON = function(url, args, callback, error) {
     args._xsrf = getCookie("_xsrf");
     $.ajax({url: url, data: {'body':JSON.stringify(args)}, dataType: "json", type: "POST",
-        success: function(response) {
-        callback(response);
-    }});
+        success: callback, error: error});
 };

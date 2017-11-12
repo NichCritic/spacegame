@@ -8,6 +8,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="static/js/io.js"></script>
         <script src="static/js/gamestate.js"></script>
+        <script src="static/js/circularArrayBuffer.js"></script>
     </head>
     <body>
 
@@ -23,8 +24,11 @@
         var camera = {x:0, y:0, w:800, h:600};
         var sprites = [];
 
-        var serverSyncTimeout = 5000;
-        var lastServerSync = Date.now();
+        var serverState = {};
+
+        var gamestate_buffer = new circularArrayBuffer(500);
+
+
 
         //Create the renderer
         var renderer = PIXI.autoDetectRenderer(800, 600);
@@ -55,6 +59,18 @@
             }
             return textures
         }
+        
+
+        function initSprite(id){
+            sprites[id] = new PIXI.Sprite(ship_textures.player.idle[0]);
+            sprites[id].x = stage.width/2 - sprites[id].width/2;
+            sprites[id].y = stage.height/2 - sprites[id].height/2;
+            sprites[id].anchor.x = 0.5;
+            sprites[id].anchor.y = 0.5;
+            sprites[id].frame = 0;
+
+            stage.addChild(sprites[id])
+        }
 
         function setup() {
             bg = new PIXI.Sprite(
@@ -80,18 +96,11 @@
             stage.addChild(stars)
             
             
-            sprites['player'] = new PIXI.Sprite(ship_textures[0]);
-            sprites['player'].x = stage.width/2 - sprites['player'].width/2;
-            sprites['player'].y = stage.height/2 - sprites['player'].height/2;
-            sprites['player'].anchor.x = 0.5;
-            sprites['player'].anchor.y = 0.5;
-            sprites['player'].frame = 0;
+            
 
-            stage.addChild(sprites['player'])
-
-            gamestate = new Gamestate(Date.now());
-            gamestate.entities['player'] = new Entity();
-            gamestate.entities['player'].mass = 200
+            // gamestate = new Gamestate(Date.now());
+            // gamestate.entities['player'] = new Entity();
+            // gamestate.entities['player'].mass = 200
 
             keys.up = keyboard(38);
             keys.left = keyboard(37);
@@ -99,51 +108,69 @@
             keys.d = keyboard(68);
 
 
-            function press(){
+            function send_command(){
+                var time =Date.now()
                 var controls = {
                     left: keys.left.isDown,
                     right:keys.right.isDown,
                     thrust: keys.up.isDown,
-                    brake: keys.d.isDown
+                    brake: keys.d.isDown,
+                    time: time
                 };
                 $.postJSON('./a/message/new', controls, function(result){
                     console.log('Sent message');
                     console.log(result);
                 });
+                // var gamestate = gamestate_buffer.top();
+                // if(gamestate){
+                //     gamestate_buffer.insert(update_gamestate(gamestate, controls, time))       
+                // }
+                
             }
 
-            function release(){
-                var controls = {
-                    left: keys.left.isDown,
-                    right:keys.right.isDown,
-                    thrust: keys.up.isDown,
-                    brake: keys.d.isDown
-                };
-                $.postJSON('./a/message/new', controls, function(result){
-                    console.log('Sent message');
-                    console.log(result);
-                });
-            }
+            
 
 
-            keys.up.press = press
-            keys.right.press = press
-            keys.left.press = press
-            keys.d.press = press
+            keys.up.press = send_command
+            keys.right.press = send_command
+            keys.left.press = send_command
+            keys.d.press = send_command
 
-            keys.up.release = release
-            keys.right.release = release
-            keys.left.release = release
-            keys.d.release = release
+            keys.up.release = send_command
+            keys.right.release = send_command
+            keys.left.release = send_command
+            keys.d.release = send_command
 
             requestAnimationFrame(update)
+            var request_sent = false;
 
             setInterval(function(){
-                $.postJSON('./a/message/updates', {}, function(result){
-                    console.log('received message')
-                    console.log(result)
-                });
-            }, 10000);            
+                // var controls = {
+                //     left: keys.left.isDown,
+                //     right:keys.right.isDown,
+                //     thrust: keys.up.isDown,
+                //     brake: keys.d.isDown
+                // };
+                // $.postJSON('./a/message/new', controls, function(result){
+                //     console.log('Sent message');
+                //     console.log(result);
+                // });
+                if(!request_sent) { 
+
+                    $.postJSON('./a/message/updates', {}, function success(result){
+                        console.log('received message')
+                        console.log(result)
+
+                        serverState = result.messages[0];
+                        gamestate = consolidate_states(serverState, gamestate_buffer);
+                        gamestate_buffer.insert(gamestate); 
+                        request_sent = false
+                    }, function error(result){
+                        request_sent = false;
+                    });
+                    request_sent = true;
+                }
+            }, 1000/60);            
         }
 
         function camera_track(camera, entity) {
@@ -158,17 +185,22 @@
         }
 
         function render(gamestate, camera, stage){
-            for(var e in gamestate.entities){
-                let entity = gamestate.entities[e];
-                let sprite = sprites[e]
+            if(gamestate) {
+                for(var e in gamestate.entities){
+                    let entity = gamestate.entities[e];
+                    if(!(e in sprites)){
+                        initSprite(e);    
+                    }   
+                    let sprite = sprites[e];
 
-                sprite.x = entity.position.x - camera.x;
-                sprite.y = entity.position.y - camera.y;
-                sprite.rotation = entity.rotation;
-                sprite.texture = ship_textures[e][entity.state][Math.floor(sprite.frame)%10];
-                sprite.frame += 0.5;
+                    sprite.x = entity.position.x - camera.x;
+                    sprite.y = entity.position.y - camera.y;
+                    sprite.rotation = entity.rotation;
+                    entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
+                    sprite.texture = ship_textures["player"][entity.state][Math.floor(sprite.frame)%10];
+                    sprite.frame += 0.5;
+                }
             }
-
             stars.tilePosition.x = -camera.x;
             stars.tilePosition.y = -camera.y;
             
@@ -180,21 +212,22 @@
 
             requestAnimationFrame(update)
             var time = Date.now();
-
+            var gamestate = gamestate_buffer.top()
             controls = {
-                left: keys.left.isDown,
-                right:keys.right.isDown,
-                thrust: keys.up.isDown,
-                brake: keys.d.isDown
+                left: false,
+                right:false,
+                thrust: false,
+                brake: false
             };
 
 
 
             
-            gamestate = update_gamestate(gamestate, controls, time);
-
-            camera = camera_track(camera, gamestate.entities['player']);
-
+            
+            if(gamestate){
+                gamestate_buffer.insert(update_gamestate(gamestate, controls, time));
+                camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
+            }
             render(gamestate, camera, stage);
             
         }

@@ -36,9 +36,9 @@ class PlayerControlled(Base):
 
 class PlayerInput():
 
-    def __init__(self, entity_id, data):
+    def __init__(self, entity_id, data=None):
         self.entity_id = entity_id
-        self.data = data
+        self.data = [] if data is None else data
 
 
 class Position():
@@ -87,12 +87,19 @@ class Mass():
         self.mass = mass
 
 
+class Type():
+
+    def __init__(self, entity_id, type):
+        self.entity_id = entity_id
+        self.type = type
+
+
 class PhysicsUpdate():
 
     def __init__(self, entity_id, last_update=None):
         self.entity_id = entity_id
         import time
-        self.last_update = time.time() if last_update is None else last_update
+        self.last_update = time.time() * 1000 if last_update is None else last_update
 
 
 class GameStateRequest():
@@ -110,6 +117,7 @@ components = {
     "physics_update": PhysicsUpdate,
     "player_input": PlayerInput,
     "position": Position,
+    "type": Type,
     "rotation": Rotation,
     "velocity": Velocity,
 }

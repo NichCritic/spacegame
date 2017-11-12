@@ -15,8 +15,10 @@ class CommandHandler():
 
     def handle_command(self, source, command):
         av = self.node_factory.create_node(source.avatar_id, [])
-        av.add_or_update_component(
-            'player_input', {"data": json.loads(command)})
+        av.add_or_attach_component(
+            'player_input', {})
+
+        av.player_input.data.append(json.loads(command))
 
         av.add_or_attach_component(
             'position', {})
@@ -30,6 +32,7 @@ class CommandHandler():
             'rotation', {})
 
         av.add_or_attach_component('mass', {})
+        av.add_or_attach_component('type', {'type': 'ship'})
         av.add_or_attach_component('physics_update', {})
 
         av.add_or_attach_component('game_state_request', {})

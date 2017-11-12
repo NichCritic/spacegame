@@ -16,19 +16,21 @@ function Entity() {
 	this.control = {
 		left:false,
 		right:false,
-		thrust:false
+		thrust:false,
+		brake:false
 	}
 	this.rotation = 0;
-	this.time_stamp = 0;
+	this.last_update = 0;
 }
 
 function Gamestate(time) {
+	this.player_id = "player";
 	this.entities = {};
 	this.time = time;
 }
 
 function physics(entity, control, time) {
-	let dt = time - entity.time_stamp;
+	let dt = time - entity.last_update;
 
 	if (dt <= 0) {
 		return entity;
@@ -52,8 +54,8 @@ function physics(entity, control, time) {
     new_entity.velocity.y = entity.velocity.y + new_entity.acceleration.y * dt;
 
     if(!control.brake){
-    	new_entity.velocity.x *= 0.95;
-    	new_entity.velocity.y *= 0.95;
+    	new_entity.velocity.x *= Math.pow(0.99, dt);
+    	new_entity.velocity.y *= Math.pow(0.99, dt);
     }
 
     new_entity.position.x = entity.position.x + new_entity.velocity.x * dt;
@@ -63,7 +65,7 @@ function physics(entity, control, time) {
 
     new_entity.state = control.thrust ? 'accelerating' : 'idle';
 
-    new_entity.time_stamp = time;
+    new_entity.last_update = time;
 
     return new_entity;
 }
@@ -77,7 +79,46 @@ function update_gamestate(gamestate, control, time) {
 		new_gamestate.entities[i] = n_e;
 	}
 
+	new_gamestate.player_id = gamestate.player_id
+
 	return new_gamestate
 }
 
+function consolidate_states(server_state, gamestate_buffer) {
+	var gamestate = gamestate_buffer.top();
+
+	if(!gamestate) {
+		return server_state;
+	}
+
+	var similar_state = gamestate_buffer.find(function(item) {
+	return item.time <= server_state.time; 
+	});
+
+	server_player = server_state.entities[server_state.player_id];
+
+	if(!similar_state) {
+		let new_gamestate = update_gamestate(server_state, server_player.control, gamestate.time);
+		return new_gamestate
+	}
+
+	similar_state = update_gamestate(similar_state, server_player.control, server_state.time);
+
+	local_player = similar_state.entities[similar_state.player_id];
+	
+
+	delta_pos = {};
+	delta_pos.x = Math.abs(local_player.position.x - server_player.position.x);
+	delta_pos.y = Math.abs(local_player.position.y - server_player.position.y);
+
+	delta_rot = Math.abs(local_player.rotation - server_player.rotation);
+
+	if(delta_pos.x > 10 || delta_pos.y > 10 || delta_rot > 10) {
+		let new_gamestate = update_gamestate(server_state, server_player.control, gamestate.time);
+		return new_gamestate
+	}
+
+	return gamestate;
+
+}
 
