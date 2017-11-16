@@ -21,6 +21,7 @@ function Entity() {
 	}
 	this.rotation = 0;
 	this.last_update = 0;
+	this.type = 'bolt';
 }
 
 function Gamestate(time) {
@@ -30,11 +31,11 @@ function Gamestate(time) {
 }
 
 function physics(entity, control, time) {
-	let dt = time - entity.last_update;
+	let dt = time
 
-	if (dt <= 0) {
-		return entity;
-	}
+	// if (dt <= 0) {
+	// 	return entity;
+	// }
 
 	var new_entity = new Entity();
 	new_entity.mass = entity.mass;
@@ -44,8 +45,8 @@ function physics(entity, control, time) {
 
 	new_entity.rotation = control.left ? rot_left : (control.right ? rot_right : entity.rotation);
 	
-	new_entity.force.x = control.thrust ? 1 * Math.sin(new_entity.rotation) : 0;
-	new_entity.force.y = control.thrust ? -1 * Math.cos(new_entity.rotation) : 0;
+	new_entity.force.x = control.thrust ? dt * 0.1* Math.sin(new_entity.rotation) : 0;
+	new_entity.force.y = control.thrust ? -dt * 0.1 * Math.cos(new_entity.rotation) : 0;
 
 	new_entity.acceleration.x = new_entity.force.x/new_entity.mass
     new_entity.acceleration.y = new_entity.force.y/new_entity.mass
@@ -65,13 +66,16 @@ function physics(entity, control, time) {
 
     new_entity.state = control.thrust ? 'accelerating' : 'idle';
 
-    new_entity.last_update = time;
+    new_entity.type = entity.type;
+
+    new_entity.last_update = entity.last_update + time;
+
 
     return new_entity;
 }
 
 function update_gamestate(gamestate, control, time) {
-	new_gamestate = new Gamestate(time);
+	new_gamestate = new Gamestate(0);
 
 	for(var i in gamestate.entities){
 		let e =  gamestate.entities[i];
@@ -79,7 +83,8 @@ function update_gamestate(gamestate, control, time) {
 		new_gamestate.entities[i] = n_e;
 	}
 
-	new_gamestate.player_id = gamestate.player_id
+	new_gamestate.player_id = gamestate.player_id;
+	new_gamestate.time = gamestate.time + time;
 
 	return new_gamestate
 }

@@ -100,6 +100,13 @@ class MainHandler(BaseHandler):
         self.render("client\\index2.html", messages=[])
 
 
+class TestHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def get(self):
+        self.render("client\\index3.html", messages=[])
+
+
 class CharacterCreateHandler(BaseHandler):
 
     def initialize(self, account_utils, player_factory, session_manager):

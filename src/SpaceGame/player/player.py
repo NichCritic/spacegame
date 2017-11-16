@@ -45,8 +45,9 @@ class PlayerFactory(object):
                     "player_controlled", p.avatar_id)
 
         p.avatar_id = av_id
-        self.component_manager.add_component_to_object(
-            'player_controlled', av_id, {'pid': p.id})
+        if not self.component_manager.entity_has_component(av_id, 'player_controlled'):
+            self.component_manager.add_component_to_object(
+                'player_controlled', av_id, {'pid': p.id})
 
 
 class Player(object):

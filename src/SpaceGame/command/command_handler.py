@@ -13,12 +13,14 @@ class CommandHandler():
     def __init__(self, node_factory):
         self.node_factory = node_factory
 
-    def handle_command(self, source, command):
+    def handle_command(self, source, command_json):
         av = self.node_factory.create_node(source.avatar_id, [])
         av.add_or_attach_component(
             'player_input', {})
 
-        av.player_input.data.append(json.loads(command))
+        command = json.loads(command_json)
+
+        av.player_input.data.extend(command['inputs'])
 
         av.add_or_attach_component(
             'position', {})

@@ -8,7 +8,7 @@ import tornado.ioloop
 import os.path
 import keys
 from tornado.options import options, parse_command_line
-from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler
+from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler
 
 from objects.components import components, db_components
 
@@ -40,6 +40,7 @@ def main():
     app = tornado.web.Application(
         [
             (r"/", MainHandler),
+            (r"/test", TestHandler),
             (r"/auth/login", AuthLoginHandler, dict(account_utils=account_utils,
                                                     player_factory=player_factory, session_manager=session_manager)),
             (r"/auth/logout", AuthLogoutHandler),

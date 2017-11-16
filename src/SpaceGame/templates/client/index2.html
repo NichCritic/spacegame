@@ -17,7 +17,7 @@
     window.onload = function() {
 
 
-        var bg, stars, ship_textures, gamestate;
+        var bg, stars, textures, gamestate;
         var frame = 0;
 
         var keys = {};
@@ -26,7 +26,7 @@
 
         var serverState = {};
 
-        var gamestate_buffer = new circularArrayBuffer(500);
+        var gamestate_buffer = new circularArrayBuffer(10);
 
 
 
@@ -40,6 +40,7 @@
                    .add('static/assets/parallax-space-stars2.png')
                    .add('static/assets/ship.png')
                    .add('static/assets/ship_idle.png')
+                   .add('static/assets/laser-bolt.png')
                    .load(setup)
 
         //Create a container object called the `stage`
@@ -61,8 +62,8 @@
         }
         
 
-        function initSprite(id){
-            sprites[id] = new PIXI.Sprite(ship_textures.player.idle[0]);
+        function initSprite(id, type){
+            sprites[id] = new PIXI.Sprite(textures[type].idle[0]);
             sprites[id].x = stage.width/2 - sprites[id].width/2;
             sprites[id].y = stage.height/2 - sprites[id].height/2;
             sprites[id].anchor.x = 0.5;
@@ -84,10 +85,16 @@
             var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
             var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png");
 
-            ship_textures = {}
-            ship_textures.player = {}
-            ship_textures.player.accelerating = getTexturesFromSpritesheet(ship_accel, 10, 2, 16, 24);
-            ship_textures.player.idle = getTexturesFromSpritesheet(ship_idle, 10, 2, 16, 24);
+            var bolt = PIXI.BaseTexture.from("static/assets/laser-bolt.png")
+
+            textures = {}
+            textures.ship = {}
+            textures.ship.accelerating = getTexturesFromSpritesheet(ship_accel, 10, 2, 16, 24);
+            textures.ship.idle = getTexturesFromSpritesheet(ship_idle, 10, 2, 16, 24);
+
+            textures.bolt = {};
+            textures.bolt.idle = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
+            textures.bolt.accelerating = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
 
             
 
@@ -101,6 +108,7 @@
             // gamestate = new Gamestate(Date.now());
             // gamestate.entities['player'] = new Entity();
             // gamestate.entities['player'].mass = 200
+            // gamestate_buffer.insert(gamestate)
 
             keys.up = keyboard(38);
             keys.left = keyboard(37);
@@ -108,41 +116,42 @@
             keys.d = keyboard(68);
 
 
-            function send_command(){
-                var time =Date.now()
-                var controls = {
-                    left: keys.left.isDown,
-                    right:keys.right.isDown,
-                    thrust: keys.up.isDown,
-                    brake: keys.d.isDown,
-                    time: time
-                };
-                $.postJSON('./a/message/new', controls, function(result){
-                    console.log('Sent message');
-                    console.log(result);
-                });
-                // var gamestate = gamestate_buffer.top();
-                // if(gamestate){
-                //     gamestate_buffer.insert(update_gamestate(gamestate, controls, time))       
-                // }
+            // function send_command(){
+            //     var time =Date.now()
+            //     var controls = {
+            //         left: keys.left.isDown,
+            //         right:keys.right.isDown,
+            //         thrust: keys.up.isDown,
+            //         brake: keys.d.isDown,
+            //         time: time
+            //     };
+            //     // $.postJSON('./a/message/new', controls, function(result){
+            //     //     console.log('Sent message');
+            //     //     console.log(result);
+            //     // });
+            //     // var gamestate = gamestate_buffer.top();
+            //     // if(gamestate){
+            //     //     gamestate_buffer.insert(update_gamestate(gamestate, controls, time))       
+            //     // }
                 
-            }
+            // }
 
             
 
 
-            keys.up.press = send_command
-            keys.right.press = send_command
-            keys.left.press = send_command
-            keys.d.press = send_command
+            // keys.up.press = send_command
+            // keys.right.press = send_command
+            // keys.left.press = send_command
+            // keys.d.press = send_command
 
-            keys.up.release = send_command
-            keys.right.release = send_command
-            keys.left.release = send_command
-            keys.d.release = send_command
+            // keys.up.release = send_command
+            // keys.right.release = send_command
+            // keys.left.release = send_command
+            // keys.d.release = send_command
 
             requestAnimationFrame(update)
             var request_sent = false;
+            var request_sent2= false;
 
             setInterval(function(){
                 // var controls = {
@@ -162,14 +171,56 @@
                         console.log(result)
 
                         serverState = result.messages[0];
-                        gamestate = consolidate_states(serverState, gamestate_buffer);
-                        gamestate_buffer.insert(gamestate); 
+                        // gamestate = consolidate_states(serverState, gamestate_buffer);
+
+                        for(let i = inputs.length-1; i >= 0; i--){
+                            let inp = inputs[i];
+                            if(inp.was_processed){
+                                break;
+                            }
+                            if(inp.time <= serverState.time){
+                                inp.was_processed = true;
+                            }
+                        }
+                        var new_inputs = []
+                        for(let i = 0; i < inputs.length; i++){
+                            let inp = inputs[i];
+                            if(inp.was_processed === false){
+                                new_inputs.push(inp);
+
+                            }
+                        }
+                        inputs= new_inputs
+
+                        
+
+
+                        gamestate_buffer.insert(serverState); 
                         request_sent = false
                     }, function error(result){
                         request_sent = false;
                     });
                     request_sent = true;
                 }
+                if(!request_sent2){
+                    let to_send = []
+                    for(let i = 0; i < inputs.length; i++){
+                        let inp = inputs[i];
+                        if(!inp.was_sent){
+                            to_send.push(inp)
+                            inp.was_sent = true
+                        }
+                    }
+                    $.postJSON('./a/message/new', {'inputs':to_send}, function(result){
+                        request_sent2 = false;
+
+                    }, function error(result){
+                        request_sent2 = false;
+                    });
+                    request_sent2 = true;
+                }
+
+                
             }, 1000/60);            
         }
 
@@ -189,7 +240,7 @@
                 for(var e in gamestate.entities){
                     let entity = gamestate.entities[e];
                     if(!(e in sprites)){
-                        initSprite(e);    
+                        initSprite(e, entity.type);    
                     }   
                     let sprite = sprites[e];
 
@@ -197,7 +248,8 @@
                     sprite.y = entity.position.y - camera.y;
                     sprite.rotation = entity.rotation;
                     entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
-                    sprite.texture = ship_textures["player"][entity.state][Math.floor(sprite.frame)%10];
+                    let texture = textures[entity.type][entity.state]
+                    sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
                     sprite.frame += 0.5;
                 }
             }
@@ -205,31 +257,94 @@
             stars.tilePosition.y = -camera.y;
             
             renderer.render(stage);
+
+            
         }
 
+        var sim_time= 0;
+        var inputs = [];
+        var last_time = Date.now();
+        var framecounter = 0
 
         function update() {
 
             requestAnimationFrame(update)
+            // 
+            // 
+            
+
+
+
+            
+            
+            // if(gamestate){
+            //     gamestate_buffer.insert(update_gamestate(gamestate, controls, time));
+            //     camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
+            // }
+            // render(gamestate, camera, stage);
+            
+            // Sample clock to find start time
             var time = Date.now();
+            sim_time = time - last_time;
+            // Sample user input (mouse, keyboard, joystick)
+
+         
+            // let thrust = framecounter % 400 <= 200;
+
+               var controls = {
+                    left: keys.left.isDown,
+                    right: keys.right.isDown,
+                    thrust: keys.up.isDown,
+                    brake: keys.d.isDown,
+                    time: time,
+                    dt: sim_time,
+                    was_processed: false,
+                    was_sent: false
+                };
+                // Package up and send movement command using simulation time
+                
+
+                inputs.push(controls);
+
+            // }
+            
+
+            // Read any packets from the server from the network system
             var gamestate = gamestate_buffer.top()
-            controls = {
-                left: false,
-                right:false,
-                thrust: false,
-                brake: false
-            };
 
+            // Use packets to determine visible objects and their state
 
-
-            
-            
             if(gamestate){
-                gamestate_buffer.insert(update_gamestate(gamestate, controls, time));
+                let last_processed = 0;
+                for(let i = inputs.length-1; i >= 0; i--){
+                    let inp  = inputs[i];
+                    if(inp.was_processed){
+                        last_processed = i + 1;
+                        break;
+                    }
+                    
+                    // inp.was_processed = true
+                }
+
+                for(let i = last_processed; i < inputs.length; i++){
+                    let inp  = inputs[i];
+                    gamestate = update_gamestate(gamestate, inp, inp.dt)
+                }
+
+
+                // gamestate_buffer.insert(gamestate);
                 camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
             }
-            render(gamestate, camera, stage);
             
+
+            // Render Scene
+            render(gamestate, camera, stage);
+            // Sample clock to find end time
+            last_time = time;
+            
+
+            framecounter++;
+
         }
         
        

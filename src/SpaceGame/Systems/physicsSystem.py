@@ -1,6 +1,7 @@
 from Systems.system import System
 import math
 import time
+from itertools import takewhile
 
 
 class PhysicsSystem(System):
@@ -9,17 +10,22 @@ class PhysicsSystem(System):
                  "mass", "acceleration", "force", "rotation", "physics_update"]
     handles = []
 
+    def __init__(self, node_factory):
+        self.node_factory = node_factory
+        self.sim_time = 0
+
     def physics(self, node, inp, pos, vel, mass, rot, dt):
         leftrot = rot - 1 / mass * dt
         rightrot = rot + 1 / mass * dt
 
-        node.rotation.rotation = rightrot if inp["right"] else (
-            leftrot if inp["left"] else rot)
+        node.rotation.rotation = leftrot if inp[
+            "left"] else (rightrot if inp["right"] else rot)
 
         node.force.x = math.sin(node.rotation.rotation) * \
-            dt if inp["thrust"] else 0
-        node.force.y = -math.cos(node.rotation.rotation) * \
-            dt if inp["thrust"] else 0
+            dt * 0.1 if inp["thrust"] else 0
+        node.force.y = - \
+            math.cos(node.rotation.rotation) * dt * \
+            0.1 if inp["thrust"] else 0
 
         # print(f"{node.force.y}, {dt}")
 
@@ -40,42 +46,73 @@ class PhysicsSystem(System):
         node.position.x = pos.x + node.velocity.x * dt
         node.position.y = pos.y + node.velocity.y * dt
 
+    def get_unhandled_input(self, input_data_list):
+        return reversed(list(takewhile(lambda l: not l["was_processed"], reversed(input_data_list))))
+
     def handle(self, node):
-        last_update = node.physics_update.last_update
-        last_input = node.player_input.data[-1]["time"]
+
+        # Sample clock to find start time
         now = time.time() * 1000
-        if last_update < last_input < now:
-            dt1 = last_input - last_update
-            dt2 = now - last_input
-        else:
-            dt1 = -1
-            dt2 = now - last_update
+        # Read client user input messages from network
+        # Execute client user input messages
 
-        print(f"{dt1}, {dt2}")
+        inputlist = self.get_unhandled_input(node.player_input.data)
 
-        if dt1 > 0:
-            prev_inp = node.player_input.data[-2]
-            # print(inp)
+        # print(list(inputlist))
+
+        for inp in inputlist:
             pos = node.position
             vel = node.velocity
             mass = node.mass.mass
             rot = node.rotation.rotation
 
-            self.physics(node, prev_inp, pos, vel, mass, rot, dt1)
+            self.physics(node, inp, pos, vel, mass, rot, inp["dt"])
 
-            node.physics_update.last_update = last_input
+            node.physics_update.last_update = inp["time"]
+            inp["was_processed"] = True
 
-        if dt2 <= 0:
-            return
+        # Simulate server-controlled objects using simulation time from last full pass
+        # TODO
 
-        inp = node.player_input.data[-1]
-        pos = node.position
-        vel = node.velocity
-        mass = node.mass.mass
-        rot = node.rotation.rotation
+        # Sample clock to find end time
 
-        self.physics(node, inp, pos, vel, mass, rot, dt2)
+        # End time minus start time is the simulation time for the next frame
 
-        # print(f'{node.position.x}, {node.position.y}')
+        # last_update = node.physics_update.last_update
+        # last_input = node.player_input.data[-1]["time"]
+        # now = time.time() * 1000
+        # if last_update < last_input < now:
+        #     dt1 = last_input - last_update
+        #     dt2 = now - last_input
+        # else:
+        #     dt1 = -1
+        #     dt2 = now - last_update
 
-        node.physics_update.last_update = now
+        # print(f"{dt1}, {dt2}")
+
+        # if dt1 > 0:
+        #     prev_inp = node.player_input.data[-2]
+        #     # print(inp)
+        #     pos = node.position
+        #     vel = node.velocity
+        #     mass = node.mass.mass
+        #     rot = node.rotation.rotation
+
+        #     self.physics(node, prev_inp, pos, vel, mass, rot, dt1)
+
+        #     node.physics_update.last_update = last_input
+
+        # if dt2 <= 0:
+        #     return
+
+        # inp = node.player_input.data[-1]
+        # pos = node.position
+        # vel = node.velocity
+        # mass = node.mass.mass
+        # rot = node.rotation.rotation
+
+        # self.physics(node, inp, pos, vel, mass, rot, dt2)
+
+        # # print(f'{node.position.x}, {node.position.y}')
+
+        # node.physics_update.last_update = now
