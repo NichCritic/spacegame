@@ -114,6 +114,7 @@
             keys.left = keyboard(37);
             keys.right = keyboard(39);
             keys.d = keyboard(68);
+            keys.f = keyboard(70);
 
 
             // function send_command(){
@@ -296,6 +297,7 @@
                     right: keys.right.isDown,
                     thrust: keys.up.isDown,
                     brake: keys.d.isDown,
+                    shoot: keys.f.isDown,
                     time: time,
                     dt: sim_time,
                     was_processed: false,

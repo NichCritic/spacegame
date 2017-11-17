@@ -1,21 +1,65 @@
 from Systems.system import System
 import math
+from itertools import takewhile
+
+
+class Vector():
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+class PhysicsPacket():
+
+    def __init__(self):
+        self.rotation = 0
+        self.force = Vector(0, 0)
+        self.dt = 0
+        self.time = 0
+        self.brake = True
 
 
 class InputSystem(System):
 
-    manditory = ["player_input"]
-    handles = ["player_input"]
+    manditory = ["player_input", "rotation", "physics_update", "mass"]
+    handles = []
+
+    def get_unhandled_input(self, input_data_list):
+        return reversed(list(takewhile(lambda l: not l["was_processed"], reversed(input_data_list))))
 
     def handle(self, node):
 
-        offset_state = zip(node.player_input.data, node.player_input.data[1:])
+        packets = []
 
-        for s1, s2 in offset_state:
-            dt = s2.time - s1.time
-            left = s1['left']
-            right = s1['right']
-            thrust = s1['thrust']
-            brake = s1['brake']
-            fire = s1['fire']
-            time = s1['time']
+        inputs = self.get_unhandled_input(node.player_input.data)
+        rot = node.rotation.rotation
+        for inp in inputs:
+            dt = inp['dt']
+
+            mass = node.mass.mass
+            leftrot = rot - 1 / mass * dt
+            rightrot = rot + 1 / mass * dt
+
+            p = PhysicsPacket()
+            p.rotation = leftrot if inp[
+                "left"] else (rightrot if inp["right"] else rot)
+            rot = p.rotation
+
+            p.force.x = math.sin(p.rotation) * \
+                dt * 0.1 if inp["thrust"] else 0
+            p.force.y = - \
+                math.cos(p.rotation) * dt * \
+                0.1 if inp["thrust"] else 0
+
+            p.time = inp['time']
+            p.dt = inp['dt']
+            p.brake = inp['brake']
+
+            packets.append(p)
+
+            if inp['shoot']:
+                node.add_or_attach_component('shooting', {})
+            inp["was_processed"] = True
+
+        node.physics_update.packets.extend(packets)

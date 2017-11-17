@@ -13,7 +13,7 @@ class GameStateRequestSystem(System):
         print(pnode.player_input.data[-1])
 
         nodes = self.node_factory.create_node_list(
-            ["player_input", "position", "velocity", "mass", "acceleration", "force", "rotation", "type", "physics_update"])
+            ["position", "velocity", "mass", "acceleration", "force", "rotation", "type", "physics_update"], ["player_input"])
 
         for node in nodes:
             game_state["entities"][node.id] = {
@@ -33,7 +33,7 @@ class GameStateRequestSystem(System):
                 "mass": node.mass.mass,
                 "type": node.type.type,
                 "rotation": node.rotation.rotation,
-                "control": node.player_input.data[-1],
+                "control": node.player_input.data[-1] if node.has('player_input') else None,
                 "last_update": node.physics_update.last_update
             }
         # print("Returning game state request")

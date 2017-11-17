@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello pixi!</title>
+        <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
+        <script src="static/js/keyboard.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="static/js/io.js"></script>
+        <script src="static/js/gamestate.js"></script>
+        <script src="static/js/circularArrayBuffer.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        var gamestate;
+
+        $.postJSON('./a/message/new', {'inputs':[{
+                    left: false,
+                    right: false,
+                    thrust: false,
+                    brake: false,
+                    time: 0,
+                    dt: 0,
+                    was_processed: false,
+                    was_sent: false,
+                    shoot: false
+                }]}, function(result){
+
+                        }, function error(result){
+                        });
+
+        $.postJSON('./a/message/updates', {}, function success(result){
+            console.log('received message')
+            console.log(result)
+
+            gamestate = result.messages[0];
+            // gamestate = consolidate_states(serverState, gamestate_buffer);
+
+            
+
+            
+
+
+        }, function error(result){
+        }); 
+
+        var inputs = []
+          
+        setTimeout(function(){
+            for(let i = 0; i < 100; i++){
+                let c = {
+                    left: false,
+                    right: true,
+                    thrust: true,
+                    brake: false,
+                    time: 2*i*50,
+                    dt: 50,
+                    was_processed: false,
+                    was_sent: false,
+                    shoot: false
+                };
+                inputs.push(c);
+                c = {
+                    left: false,
+                    right: true,
+                    thrust: false,
+                    brake: false,
+                    time: (2*i+1)*50,
+                    dt: 50,
+                    was_processed: false,
+                    was_sent: false,
+                    shoot: false
+                };
+                inputs.push(c);
+            }
+
+            // inputs[2].right = true;
+
+            $.postJSON('./a/message/new', {'inputs':inputs}, function(result){
+
+                        }, function error(result){
+                        });
+
+
+            // gamestate = new Gamestate(0);
+            // gamestate.entities['player'] = new Entity();
+            // gamestate.entities['player'].mass = 200;
+
+            for(let i = 0; i < inputs.length; i++){
+                let inp = inputs[i]
+                gamestate = update_gamestate(gamestate, inp, inp.dt)
+            }
+
+           $.postJSON('./a/message/updates', {}, function success(result){
+                console.log('received message')
+                console.log(result)
+
+                serverState = result.messages[0];
+                // gamestate = consolidate_states(serverState, gamestate_buffer);
+
+                
+                $.postJSON('./a/message/updates', {}, function success(result){
+                    console.log('received message')
+                    console.log(result)
+
+                    serverState = result.messages[0];
+                    // gamestate = consolidate_states(serverState, gamestate_buffer);
+
+                
+
+                
+
+
+                }, function error(result){
+                });
+
+                
+
+
+            }, function error(result){
+            });
+
+
+        }, 10000)
+
+         
+
+
+        
+            
+
+            
+            
+
+        
+       
+
+    };
+
+    </script>
+
+    </body>
+</html>

@@ -100,9 +100,22 @@ class PhysicsUpdate():
         self.entity_id = entity_id
         import time
         self.last_update = time.time() * 1000 if last_update is None else last_update
+        self.packets = []
 
 
 class GameStateRequest():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class Shooting():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class ServerUpdated():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
@@ -117,6 +130,8 @@ components = {
     "physics_update": PhysicsUpdate,
     "player_input": PlayerInput,
     "position": Position,
+    "server_updated": ServerUpdated,
+    "shooting": Shooting,
     "type": Type,
     "rotation": Rotation,
     "velocity": Velocity,

@@ -16,9 +16,11 @@ from player.player import PlayerFactory
 from objects.component_manager import ComponentManager, DBComponentSource, ArrayComponentSource
 
 from Systems.NetworkMessageSystem import NetworkMessageSystem
-# from Systems.input_system import InputSystem
-from Systems.physicsSystem import PhysicsSystem
+from Systems.input_system import InputSystem
+from Systems.purePhysicsSystem import PhysicsSystem
 from Systems.game_state_request import GameStateRequestSystem
+from Systems.shooting_system import ShootingSystem
+from Systems.server_update_system import ServerUpdateSystem
 from Systems.system_set import DBSystemSet
 
 
@@ -67,12 +69,17 @@ def setup_commands(node_factory):
 def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = DBSystemSet(object_db, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
-    # insys = InputSystem(node_factory)
+    insys = InputSystem(node_factory)
+
+    sersys = ServerUpdateSystem(node_factory)
     physys = PhysicsSystem(node_factory)
+    shoot = ShootingSystem(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(nms)
+    system_set.register(insys)
+    system_set.register(sersys)
+    system_set.register(shoot)
     system_set.register(physys)
     system_set.register(game_state_req)
-    # system_set.register(insys)
 
     return system_set

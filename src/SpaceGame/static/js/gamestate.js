@@ -17,7 +17,8 @@ function Entity() {
 		left:false,
 		right:false,
 		thrust:false,
-		brake:false
+		brake:false,
+		shoot:false
 	}
 	this.rotation = 0;
 	this.last_update = 0;
@@ -31,11 +32,25 @@ function Gamestate(time) {
 }
 
 function physics(entity, control, time) {
-	let dt = time
+	let dt = time;
 
 	// if (dt <= 0) {
 	// 	return entity;
 	// }
+
+	if(!control){
+		control = {
+			left: false,
+            right: false,
+            thrust: false,
+            brake: false,
+            shoot: false,
+            time: 0,
+            dt: 100,
+            was_processed: false,
+            was_sent: false	
+		}
+	}
 
 	var new_entity = new Entity();
 	new_entity.mass = entity.mass;
@@ -79,7 +94,8 @@ function update_gamestate(gamestate, control, time) {
 
 	for(var i in gamestate.entities){
 		let e =  gamestate.entities[i];
-		let n_e = physics(e, control, time);
+		let cont = i === gamestate.player_id ? control : e.control
+		let n_e = physics(e, cont, time);
 		new_gamestate.entities[i] = n_e;
 	}
 
