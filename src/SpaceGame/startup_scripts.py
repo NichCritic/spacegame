@@ -42,6 +42,21 @@ def setup_objects(all_db_components, all_components, session):
     return avatar_factory, node_factory, object_db, player_factory, account_utils
 
 
+def create_spacestations(node_factory):
+    import math
+    import random
+    for i in range(1000):
+        x = math.floor(random.random() * 100000)
+        y = math.floor(random.random() * 100000)
+        node_factory.create_new_node(
+            {
+                'position': {'x': x, 'y': y},
+                'type': {'type': 'spacestation1'}
+            }
+
+        )
+
+
 def setup_db(db):
     db_engine = base.engine(db)
     Session = base.create_sessionmaker(db_engine)

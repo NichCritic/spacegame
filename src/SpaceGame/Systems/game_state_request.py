@@ -28,7 +28,7 @@ class GameStateRequestSystem(System):
             control = node.player_input.data[
                 -1] if node.has('player_input') else None,
             last_update = node.physics_update.last_update if node.has(
-                physics_update) else 0
+                'physics_update') else 0
 
             game_state["entities"][node.id] = {
                 "id": node.id,

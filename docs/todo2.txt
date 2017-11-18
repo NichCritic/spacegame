@@ -1,16 +1,19 @@
 TODO:
 
 Better client side handling of server entities and other players
-Space stations
 no shooting in the past
 Projectile hit / health / damage
 Projectile timeout
 Players only get updates about entities within a given radius
+Collision with spacestation (exclude radius)
 Shops / Money
+Maps
 AI enemies
 Hazards (asteroids?)
+Pointer to nearest base
 Planets (things to see)
 Persistent positions
 Clean up client side code
 Additional ships
 Procedural background stars
+Differentiated starbases

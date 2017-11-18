@@ -41,6 +41,7 @@
                    .add('static/assets/ship.png')
                    .add('static/assets/ship_idle.png')
                    .add('static/assets/laser-bolt.png')
+                   .add('static/assets/spacestation1.png')
                    .load(setup)
 
         //Create a container object called the `stage`
@@ -85,7 +86,8 @@
             var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
             var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png");
 
-            var bolt = PIXI.BaseTexture.from("static/assets/laser-bolt.png")
+            var bolt = PIXI.BaseTexture.fromImage("static/assets/laser-bolt.png")
+            // var spacestation1 = PIXI.BaseTexture.fromImage("static/assets/spacestation1.png")
 
             textures = {}
             textures.ship = {}
@@ -97,7 +99,9 @@
             textures.bolt.accelerating = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
 
             
-
+            textures.spacestation1 = {};
+            textures.spacestation1.idle = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
+            textures.spacestation1.accelerating = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
 
             stage.addChild(bg)
             stage.addChild(stars)
