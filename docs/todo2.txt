@@ -1,3 +1,16 @@
 TODO:
 
-Isolate input from physics to enable non-player controlled entities to also use the physics system
+Better client side handling of server entities and other players
+Space stations
+no shooting in the past
+Projectile hit / health / damage
+Projectile timeout
+Players only get updates about entities within a given radius
+Shops / Money
+AI enemies
+Hazards (asteroids?)
+Planets (things to see)
+Persistent positions
+Clean up client side code
+Additional ships
+Procedural background stars
