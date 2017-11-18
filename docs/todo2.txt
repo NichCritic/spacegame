@@ -8,6 +8,7 @@ Players only get updates about entities within a given radius
 Collision with spacestation (exclude radius)
 Shops / Money
 Maps
+set starbase positions between server resets
 AI enemies
 Hazards (asteroids?)
 Pointer to nearest base

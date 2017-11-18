@@ -46,8 +46,8 @@ def create_spacestations(node_factory):
     import math
     import random
     for i in range(1000):
-        x = math.floor(random.random() * 100000)
-        y = math.floor(random.random() * 100000)
+        x = math.floor(random.random() * 100000 - 50000)
+        y = math.floor(random.random() * 100000 - 50000)
         node_factory.create_new_node(
             {
                 'position': {'x': x, 'y': y},
