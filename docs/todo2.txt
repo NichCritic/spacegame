@@ -2,11 +2,11 @@ TODO:
 
 Better client side handling of server entities and other players
 no shooting in the past
-Projectile hit / health / damage
 Projectile timeout
 Players only get updates about entities within a given radius
-Collision with spacestation (exclude radius)
+Projectile hit / health / damage
 Shops / Money
+Collision with spacestation (exclude radius)
 Maps
 set starbase positions between server resets
 AI enemies
