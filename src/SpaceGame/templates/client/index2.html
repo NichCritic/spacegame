@@ -202,11 +202,10 @@
             if(gamestate){
                 let unprocessed = inputs.getUnprocessedInput();
 
+
                 
-                for(let i = 0; i < unprocessed.length; i++){
-                    let inp  = unprocessed[i];
-                    gamestate = update_gamestate(gamestate, inp, inp.dt)
-                }
+                gamestate = update_gamestate(gamestate, unprocessed)
+                
 
 
                 camera = camera_track(camera, gamestate.entities[gamestate.player_id]);

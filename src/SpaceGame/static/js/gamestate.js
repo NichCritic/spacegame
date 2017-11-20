@@ -34,9 +34,9 @@ function Gamestate(time) {
 function physics(entity, control, time) {
 	let dt = time;
 
-	// if (dt <= 0) {
-	// 	return entity;
-	// }
+	if (!dt) {
+	 	return entity;
+	}
 
 	if(!control){
 		control = {
@@ -89,14 +89,26 @@ function physics(entity, control, time) {
     return new_entity;
 }
 
-function update_gamestate(gamestate, control, time) {
+function update_gamestate(gamestate, unprocessed) {
 	new_gamestate = new Gamestate(0);
 
-	for(var i in gamestate.entities){
-		let e =  gamestate.entities[i];
-		let cont = i === gamestate.player_id ? control : e.control
-		let n_e = physics(e, cont, time);
-		new_gamestate.entities[i] = n_e;
+	let player = gamestate.entities[gamestate.player_id];
+	let time = 0
+
+	for(let i = 0; i < unprocessed.length; i++){
+		let cont = unprocessed[i];
+		player = physics(player, cont, cont.dt);
+		new_gamestate.entities[gamestate.player_id] = player;
+		time += cont.dt;	
+	}
+
+	for(var i in gamestate.entities) {
+		if(i !== gamestate.player_id){
+			let e =  gamestate.entities[i];
+			let cont = e.control
+			let n_e = physics(e, cont, cont.dt);
+			new_gamestate.entities[i] = n_e;
+		}
 	}
 
 	new_gamestate.player_id = gamestate.player_id;

@@ -251,6 +251,7 @@ class ComponentManager(object):
         for entity_list in entities_from_sources[1:]:
             if entity_list != []:
                 entities = list(set(entities).intersection(set(entity_list)))
+
         return entities
 
     def get_components_for_entities(self, entity_ids, component_name):

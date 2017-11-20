@@ -10,7 +10,8 @@ class System(object):
         self.node_factory = node_factory
 
     def process(self):
-        for node in self.get_nodes():
+        nodes = self.get_nodes()
+        for node in nodes:
             # print(f"{self.__class__.__name__} system got message from
             # {node.id}")
             self.handle(node)
