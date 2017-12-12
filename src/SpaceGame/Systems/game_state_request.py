@@ -11,9 +11,10 @@ class GameStateRequestSystem(System):
                       "time": pnode.player_input.data[-1]['time']}
 
         print(pnode.player_input.data[-1])
+        print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "acceleration", "force", "rotation", "physics_update", "player_input"])
+            ["position", "type"], ["velocity", "mass", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"])
 
         for node in nodes:
 
@@ -29,6 +30,8 @@ class GameStateRequestSystem(System):
                 -1] if node.has('player_input') else None,
             last_update = node.physics_update.last_update if node.has(
                 'physics_update') else 0
+            state_history = node.state_history.history if node.has(
+                'state_history') else []
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -48,7 +51,8 @@ class GameStateRequestSystem(System):
                 "type": node.type.type,
                 "rotation": rotation,
                 "control": control,
-                "last_update": last_update
+                "last_update": last_update,
+                "state_history": state_history
             }
         # print("Returning game state request")
 

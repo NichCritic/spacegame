@@ -36,7 +36,10 @@ function getServerData(unlock_fn, args){
             }
         }
         inputs= new_inputs
-        gamestate_buffer.insert(serverState); 
+        gamestate_buffer.insert(serverState);
+
+        //Hack, accessing global
+        replay_state.time = serverState.time 
         unlock_fn();
     }, function error(result){
         unlock_fn();

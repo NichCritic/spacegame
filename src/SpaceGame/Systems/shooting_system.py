@@ -21,5 +21,6 @@ class ShootingSystem(System):
             'mass': {},
             'server_updated': {},
             'type': {'type': 'bolt'},
-            'physics_update': {}
+            'physics_update': {},
+            'state_history': {}
         })

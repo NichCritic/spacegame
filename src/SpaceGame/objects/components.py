@@ -121,6 +121,13 @@ class ServerUpdated():
         self.entity_id = entity_id
 
 
+class StateHistory():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.history = []
+
+
 components = {
     "acceleration": Acceleration,
     "force": Force,
@@ -132,6 +139,7 @@ components = {
     "position": Position,
     "server_updated": ServerUpdated,
     "shooting": Shooting,
+    "state_history": StateHistory,
     "type": Type,
     "rotation": Rotation,
     "velocity": Velocity,

@@ -38,4 +38,5 @@ class CommandHandler():
         av.add_or_attach_component('physics_update', {})
 
         av.add_or_attach_component('game_state_request', {})
+        av.add_or_attach_component('state_history', {})
         return ("success",)

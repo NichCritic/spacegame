@@ -21,6 +21,7 @@ from Systems.purePhysicsSystem import PhysicsSystem
 from Systems.game_state_request import GameStateRequestSystem
 from Systems.shooting_system import ShootingSystem
 from Systems.server_update_system import ServerUpdateSystem
+from Systems.historySystem import HistorySystem
 from Systems.system_set import DBSystemSet
 
 
@@ -45,16 +46,16 @@ def setup_objects(all_db_components, all_components, session):
 def create_spacestations(node_factory):
     import math
     import random
-    for i in range(1000):
-        x = math.floor(random.random() * 100000 - 50000)
-        y = math.floor(random.random() * 100000 - 50000)
-        node_factory.create_new_node(
-            {
-                'position': {'x': x, 'y': y},
-                'type': {'type': 'spacestation1'}
-            }
+    # for i in range(1000):
+    #     x = math.floor(random.random() * 100000 - 50000)
+    #     y = math.floor(random.random() * 100000 - 50000)
+    #     node_factory.create_new_node(
+    #         {
+    #             'position': {'x': x, 'y': y},
+    #             'type': {'type': 'spacestation1'}
+    #         }
 
-        )
+    #     )
 
 
 def setup_db(db):
@@ -85,13 +86,14 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = DBSystemSet(object_db, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
     insys = InputSystem(node_factory)
-
     sersys = ServerUpdateSystem(node_factory)
+    hissys = HistorySystem(node_factory)
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(nms)
     system_set.register(insys)
+    system_set.register(hissys)
     system_set.register(sersys)
     system_set.register(shoot)
     system_set.register(physys)

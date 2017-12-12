@@ -19,6 +19,15 @@ class PhysicsPacket():
         self.time = 0
         self.brake = True
 
+    def to_dict(self):
+        return {
+            "rotation": self.rotation,
+            "force": {"x": self.force.x, "y": self.force.y},
+            "dt": self.dt,
+            "time": self.time,
+            "brake": self.brake
+        }
+
 
 class InputSystem(System):
 

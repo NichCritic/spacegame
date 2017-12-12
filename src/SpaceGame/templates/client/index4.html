@@ -89,7 +89,6 @@
             var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png");
 
             var bolt = PIXI.BaseTexture.fromImage("static/assets/laser-bolt.png")
-            // var spacestation1 = PIXI.BaseTexture.fromImage("static/assets/spacestation1.png")
 
             textures = {}
             textures.ship = {}
@@ -114,6 +113,13 @@
             keys.d = keyboard(68);
             keys.f = keyboard(70);
 
+            gs = new Gamestate(0);
+            gs.entities[Shipdata.id] = Shipdata;
+            gamestate_buffer.insert(gs);
+            //gs.player_id = Shipdata.id;
+
+            replay_state.time = 1511369031028 - 10000 
+
             requestAnimationFrame(update)
         }
 
@@ -129,23 +135,6 @@
         }
 
         function render(gamestate, camera, stage){
-            if(gamestate) {
-                //for(var e in gamestate.entities){
-                    let entity = gamestate.entities[gamestate.player_id];
-                    if(!(e in sprites)){
-                        initSprite(e, entity.type);    
-                    }   
-                    let sprite = sprites[e];
-
-                    sprite.x = entity.position.x - camera.x;
-                    sprite.y = entity.position.y - camera.y;
-                    sprite.rotation = entity.rotation;
-                    entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
-                    let texture = textures[entity.type][entity.state]
-                    sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
-                    sprite.frame += 0.5;
-                //}
-            }
 
             if(replay_state){
                 for(var e in replay_state.entities){
@@ -192,23 +181,23 @@
             // Sample user input (mouse, keyboard, joystick)
 
          
-           //  // let thrust = framecounter % 400 <= 200;
+            // let thrust = framecounter % 400 <= 200;
 
-           var controls = {
-                left: keys.left.isDown,
-                right: keys.right.isDown,
-                thrust: keys.up.isDown,
-                brake: keys.d.isDown,
-                shoot: keys.f.isDown,
-                time: time,
-                dt: sim_time,
-                was_processed: false,
-                was_sent: false
-            };
-            // Package up and send movement command using simulation time
+           // var controls = {
+           //      left: keys.left.isDown,
+           //      right: keys.right.isDown,
+           //      thrust: keys.up.isDown,
+           //      brake: keys.d.isDown,
+           //      shoot: keys.f.isDown,
+           //      time: time,
+           //      dt: sim_time,
+           //      was_processed: false,
+           //      was_sent: false
+           //  };
+           //  // Package up and send movement command using simulation time
             
 
-            inputs.push(new Input(controls));
+           //  inputs.push(new Input(controls));
 
            
             
@@ -225,9 +214,9 @@
                 
                 gamestate = update_gamestate(gamestate, unprocessed, sim_time)
                 
+                gamestate_buffer.insert(gamestate);
 
-
-                camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
+                camera = camera_track(camera, gamestate.entities[Shipdata.id]);
             }
             
 
@@ -238,21 +227,182 @@
             
 
             framecounter++;
-            throttledGetServerData(
-                {
-                    gamestate_buffer:gamestate_buffer,
-                    inputs:inputs.list
-                }
-            );
-            throttledSendServerData({
-                inputs:inputs.list
-            });
+           
 
         }
         
        
 
     };
+
+    var Shipdata = {
+        "id":"d05b3dec-0555-42fd-bedf-f3689acf2b4d",
+        "type":"ship",
+        "position":{"x":0,"y":0},
+        "velocity":{"x":0,"y":0},
+        "acceleration":{"x":0,"y":0},
+        "force":{"x":0,"y":0},
+        "mass":200,
+        "type":"ship",
+        "rotation":0,
+        "control":[{"left":false,"right":false,"thrust":false,"brake":false,"shoot":false,"time":1511369031028,"dt":17,"was_processed":true,"was_sent":true}],
+        "last_update":1511369031028,
+        "state_history":[{
+            "position":{"x":0, "y":0},
+            "velocity":{"x":0, "y":0},
+            "acceleration":{"x":0, "y":0},
+            "force":{"x":0, "y":0},
+            "mass":200,
+            "rotation":0,
+            "physics_packets":[
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 101,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 201,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 301,
+                    "brake": true
+                },
+
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 401,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 501,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 601,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 701,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 801,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 901,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1001,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1101,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1201,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1301,
+                    "brake": true
+                },
+
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1401,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1501,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1601,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1701,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1801,
+                    "brake": true
+                },
+                {
+                    "rotation": 0,
+                    "force": {"x": 0, "y": -1},
+                    "dt": 100,
+                    "time": 1901,
+                    "brake": true
+                },
+                
+            ],
+            "time":0
+        }]
+    }
+
 
     </script>
 
