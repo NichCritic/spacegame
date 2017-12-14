@@ -1,85 +1,3 @@
-var EnemyReplay = (function(){
-	function EnemyReplay(){
-		this.entities = {};
-		this.entity_packets = {};
-		this.entity_time = {};
-		this.time = Date.now();
-	}
-	EnemyReplay.prototype = {
-		update:_update,
-		tick:_tick,
-	}
-
-	
-
-	function _tick(dt) {
-		for(var i in this.entities){
-			let e = this.entities[i];
-			var new_e = e;
-			packets = find_updates(this.entity_packets[i], this.time, this.time+dt);
-			for(p in packets){
-				let pack = packets[p];
-				new_e = packet_physics(new_e, pack)
-				this.entity_time[i] = pack.time + pack.dt
-			}
-			this.entities[i] = new_e;
-		}
-		
-
-		this.time += dt
-	}
-
-	function _update(id, entity){
-		let last = entity.state_history.length-1;
-		let last_update = entity.state_history[last]
-		//Hack, attach the type to the state for rendering, 
-		//but really the data needed for rendering should be removed seperately
-		last_update.type = entity.type;
-		last_update.mass = entity.mass;
-		if(!(id in this.entities)){
-
-			this.entities[id] = last_update;
-			this.entity_packets[id] = last_update.physics_packets;
-			this.entity_time[id] = last_update.time;
-			this.time = last_update.time;
-			//return;
-		}
-
-		let new_packets = [];
-		let latest_time = this.entity_time[id];
-		for(let p in this.entity_packets[id]){
-			let pack = this.entity_packets[id][p];
-			if(pack.time > latest_time){
-				new_packets.push(pack);
-				latest_time = pack.time
-			}
-		}
-
-		for(let p in last_update.physics_packets){
-			let pack = last_update.physics_packets[p];
-			if(pack.time > latest_time) {
-				new_packets.push(pack);
-				latest_time = pack.time
-			}
-		}
-		this.entity_packets[id] = new_packets;
-	}
-
-	function find_updates(packets, start, end){
-		var res = [];
-		for(var i = 0; i < packets.length; i++){
-			packet = packets[i];
-			if(packet.time >= start && packet.time < end){
-				res.push(packet)
-			}
-		}
-		return res
-	}
-
-
-	return EnemyReplay;
-})();
-
 function Entity() {
 	this.position = {
 		x:0, y:0
@@ -196,13 +114,88 @@ function physics(entity, control, time) {
     return new_entity;
 }
 
-var replay_state = new EnemyReplay();
+function interpolate(p1, p2, proportion) {
 
-function update_gamestate(gamestate, unprocessed, dt) {
-	new_gamestate = new Gamestate(0);
+}
 
+var EnemyState = (function(){
+	function EState(){
+		this.previous_state = null;
+		this.render_state = null;
+		this.server_state = null; 
+		this.t = 0;
+	}	
+
+	EState.prototype = {
+		tick: _tick,
+		update: _update
+	}
+
+	function _tick(dt) {
+		if(!this.previous_state){
+			return;
+		}
+		if(this.render_state.time >= this.server_state.time){
+			//Up to date
+			return;
+		}
+		this.t += dt;
+
+		let update_time = this.server_state.time - this.previous_state.time;
+		let update_proportion = this.t / update_time;
+		if(update_proportion > 1){
+			update_proportion = 1;
+		}
+
+		for(let e in this.render_state.entities) {
+			if(e === this.server_state.player_id){
+				continue;
+			}
+			let prv = this.previous_state.entities[e];
+			let srv = this.server_state.entities[e];
+			let px = prv.position.x;
+			let py = prv.position.y;
+			let sx = srv.position.x;
+			let sy = srv.position.y;
+			let new_x = px + ((sx-px)*update_proportion);
+			let new_y = py + ((sy-py)*update_proportion);
+			this.render_state.entities[e].position.x = new_x;
+			this.render_state.entities[e].position.y = new_y;
+
+		}
+		
+		if(update_proportion >= 1){
+			//Set the render state to the server state if we're caught up
+			this.update(this.server_state);
+		}
+	}
+
+	function _update(new_server_state){
+		this.previous_state = this.server_state;
+		this.render_state = this.server_state;
+		this.server_state = new_server_state;
+		this.t = 0
+	}
+
+
+
+
+	return EState;
+})();
+
+var replay_state = new EnemyState();
+
+
+function update_player(gamestate, unprocessed, dt) {
+	let new_gamestate = new Gamestate(0);
 	let player = gamestate.entities[gamestate.player_id];
 	let time = 0
+
+	for(let e in gamestate.entities){
+		if(e !== gamestate.player_id){
+			new_gamestate.entities[e] = gamestate.entities[e];
+		}
+	}
 
 	for(let i = 0; i < unprocessed.length; i++){
 		let cont = unprocessed[i];
@@ -211,20 +204,20 @@ function update_gamestate(gamestate, unprocessed, dt) {
 		time += cont.dt;	
 	}
 
-	for(var i in gamestate.entities) {
-		if(i !== gamestate.player_id){
-			let e = gamestate.entities[i];
-			replay_state.update(i, e);
-			replay_state.tick(dt);
-			new_gamestate.entities[i] = e;
-			new_gamestate.entities[i].position = replay_state.entities[i].position;
-		}
-	}
-
 	new_gamestate.player_id = gamestate.player_id;
 	new_gamestate.time = gamestate.time + time;
 
 	return new_gamestate
+}
+
+function update_enemies(gamestate, dt) {
+	if(!replay_state.server_state){
+		replay_state.update(gamestate);
+	}
+	if(gamestate.time > replay_state.server_state.time){
+		replay_state.update(gamestate);
+	}
+	replay_state.tick(dt);
 }
 
 

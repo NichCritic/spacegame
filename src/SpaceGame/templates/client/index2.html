@@ -147,9 +147,12 @@
                 //}
             }
 
-            if(replay_state){
-                for(var e in replay_state.entities){
-                    let entity = replay_state.entities[e];
+            if(replay_state && replay_state.render_state){
+                for(var e in replay_state.render_state.entities){
+                    if(e === replay_state.render_state.player_id) {
+                        continue;
+                    }
+                    let entity = replay_state.render_state.entities[e];
                     if(!(e in sprites)){
                         initSprite(e, entity.type);    
                     }   
@@ -223,8 +226,8 @@
 
 
                 
-                gamestate = update_gamestate(gamestate, unprocessed, sim_time)
-                
+                update_enemies(gamestate, sim_time);
+                gamestate = update_player(gamestate, unprocessed, sim_time);
 
 
                 camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
