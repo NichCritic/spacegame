@@ -72,16 +72,22 @@ class DBComponentSource():
                 "Can't add a component more than once to the same object")
 
     def get_entities_with_components(self, component_list):
-        q = self.session.query(Entity)
+        # import pdb
+        # pdb.set_trace()
+        if len(component_list) == 0:
+            return []
 
-        for comp in component_list:
+        T0 = self.component_list[component_list[0]]
+        q = self.session.query(T0)
+
+        for comp in component_list[1:]:
             Table = self.component_list[comp]
             entities = self.session.query(Table).all()
 
-            q = q.filter(Entity.id.in_([e.entity_id for e in entities]))
+            q = q.filter(T0.entity_id.in_([e.entity_id for e in entities]))
 
         entities = q.all()
-        return [e.id for e in entities]
+        return [e.entity_id for e in entities]
 
     def get_component_for_entities(self, entity_ids, component_name):
         Table = self.component_list[component_name]
