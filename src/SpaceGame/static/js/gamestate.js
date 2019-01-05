@@ -21,6 +21,7 @@ function Entity() {
 
 function Gamestate(time) {
 	this.player_id = "player";
+	this.client_entities = []
 	this.entities = {};
 	this.time = time;
 }

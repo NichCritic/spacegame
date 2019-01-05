@@ -111,8 +111,9 @@ class GameStateRequest():
 
 class Shooting():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, time):
         self.entity_id = entity_id
+        self.time = time
 
 
 class ServerUpdated():
@@ -126,6 +127,22 @@ class StateHistory():
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.history = []
+
+
+class Camera():
+
+    def __init__(self, entity_id, radius):
+        self.new_entities = {}
+        self.tracked_entites = {}
+        self.leaving_entities = {}
+        self.radius = radius
+        self.entity_id = entity_id
+
+
+class Renderable():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
 
 
 components = {
@@ -143,6 +160,8 @@ components = {
     "type": Type,
     "rotation": Rotation,
     "velocity": Velocity,
+    "camera": Camera,
+    "renderable": Renderable
 }
 
 db_components = {

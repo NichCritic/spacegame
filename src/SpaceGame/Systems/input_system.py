@@ -68,7 +68,7 @@ class InputSystem(System):
             packets.append(p)
 
             if inp['shoot']:
-                node.add_or_attach_component('shooting', {})
+                node.add_or_attach_component('shooting', {'time': p.time})
             inp["was_processed"] = True
 
         node.physics_update.packets.extend(packets)

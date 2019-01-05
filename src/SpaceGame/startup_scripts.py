@@ -95,8 +95,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(insys)
     system_set.register(hissys)
     system_set.register(sersys)
-    system_set.register(shoot)
     system_set.register(physys)
+    system_set.register(shoot)
     system_set.register(game_state_req)
 
     return system_set
