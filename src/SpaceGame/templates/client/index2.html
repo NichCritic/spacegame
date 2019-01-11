@@ -10,7 +10,10 @@
         <script src="static/js/io.js"></script>
         <script src="static/js/gamestate.js"></script>
         <script src="static/js/circularArrayBuffer.js"></script>
+        <script src="static/js/camera.js"></script>
         <script src="static/js/inputs.js"></script>
+        <script src="static/js/gameloop.js"></script>
+        <script src="static/js/menu.js"></script>
     </head>
     <body>
 
@@ -23,17 +26,17 @@
         var frame = 0;
 
         var keys = {};
-        var camera = {x:0, y:0, w:800, h:600};
+        
         var sprites = [];
 
         var serverState = {};
 
-        var gamestate_buffer = new circularArrayBuffer(10);
+        
 
-
+        var is_menu = false;
 
         //Create the renderer
-        var renderer = PIXI.autoDetectRenderer(800, 600);
+        var renderer = PIXI.autoDetectRenderer(1200, 600);
 
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
@@ -44,10 +47,10 @@
                    .add('static/assets/ship_idle.png')
                    .add('static/assets/laser-bolt.png')
                    .add('static/assets/spacestation1.png')
+                   .add('static/assets/bolfenn.png')
                    .load(setup)
 
-        //Create a container object called the `stage`
-        var stage; stage = new PIXI.Container();
+       
 
 
         function getTexturesFromSpritesheet(mySpriteSheetImage, count, rows, imgW, imgH){
@@ -66,14 +69,7 @@
         
 
         function initSprite(id, type){
-            sprites[id] = new PIXI.Sprite(textures[type].idle[0]);
-            sprites[id].x = stage.width/2 - sprites[id].width/2;
-            sprites[id].y = stage.height/2 - sprites[id].height/2;
-            sprites[id].anchor.x = 0.5;
-            sprites[id].anchor.y = 0.5;
-            sprites[id].frame = 0;
-
-            stage.addChild(sprites[id])
+            
         }
 
         function setup() {
@@ -82,7 +78,7 @@
             );
             stars = new PIXI.extras.TilingSprite(
                 PIXI.loader.resources["static/assets/parallax-space-stars2.png"].texture
-            , 800, 600);
+            , 1200, 600);
             
 
             var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
@@ -105,6 +101,13 @@
             textures.spacestation1.idle = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
             textures.spacestation1.accelerating = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
 
+            textures.bolfenn = {};
+            textures.bolfenn.idle = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
+            textures.bolfenn.accelerating = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
+
+            textures.stars = stars;
+            textures.bg = bg;
+
             stage.addChild(bg)
             stage.addChild(stars)
             
@@ -113,144 +116,56 @@
             keys.right = keyboard(39);
             keys.d = keyboard(68);
             keys.f = keyboard(70);
+            
+
+            setup_menu(keys);
 
             requestAnimationFrame(update)
         }
 
-        function camera_track(camera, entity) {
-            var new_camera = {
-                x: entity.position.x - camera.w /2,
-                y: entity.position.y - camera.h /2,
-                h: camera.h,
-                w: camera.w
-            }
+        
 
-            return new_camera;
-        }
+        
 
-        function render(gamestate, camera, stage){
-            if(gamestate) {
-                //for(var e in gamestate.entities){
-                    let entity = gamestate.entities[gamestate.player_id];
-                    if(!(e in sprites)){
-                        initSprite(e, entity.type);    
-                    }   
-                    let sprite = sprites[e];
+        
 
-                    sprite.x = entity.position.x - camera.x;
-                    sprite.y = entity.position.y - camera.y;
-                    sprite.rotation = entity.rotation;
-                    entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
-                    let texture = textures[entity.type][entity.state]
-                    sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
-                    sprite.frame += 0.5;
-                //}
-            }
-
-            if(replay_state && replay_state.render_state){
-                for(var e in replay_state.render_state.entities){
-                    if(e === replay_state.render_state.player_id) {
-                        continue;
-                    }
-                    let entity = replay_state.render_state.entities[e];
-                    if(!(e in sprites)){
-                        initSprite(e, entity.type);    
-                    }   
-                    let sprite = sprites[e];
-
-                    sprite.x = entity.position.x - camera.x;
-                    sprite.y = entity.position.y - camera.y;
-                    sprite.rotation = entity.rotation;
-                    entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
-                    let texture = textures[entity.type][entity.state]
-                    sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
-                    sprite.frame += 0.5;
-                }
-
-            }
-            stars.tilePosition.x = -camera.x;
-            stars.tilePosition.y = -camera.y;
-            
-            renderer.render(stage);
-
-            
-        }
+        
 
         var sim_time= 0;
         var inputs = new InputList();
         var last_time = Date.now();
         var framecounter = 0
+        
+
+        
+        
 
         
 
+        var mode = game_state;
 
         function update() {
 
             requestAnimationFrame(update)
-            
-            
             // Sample clock to find start time
             var time = Date.now();
             sim_time = time - last_time;
-            // Sample user input (mouse, keyboard, joystick)
 
-         
-           //  // let thrust = framecounter % 400 <= 200;
-
-           var controls = {
-                left: keys.left.isDown,
-                right: keys.right.isDown,
-                thrust: keys.up.isDown,
-                brake: keys.d.isDown,
-                shoot: keys.f.isDown,
-                time: time,
-                dt: sim_time,
-                was_processed: false,
-                was_sent: false
-            };
-            // Package up and send movement command using simulation time
+            var unprocessed_input = mode.get_input(inputs, keys, time, sim_time);
+            
             
 
-            inputs.push(new Input(controls));
+            state = mode.get_state();
 
-           
-            
-
-            // Read any packets from the server from the network system
-            var gamestate = gamestate_buffer.top()
-
-            // Use packets to determine visible objects and their state
-
-            if(gamestate){
-                let unprocessed = inputs.getUnprocessedInput();
-
-
-                
-                update_enemies(gamestate, sim_time);
-                gamestate = update_player(gamestate, unprocessed, sim_time);
-
-
-                camera = camera_track(camera, gamestate.entities[gamestate.player_id]);
-            }
-            
+            state = mode.update(state, sim_time, unprocessed_input);
 
             // Render Scene
-            render(gamestate, camera, stage);
+            mode.render(renderer, textures, sprites, state, mode.stage);
             // Sample clock to find end time
             last_time = time;
             
-
-            framecounter++;
-            throttledGetServerData(
-                {
-                    gamestate_buffer:gamestate_buffer,
-                    inputs:inputs.list
-                }
-            );
-            throttledSendServerData({
-                inputs:inputs.list
-            });
-
+            mode.update_server();
+            
         }
         
        

@@ -24,6 +24,7 @@ function Gamestate(time) {
 	this.client_entities = []
 	this.entities = {};
 	this.time = time;
+	this.camera = {};
 }
 
 function packet_physics(entity, packet){
