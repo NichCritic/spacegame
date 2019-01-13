@@ -31,7 +31,10 @@
 
         var serverState = {};
 
-        
+        var game_mode;
+        var menu_mode;
+
+        var mode;
 
         var is_menu = false;
 
@@ -53,19 +56,7 @@
        
 
 
-        function getTexturesFromSpritesheet(mySpriteSheetImage, count, rows, imgW, imgH){
-            var textures = [];
-            var countPerRow = Math.floor(count/rows);
-
-            for(var i = 0; i < count; i++) {
-                let x = (i % countPerRow) * imgW;
-                let y = Math.floor(i/countPerRow) * imgH;
-                let frame = new PIXI.Rectangle(x, y, imgW, imgH);
-                let texture = new PIXI.Texture(mySpriteSheetImage, frame);
-                textures.push(texture);
-            }
-            return textures
-        }
+        
         
 
         function initSprite(id, type){
@@ -73,43 +64,7 @@
         }
 
         function setup() {
-            bg = new PIXI.Sprite(
-                PIXI.loader.resources["static/assets/parallax-space-background2.png"].texture
-            );
-            stars = new PIXI.extras.TilingSprite(
-                PIXI.loader.resources["static/assets/parallax-space-stars2.png"].texture
-            , 1200, 600);
             
-
-            var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
-            var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png");
-
-            var bolt = PIXI.BaseTexture.fromImage("static/assets/laser-bolt.png")
-            // var spacestation1 = PIXI.BaseTexture.fromImage("static/assets/spacestation1.png")
-
-            textures = {}
-            textures.ship = {}
-            textures.ship.accelerating = getTexturesFromSpritesheet(ship_accel, 10, 2, 16, 24);
-            textures.ship.idle = getTexturesFromSpritesheet(ship_idle, 10, 2, 16, 24);
-
-            textures.bolt = {};
-            textures.bolt.idle = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
-            textures.bolt.accelerating = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
-
-            
-            textures.spacestation1 = {};
-            textures.spacestation1.idle = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
-            textures.spacestation1.accelerating = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
-
-            textures.bolfenn = {};
-            textures.bolfenn.idle = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
-            textures.bolfenn.accelerating = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
-
-            textures.stars = stars;
-            textures.bg = bg;
-
-            stage.addChild(bg)
-            stage.addChild(stars)
             
             keys.up = keyboard(38);
             keys.left = keyboard(37);
@@ -118,7 +73,23 @@
             keys.f = keyboard(70);
             
 
-            setup_menu(keys);
+            menu_mode = MenuState();
+            menu_mode.init();
+
+            game_mode = GameLoop();
+            game_mode.init();
+            mode = game_mode
+
+            keys.c = keyboard(67);
+            keys.c.press = function() {
+                if(mode == menu_mode) {
+                    mode = game_mode
+                }
+                else
+                {
+                    mode = menu_mode
+                }
+            }
 
             requestAnimationFrame(update)
         }
@@ -142,7 +113,7 @@
 
         
 
-        var mode = game_state;
+        
 
         function update() {
 
@@ -160,7 +131,7 @@
             state = mode.update(state, sim_time, unprocessed_input);
 
             // Render Scene
-            mode.render(renderer, textures, sprites, state, mode.stage);
+            mode.render(renderer, state, mode.stage);
             // Sample clock to find end time
             last_time = time;
             
