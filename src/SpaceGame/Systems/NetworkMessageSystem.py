@@ -41,9 +41,9 @@ class NetworkMessageSystem(object):
              messages to those'''
 
             if p in players:
-                print("happens")
+                # print("happens")
                 message_buffer = players[p].message_buffer
-                print("also happens")
+                # print("also happens")
                 for message in node.network_messages.msg:
                     self.send_message(message_buffer, message)
             node.remove_component("network_messages")

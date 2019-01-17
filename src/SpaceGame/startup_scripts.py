@@ -23,6 +23,7 @@ from Systems.shooting_system import ShootingSystem
 from Systems.server_update_system import ServerUpdateSystem
 from Systems.historySystem import HistorySystem
 from Systems.system_set import DBSystemSet
+from Systems.spatial_system import SpatialSystem
 
 
 from command.command_handler import CommandHandler
@@ -52,7 +53,20 @@ def create_spacestations(node_factory):
     node_factory.create_new_node(
         {
             'position': {'x': 0, 'y': 0},
-            'type': {'type': 'bolfenn'}
+            'type': {'type': 'bolfenn'},
+            'shop': {"shop_data": {
+                "name": "Bolfenn shop",
+                "items": [
+                    {"id": "0001", "pos": 0, "text": "Rockets",
+                     "cost": 10000, "img": ""},
+                    {"id": "0002", "pos": 1, "text": "Shields",
+                     "cost": 1000, "img": ""},
+                    {"id": "0003", "pos": 2, "text": "Engines",
+                     "cost": 20505, "img": ""}
+                ]
+            }
+
+            }
         }
 
     )
@@ -90,6 +104,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     hissys = HistorySystem(node_factory)
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
+    spatial = SpatialSystem(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(nms)
     system_set.register(insys)
@@ -97,6 +112,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(sersys)
     system_set.register(physys)
     system_set.register(shoot)
+    system_set.register(spatial)
     system_set.register(game_state_req)
 
     return system_set

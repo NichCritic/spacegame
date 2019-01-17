@@ -52,7 +52,7 @@ class MessageBuffer(object):
         self.waiters.remove(callback)
 
     def new_messages(self, messages):
-        logging.info("Sending new message to %r listeners", len(self.waiters))
+        # logging.info("Sending new message to %r listeners", len(self.waiters))
         for callback in self.waiters:
             try:
                 callback(messages)
@@ -107,6 +107,50 @@ class TestHandler(BaseHandler):
         self.render("client\\index4.html", messages=[])
 
 
+class ShopHandler(BaseHandler):
+
+    def initialize(self, account_utils, player_factory, session_manager, node_factory):
+        self.account_utils = account_utils
+        self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.node_factory = node_factory
+
+    def man_dist(self, pos_a, pos_b):
+        return pos_a.x + pos_a.y + pos_b.x + pos_b.y
+
+    @tornado.web.authenticated
+    def get(self):
+
+        if not self.current_user['id'] in self.player_factory.players:
+            self.clear()
+            self.set_status(500)
+            self.finish("No currently signed in user")
+            return
+
+        player = self.player_factory.players[self.current_user['id']]
+        av = self.node_factory.create_node(
+            player.avatar_id, ["position", "sector"])
+
+        shops = self.node_factory.create_node_list(
+            ["position", "shop"], [], av.sector.neighbours)
+
+        if not shops:
+            self.clear()
+            self.set_status(404)
+            self.finish("Not near any shops")
+            return
+
+        closest = shops[0]
+
+        for shop in shops:
+            if self.man_dist(av.position, closest.position) < self.man_dist(av.position, shop.position):
+                closest = shop
+
+        data = closest.shop.shop_data
+
+        self.finish(data)
+
+
 class CharacterCreateHandler(BaseHandler):
 
     def initialize(self, account_utils, player_factory, session_manager):
@@ -124,7 +168,7 @@ class CharacterCreateHandler(BaseHandler):
         acct_id = self.current_user["acct_id"]
 
         # print(self.current_user)
-        print(self.request.body)
+        # print(self.request.body)
 
         post_data = self.request.body.decode('utf-8')
 
@@ -241,12 +285,12 @@ class CommandMessageHandler(BaseHandler):
             "from": self.current_user["given_name"],
             "body": self.get_argument("body"),
         }
-        logging.info(self.current_user)
+        # logging.info(self.current_user)
         if not self.current_user['id'] in self.player_factory.players:
             self.create_player()
         player = self.player_factory.get_player(self.current_user["player_id"])
         result = self.command_handler.handle_command(player, message["body"])
-        logging.info(result)
+        # logging.info(result)
         if result[0] == "error":
             # to_basestring is necessary for Python 3's json encoder,
             # which doesn't accept byte strings.
@@ -276,7 +320,7 @@ class MessageUpdatesHandler(BaseHandler):
     @tornado.web.authenticated
     @tornado.web.asynchronous
     def post(self):
-        print(self.current_user["id"])
+        # print(self.current_user["id"])
         cursor = self.get_argument("cursor", None)
         if not self.current_user['id'] in self.player_factory.players:
             self.create_player()
@@ -307,7 +351,7 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
 
     @gen.coroutine
     def get(self):
-        print(self.get_query_argument("code", False))
+        # print(self.get_query_argument("code", False))
         if self.get_query_argument("code", False):
 
             access = yield self.get_authenticated_user(
@@ -316,7 +360,7 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
             user = yield self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v1/userinfo",
                 access_token=access["access_token"])
-            print(user)
+            # print(user)
             with self.session_manager.get_session() as session:
 
                 acct = self.account_utils.handle_login(

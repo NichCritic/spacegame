@@ -10,8 +10,8 @@ class GameStateRequestSystem(System):
         game_state = {"player_id": pnode.id, "entities": {},
                       "time": pnode.player_input.data[-1]['time']}
 
-        print(pnode.player_input.data[-1])
-        print("BOOOOOOOOOYYYYYYYYY")
+        # print(pnode.player_input.data[-1])
+        # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
             ["position", "type"], ["velocity", "mass", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"])

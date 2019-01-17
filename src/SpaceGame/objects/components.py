@@ -49,6 +49,26 @@ class Position():
         self.y = y
 
 
+class Sector():
+    '''
+    A sector is position / 2500
+    neightbours has the list of all entities in the sector
+    '''
+
+    def __init__(self, entity_id, sx, sy, neighbours):
+        self.entity_id = entity_id
+        self.sx = sx
+        self.sy = sy
+        self.neighbours = neighbours
+
+
+class Shop():
+
+    def __init__(self, entity_id, shop_data):
+        self.entity_id = entity_id
+        self.shop_data = shop_data
+
+
 class Velocity():
 
     def __init__(self, entity_id, x=0, y=0):
@@ -161,7 +181,9 @@ components = {
     "rotation": Rotation,
     "velocity": Velocity,
     "camera": Camera,
-    "renderable": Renderable
+    "renderable": Renderable,
+    "shop": Shop,
+    "sector": Sector
 }
 
 db_components = {

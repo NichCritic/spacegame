@@ -91,6 +91,11 @@
                 }
             }
 
+            keys.esc = keyboard(27);
+            keys.esc.press = function() {
+                mode = game_mode
+            }
+
             requestAnimationFrame(update)
         }
 
