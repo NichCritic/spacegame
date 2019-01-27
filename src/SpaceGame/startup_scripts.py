@@ -24,6 +24,9 @@ from Systems.server_update_system import ServerUpdateSystem
 from Systems.historySystem import HistorySystem
 from Systems.system_set import DBSystemSet
 from Systems.spatial_system import SpatialSystem
+from Systems.transaction_system import TransactionSystem
+
+import objects.item
 
 
 from command.command_handler import CommandHandler
@@ -44,28 +47,39 @@ def setup_objects(all_db_components, all_components, session):
     return avatar_factory, node_factory, object_db, player_factory, account_utils
 
 
-def create_spacestations(node_factory):
+def create_spacestations(node_factory, session):
     import math
     import random
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
+    gold = objects.item.get_item_by_name(session, 'gold')
+    silver = objects.item.get_item_by_name(session, 'silver')
+    copper = objects.item.get_item_by_name(session, 'copper')
+    crystal = objects.item.get_item_by_name(session, 'crystal')
+
     node_factory.create_new_node(
         {
             'position': {'x': 0, 'y': 0},
             'type': {'type': 'bolfenn'},
-            'shop': {"shop_data": {
-                "name": "Bolfenn shop",
-                "items": [
-                    {"id": "0001", "pos": 0, "text": "Rockets",
-                     "cost": 10000, "img": ""},
-                    {"id": "0002", "pos": 1, "text": "Shields",
-                     "cost": 1000, "img": ""},
-                    {"id": "0003", "pos": 2, "text": "Engines",
-                     "cost": 20505, "img": ""}
-                ]
-            }
-
+            'shop': {"shop_data":
+                     {
+                         "name": "Bolfenn shop",
+                         "items": [
+                             {"id": crystal.id, "pos": 0, "text": crystal.name,
+                              "cost": 100, "img": ""},
+                             {"id": gold.id, "pos": 1, "text": gold.name,
+                              "cost": 1000, "img": ""},
+                             {"id": silver.id, "pos": 2, "text": silver.name,
+                              "cost": 10000, "img": ""}
+                         ]
+                     }
+                     },
+            'money': {
+                "money": 0
+            },
+            "inventory": {
+                "inventory": {gold.id: {"qty": 500}, silver.id: {"qty": 500}, crystal.id: {"qty": 500}}
             }
         }
 
@@ -105,6 +119,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
+    transaction = TransactionSystem(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(nms)
     system_set.register(insys)
@@ -113,6 +128,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(physys)
     system_set.register(shoot)
     system_set.register(spatial)
+    system_set.register(transaction)
     system_set.register(game_state_req)
 
     return system_set

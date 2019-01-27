@@ -69,6 +69,27 @@ class Shop():
         self.shop_data = shop_data
 
 
+class Money():
+
+    def __init__(self, entity_id, money):
+        self.entity_id = entity_id
+        self.money = money
+
+
+class Inventory():
+
+    def __init__(self, entity_id, inventory):
+        self.entity_id = entity_id
+        self.inventory = inventory
+
+
+class Transaction():
+
+    def __init__(self, entity_id, transactions):
+        self.entity_id = entity_id
+        self.transactions = transactions
+
+
 class Velocity():
 
     def __init__(self, entity_id, x=0, y=0):
@@ -183,6 +204,9 @@ components = {
     "camera": Camera,
     "renderable": Renderable,
     "shop": Shop,
+    "money": Money,
+    "inventory": Inventory,
+    "transaction": Transaction,
     "sector": Sector
 }
 

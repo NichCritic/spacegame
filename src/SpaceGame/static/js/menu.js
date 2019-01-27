@@ -13,6 +13,18 @@ var MenuState = (function() {
         ]
     };
 
+    jQuery.postJSON = function(url, args, callback, error) {
+        // args._xsrf = getCookie("_xsrf");
+        $.ajax({url: url, data: {'body':JSON.stringify(args)}, dataType: "json", type: "POST",
+            success: callback, error: error});
+    };
+
+    jQuery.getJSON = function(url, callback, error) {
+        // args._xsrf = getCookie("_xsrf");
+        $.ajax({url: url, dataType: "json", type: "GET",
+            success: callback, error: error});
+    };
+
     var sprites = {};
 
     var renderables = {};
@@ -73,6 +85,18 @@ var MenuState = (function() {
             }
         };
 
+        keys.enter = keyboard(13);
+
+        keys.enter.press = function() {
+            $.postJSON("/shop", {msg: "purchase", "item_index":selector_index}, 
+            function(){
+                
+            },
+            function(err){
+                console.warn(err);
+            })
+        };
+
 
 
     }
@@ -83,11 +107,7 @@ var MenuState = (function() {
         return state;
     }
 
-    jQuery.getJSON = function(url, callback, error) {
-        // args._xsrf = getCookie("_xsrf");
-        $.ajax({url: url, dataType: "json", type: "GET",
-            success: callback, error: error});
-    };
+    
 
     function get_server_data(unlock_fn) {
         $.getJSON("/shop", function success(data){

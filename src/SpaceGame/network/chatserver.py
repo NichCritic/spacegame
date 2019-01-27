@@ -25,6 +25,8 @@ import uuid
 from tornado import gen
 from tornado.options import define
 
+import json
+
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -118,9 +120,7 @@ class ShopHandler(BaseHandler):
     def man_dist(self, pos_a, pos_b):
         return pos_a.x + pos_a.y + pos_b.x + pos_b.y
 
-    @tornado.web.authenticated
-    def get(self):
-
+    def get_player(self):
         if not self.current_user['id'] in self.player_factory.players:
             self.clear()
             self.set_status(500)
@@ -128,6 +128,10 @@ class ShopHandler(BaseHandler):
             return
 
         player = self.player_factory.players[self.current_user['id']]
+        return player
+
+    def get_closest_shop(self):
+        player = self.get_player()
         av = self.node_factory.create_node(
             player.avatar_id, ["position", "sector"])
 
@@ -146,7 +150,74 @@ class ShopHandler(BaseHandler):
             if self.man_dist(av.position, closest.position) < self.man_dist(av.position, shop.position):
                 closest = shop
 
+        return closest
+
+    @tornado.web.authenticated
+    def get(self):
+        closest = self.get_closest_shop()
         data = closest.shop.shop_data
+
+        self.finish(data)
+
+    def post(self):
+        post_data = self.get_argument("body")
+        json_data = json.loads(post_data)
+
+        closest_shop = self.get_closest_shop()
+
+        shop_data = closest_shop.shop.shop_data
+
+        items = shop_data["items"]
+
+        selected_item = items[json_data["item_index"]]
+
+        player = self.get_player()
+
+        av = self.node_factory.create_node(
+            player.avatar_id, [])
+
+        av.add_or_attach_component('transaction', {"transactions": []})
+
+        av.transaction.transactions.append({
+            "buyer_id": av.id,
+            "seller_id": closest_shop.id,
+            "item_id": selected_item["id"],
+            "quantity": 1,
+            "price": selected_item["cost"]
+        })
+
+        self.finish()
+
+
+class InventoryHandler(BaseHandler):
+
+    def initialize(self, account_utils, player_factory, session_manager, node_factory):
+        self.account_utils = account_utils
+        self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.node_factory = node_factory
+
+    def get_player(self):
+        if not self.current_user['id'] in self.player_factory.players:
+            self.clear()
+            self.set_status(500)
+            self.finish("No currently signed in user")
+            return
+
+        player = self.player_factory.players[self.current_user['id']]
+        return player
+
+    @tornado.web.authenticated
+    def get(self):
+        import objects.item
+        player = self.get_player()
+        av = self.node_factory.create_node(player.avatar_id, ["inventory"], [])
+
+        with self.session_manager.get_session() as session:
+            items = [{"name": objects.item.get_item_by_id(
+                session, it).name, "id": it, "qty": av.inventory.inventory[it]["qty"]} for it in av.inventory.inventory]
+
+        data = {"inventory": items}
 
         self.finish(data)
 

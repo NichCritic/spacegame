@@ -39,4 +39,6 @@ class CommandHandler():
 
         av.add_or_attach_component('game_state_request', {})
         av.add_or_attach_component('state_history', {})
+        av.add_or_attach_component('money', {'money': 10000})
+        av.add_or_attach_component('inventory', {'inventory': {}})
         return ("success",)

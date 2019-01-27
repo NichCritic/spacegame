@@ -8,9 +8,10 @@ import tornado.ioloop
 import os.path
 import keys
 from tornado.options import options, parse_command_line
-from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler
+from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler, InventoryHandler
 
 from objects.components import components, db_components
+import objects.item
 
 from startup_scripts import register_systems, setup_commands, setup_db, setup_objects, create_spacestations
 
@@ -27,12 +28,12 @@ session_manager = setup_db('sqlite:///main.db')
 with session_manager.get_session() as session:
     avatar_factory, node_factory, object_db, player_factory, account_utils = setup_objects(
         all_db_components, all_components, session)
+    create_spacestations(node_factory, session)
 
 
 command_handler = setup_commands(node_factory)
 system_set = register_systems(
     session_manager, object_db, node_factory, player_factory)
-create_spacestations(node_factory)
 
 
 def main():
@@ -54,7 +55,9 @@ def main():
             (r"/character_create", CharacterCreateHandler, dict(account_utils=account_utils,
                                                                 player_factory=player_factory, session_manager=session_manager)),
             (r"/shop", ShopHandler, dict(account_utils=account_utils,
-                                         player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
+                                         player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+            (r"/inv", InventoryHandler, dict(account_utils=account_utils,
+                                             player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
         ],
         cookie_secret=keys.cookie_secret,
         login_url="/auth/login",
