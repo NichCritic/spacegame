@@ -5,9 +5,10 @@ function locked(fn){
     }
     function inner(args){
         if(!lock){
-            fn(unlock_fn, args);
+            ret = fn(unlock_fn, args);
             lock = true;
         }
+        return ret;
     }
     return inner;
 }

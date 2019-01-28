@@ -73,8 +73,11 @@
             keys.f = keyboard(70);
             
 
-            menu_mode = MenuState();
+            menu_mode = MenuState(shopMenu);
             menu_mode.init();
+
+            inv_mode = MenuState(invMenu);
+            inv_mode.init();
 
             game_mode = GameLoop();
             game_mode.init();
@@ -83,12 +86,22 @@
             keys.c = keyboard(67);
             keys.c.press = function() {
                 if(mode == menu_mode) {
-                    mode = game_mode
+                    mode = game_mode;
                 }
                 else
                 {
-                    mode = menu_mode
+                    mode = menu_mode;
                 }
+            }
+
+            keys.i = keyboard(73);
+            keys.i.press = function() {
+                if(mode == inv_mode){
+                    mode = game_mode;
+                }else{
+                    mode = inv_mode;
+                }
+
             }
 
             keys.esc = keyboard(27);

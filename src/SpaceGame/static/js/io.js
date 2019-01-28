@@ -3,6 +3,14 @@ function getCookie(name) {
     return r ? r[1] : undefined;
 }
 
+
+
+jQuery.getJSON = function(url, callback, error) {
+        // args._xsrf = getCookie("_xsrf");
+    $.ajax({url: url, dataType: "json", type: "GET",
+        success: callback, error: error});
+};
+
 jQuery.postJSON = function(url, args, callback, error) {
     // args._xsrf = getCookie("_xsrf");
     $.ajax({url: url, data: {'body':JSON.stringify(args)}, dataType: "json", type: "POST",
