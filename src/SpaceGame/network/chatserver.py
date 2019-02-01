@@ -118,7 +118,7 @@ class ShopHandler(BaseHandler):
         self.node_factory = node_factory
 
     def man_dist(self, pos_a, pos_b):
-        return pos_a.x + pos_a.y + pos_b.x + pos_b.y
+        return abs(pos_a.x - pos_b.x) + abs(pos_a.y - pos_b.y)
 
     def get_player(self):
         if not self.current_user['id'] in self.player_factory.players:
