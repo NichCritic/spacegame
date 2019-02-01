@@ -76,11 +76,17 @@ class Money():
         self.money = money
 
 
-class Inventory():
+class Inventory(Base):
+    __compname__ = "inventory"
+    __tablename__ = "inventory"
+    id = Column(Integer, primary_key=True)
+
+    entity_id = Column(String, ForeignKey("entity.id"))
+    inv = Column(String)
 
     def __init__(self, entity_id, inventory):
         self.entity_id = entity_id
-        self.inventory = inventory
+        self.inv = inventory
 
 
 class Transaction():
@@ -205,11 +211,11 @@ components = {
     "renderable": Renderable,
     "shop": Shop,
     "money": Money,
-    "inventory": Inventory,
     "transaction": Transaction,
     "sector": Sector
 }
 
 db_components = {
+    "inventory": Inventory,
     "player_controlled": PlayerControlled
 }

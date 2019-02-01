@@ -79,7 +79,7 @@ def create_spacestations(node_factory, session):
                 "money": 0
             },
             "inventory": {
-                "inventory": {gold.id: {"qty": 500}, silver.id: {"qty": 500}, crystal.id: {"qty": 500}}
+                "inventory": f'{{"{gold.id}": {{"qty": 500}}, "{silver.id}": {{"qty": 500}}, "{crystal.id}": {{"qty": 500}}}}'
             }
         }
 
@@ -105,8 +105,8 @@ class ObjectProvider(object):
         self.node_factory = NodeFactoryDB(all_components, Session)
 
 
-def setup_commands(node_factory):
-    command_handler = CommandHandler(node_factory)
+def setup_commands(node_factory, session_manager, db_comps):
+    command_handler = CommandHandler(node_factory, session_manager, db_comps)
     return command_handler
 
 

@@ -178,13 +178,25 @@ class ShopHandler(BaseHandler):
 
         av.add_or_attach_component('transaction', {"transactions": []})
 
-        av.transaction.transactions.append({
-            "buyer_id": av.id,
-            "seller_id": closest_shop.id,
-            "item_id": selected_item["id"],
-            "quantity": 1,
-            "price": selected_item["cost"]
-        })
+        logging.info("adding transaction")
+
+        if json_data['msg'] == 'purchase':
+            av.transaction.transactions.append({
+                "buyer_id": av.id,
+                "seller_id": closest_shop.id,
+                "item_id": selected_item["id"],
+                "quantity": 1,
+                "price": selected_item["cost"]
+            })
+
+        if json_data['msg'] == 'sell':
+            av.transaction.transactions.append({
+                "buyer_id": closest_shop.id,
+                "seller_id": av.id,
+                "item_id": selected_item["id"],
+                "quantity": 1,
+                "price": selected_item["cost"] / 2
+            })
 
         self.finish()
 
@@ -214,10 +226,39 @@ class InventoryHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["inventory"], [])
 
         with self.session_manager.get_session() as session:
+            inventory = json.loads(av.inventory.inv)
             items = [{"name": objects.item.get_item_by_id(
-                session, it).name, "id": it, "qty": av.inventory.inventory[it]["qty"]} for it in av.inventory.inventory]
+                session, it).name, "id": it, "qty": inventory[it]["qty"]} for it in inventory]
 
         data = {"inventory": items}
+
+        self.finish(data)
+
+
+class MoneyHandler(BaseHandler):
+
+    def initialize(self, account_utils, player_factory, session_manager, node_factory):
+        self.account_utils = account_utils
+        self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.node_factory = node_factory
+
+    def get_player(self):
+        if not self.current_user['id'] in self.player_factory.players:
+            self.clear()
+            self.set_status(500)
+            self.finish("No currently signed in user")
+            return
+
+        player = self.player_factory.players[self.current_user['id']]
+        return player
+
+    @tornado.web.authenticated
+    def get(self):
+        player = self.get_player()
+        av = self.node_factory.create_node(player.avatar_id, ["money"], [])
+
+        data = {"money": av.money.money}
 
         self.finish(data)
 

@@ -8,7 +8,7 @@ import tornado.ioloop
 import os.path
 import keys
 from tornado.options import options, parse_command_line
-from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler, InventoryHandler
+from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler, InventoryHandler, MoneyHandler
 
 from objects.components import components, db_components
 import objects.item
@@ -28,10 +28,11 @@ session_manager = setup_db('sqlite:///main.db')
 with session_manager.get_session() as session:
     avatar_factory, node_factory, object_db, player_factory, account_utils = setup_objects(
         all_db_components, all_components, session)
+    object_db.set_session(session)
     create_spacestations(node_factory, session)
 
 
-command_handler = setup_commands(node_factory)
+command_handler = setup_commands(node_factory, session_manager, object_db)
 system_set = register_systems(
     session_manager, object_db, node_factory, player_factory)
 
@@ -57,7 +58,9 @@ def main():
             (r"/shop", ShopHandler, dict(account_utils=account_utils,
                                          player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/inv", InventoryHandler, dict(account_utils=account_utils,
-                                             player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
+                                             player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+            (r"/money", MoneyHandler, dict(account_utils=account_utils,
+                                           player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
         ],
         cookie_secret=keys.cookie_secret,
         login_url="/auth/login",

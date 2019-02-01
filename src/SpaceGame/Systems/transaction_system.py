@@ -1,7 +1,8 @@
 from Systems.system import System
-import math
 import time
 from itertools import takewhile
+import json
+import logging
 
 
 class TransactionSystem(System):
@@ -16,7 +17,7 @@ class TransactionSystem(System):
         for t in node.transaction.transactions:
             b_id = t['buyer_id']
             s_id = t['seller_id']
-            i_id = t['item_id']
+            i_id = str(t['item_id'])
             qty = t['quantity']
             cost = t['price']
 
@@ -28,19 +29,26 @@ class TransactionSystem(System):
             buyer.money.money -= cost
             seller.money.money += cost
 
-            if i_id in buyer.inventory.inventory:
-                if "qty" in buyer.inventory.inventory[i_id]:
-                    buyer.inventory.inventory[i_id]["qty"] += qty
+            buyer_inv = json.loads(buyer.inventory.inv)
+
+            seller_inv = json.loads(seller.inventory.inv)
+
+            if i_id in buyer_inv:
+                if "qty" in buyer_inv[i_id]:
+                    buyer_inv[i_id]["qty"] += qty
                 else:
-                    buyer.inventory.inventory[i_id]["qty"] = qty
+                    buyer_inv[i_id]["qty"] = qty
             else:
-                buyer.inventory.inventory[i_id] = {"qty": qty}
+                buyer_inv[i_id] = {"qty": qty}
 
             # TODO Verify seller actually has the item
-            if i_id in seller.inventory.inventory:
-                if "qty" in buyer.inventory.inventory[i_id]:
-                    seller.inventory.inventory[i_id]["qty"] -= qty
+            if i_id in seller_inv:
+                if "qty" in seller_inv[i_id]:
+                    seller_inv[i_id]["qty"] -= qty
                 else:
-                    seller.inventory.inventory[i_id]["qty"] = 0
+                    seller_inv[i_id]["qty"] = 0
+
+            buyer.inventory.inv = json.dumps(buyer_inv)
+            seller.inventory.inv = json.dumps(seller_inv)
 
         node.transaction.transactions = []
