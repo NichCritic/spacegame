@@ -26,6 +26,9 @@ class CommandHandler():
 
         av.add_or_attach_component(
             'position', {})
+        av.add_or_attach_component('area', {'radius': 8})
+        av.add_or_attach_component('collidable', {})
+
         av.add_or_attach_component(
             'velocity', {})
         av.add_or_attach_component(

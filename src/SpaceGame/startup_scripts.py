@@ -25,6 +25,9 @@ from Systems.historySystem import HistorySystem
 from Systems.system_set import DBSystemSet
 from Systems.spatial_system import SpatialSystem
 from Systems.transaction_system import TransactionSystem
+from Systems.collisionSystem import CollisionSystem
+from Systems.collisionMovementSystem import CollisionMovementSystem
+from Systems.collisionSink import CollisionSink
 
 import objects.item
 
@@ -61,6 +64,8 @@ def create_spacestations(node_factory, session):
     node_factory.create_new_node(
         {
             'position': {'x': 0, 'y': 0},
+            'area': {'radius': 250},
+            'collidable': {},
             'type': {'type': 'bolfenn'},
             'shop': {"shop_data":
                      {
@@ -87,7 +92,9 @@ def create_spacestations(node_factory, session):
 
     node_factory.create_new_node(
         {
-            'position': {'x': 0, 'y': 1000},
+            'position': {'x': 0, 'y': 5000},
+            'area': {'radius': 250},
+            'collidable': {},
             'type': {'type': 'bolfenn'},
             'shop': {"shop_data":
                      {
@@ -146,7 +153,10 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
+    collision = CollisionSystem(node_factory)
+    coll_mov = CollisionMovementSystem(node_factory)
     transaction = TransactionSystem(node_factory)
+    coll_sink = CollisionSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(nms)
     system_set.register(insys)
@@ -155,7 +165,10 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(physys)
     system_set.register(shoot)
     system_set.register(spatial)
+    system_set.register(collision)
+    system_set.register(coll_mov)
     system_set.register(transaction)
+    system_set.register(coll_sink)
     system_set.register(game_state_req)
 
     return system_set

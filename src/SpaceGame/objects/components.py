@@ -49,6 +49,26 @@ class Position():
         self.y = y
 
 
+class Area():
+
+    def __init__(self, entity_id, radius):
+        self.entity_id = entity_id
+        self.radius = radius
+
+
+class Collidable():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class Colliding():
+
+    def __init__(self, entity_id, collisions):
+        self.entity_id = entity_id
+        self.collisions = [] if not collisions else collisions
+
+
 class Sector():
     '''
     A sector is position / 2500
@@ -217,7 +237,10 @@ components = {
     "renderable": Renderable,
     "shop": Shop,
     "transaction": Transaction,
-    "sector": Sector
+    "sector": Sector,
+    "area": Area,
+    "collidable": Collidable,
+    "colliding": Colliding
 }
 
 db_components = {
