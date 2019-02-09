@@ -67,6 +67,10 @@ var GameLoop = (function() {
         textures.bolfenn.idle = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
         textures.bolfenn.accelerating = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
 
+        textures.asteroid = {};
+        textures.asteroid.idle = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
+        textures.asteroid.accelerating = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
+
         textures.stars = stars;
         textures.bg = bg;
 
@@ -78,6 +82,7 @@ var GameLoop = (function() {
         if(state) {
             update_enemies(state, sim_time);
             state = update_player(state, unprocessed_input, sim_time);
+            detect_and_resolve_collisions(state);
             state.camera = camera_track(camera, state.entities[state.player_id]);
         }
         return state;

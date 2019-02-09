@@ -3,6 +3,7 @@ function Entity() {
 		x:0, y:0
 	};
 	this.mass = 1;
+	this.radius = 1;
 	this.velocity = {
 		x:0, y:0
 	};
@@ -17,6 +18,26 @@ function Entity() {
 	this.rotation = 0;
 	this.last_update = 0;
 	this.type = 'bolt';
+}
+
+function clone_entity(entity) {
+	var new_entity = new Entity();
+	new_entity.position.x = entity.position.x;
+	new_entity.position.y = entity.position.y;
+	new_entity.mass = entity.mass;
+	new_entity.radius = entity.radius;
+	new_entity.velocity.x = entity.velocity.x;
+	new_entity.velocity.y = entity.velocity.y;
+	new_entity.acceleration.x = entity.acceleration.x;
+	new_entity.acceleration.y = entity.acceleration.y;
+	new_entity.force.x = entity.force.x;
+	new_entity.force.y = entity.force.y;
+	new_entity.state = entity.state;
+	new_entity.physics_packets = entity.physics_packets;
+	new_entity.rotation = entity.rotation;
+	new_entity.last_update = entity.last_update;
+	new_entity.type = entity.type;
+	return new_entity;
 }
 
 function Gamestate(time) {
@@ -220,6 +241,48 @@ function update_enemies(gamestate, dt) {
 		replay_state.update(gamestate);
 	}
 	replay_state.tick(dt);
+}
+
+/*
+	TODO: Doesn't handle two objects in motion very well
+*/
+function detect_and_resolve_collisions(gamestate) {
+	var new_entities = {};
+	for(var e1_id in gamestate.entities) {
+		var e1 = clone_entity(gamestate.entities[e1_id]);
+		if(e1.velocity.x == 0 && e1.velocity.y == 0) {
+			new_entities[e1_id] = e1;
+			continue;
+		}
+
+		for(var e2_id in gamestate.entities) {
+			if(e1_id != e2_id) {
+				var e2 = clone_entity(gamestate.entities[e2_id]);
+				var dist = Math.sqrt((e1.position.x-e2.position.x)*(e1.position.x-e2.position.x)+(e1.position.y-e2.position.y)*(e1.position.y-e2.position.y));
+				if(dist < e1.radius+e2.radius){
+					let delta = e1.radius + e2.radius - dist;
+					let norm_vec = {
+						x: (e1.position.x - e2.position.x) / dist,
+						y: (e1.position.y - e2.position.y) / dist
+					}
+					e1.position.x = e1.position.x + norm_vec.x * delta;
+					e1.position.y = e1.position.y + norm_vec.y * delta;
+
+					mom1 = {
+						x: e1.velocity.x * e1.mass,
+						y: e1.velocity.y * e1.mass
+					}
+
+					e1.force.x = -mom1.x;
+					e1.force.y = -mom1.y;
+				}
+			}
+
+		}
+		new_entities[e1_id] = e1; 
+	}
+	gamestate.entities = new_entities;
+	return gamestate;
 }
 
 

@@ -119,6 +119,22 @@ def create_spacestations(node_factory, session):
 
     )
 
+    node_factory.create_new_node({
+        "type": {"type": "asteroid"},
+        "area": {"radius": 100},
+        "position": {"x": 1500, "y": 0},
+        "rotation": {"rotation": 10},
+        "velocity": {"x": 0.05, "y": 0.08},
+        "collidable": {},
+        'force': {},
+        'acceleration': {},
+        'mass': {},
+        'server_updated': {},
+        'physics_update': {},
+        'state_history': {}
+
+    })
+
 
 def setup_db(db):
     db_engine = base.engine(db)
