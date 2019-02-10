@@ -273,8 +273,8 @@ function detect_and_resolve_collisions(gamestate) {
 						y: e1.velocity.y * e1.mass
 					}
 
-					e1.force.x = -mom1.x;
-					e1.force.y = -mom1.y;
+					e1.force.x = -(e1.force.x+mom1.x);
+					e1.force.y = -(e1.force.y+mom1.y);
 				}
 			}
 

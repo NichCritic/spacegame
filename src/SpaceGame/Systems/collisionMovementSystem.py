@@ -27,14 +27,14 @@ class CollisionMovementSystem(System):
             mom1_x = node.velocity.x * node.mass.mass
             mom1_y = node.velocity.y * node.mass.mass
 
-            if c_node.entity_has('mass') and c_node.enttiy_has('velocity'):
+            if c_node.entity_has('mass') and c_node.entity_has('velocity'):
                 c_node.add_or_attach_component("mass", {})
                 c_node.add_or_attach_component("velocity", {})
                 mom2_x = c_node.velocity.x * c_node.mass.mass
                 mom2_y = c_node.velocity.y * c_node.mass.mass
 
-                node.force.x = -(mom1_x + mom2_x) / 2
-                node.force.y = -(mom1_x + mom2_y) / 2
+                node.force.x = -(node.force.x + (mom1_x + mom2_x) / 2)
+                node.force.y = -(node.force.y + (mom1_x + mom2_y) / 2)
             else:
-                node.force.x = -mom1_x
-                node.force.y = -mom1_y
+                node.force.x = mom1_x
+                node.force.y = mom1_y
