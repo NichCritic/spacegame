@@ -3,7 +3,7 @@ from Systems.system import System
 
 class GameStateRequestSystem(System):
 
-    manditory = ["player_controlled", "player_input"]
+    manditory = ["player_controlled", "player_input", "sector"]
     handles = []
 
     def handle(self, pnode):
@@ -14,7 +14,7 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"])
+            ["position", "type"], ["velocity", "mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
 

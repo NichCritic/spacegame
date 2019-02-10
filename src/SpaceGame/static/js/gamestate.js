@@ -174,6 +174,9 @@ var EnemyState = (function(){
 			if(e === this.server_state.player_id){
 				continue;
 			}
+			if(!(e in this.server_state) || !(e in this.previous_state)) {
+				continue
+			}
 			let prv = this.previous_state.entities[e];
 			let srv = this.server_state.entities[e];
 			let px = prv.position.x;
