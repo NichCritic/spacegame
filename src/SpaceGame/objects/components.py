@@ -5,7 +5,7 @@ Created on 2013-11-03
 '''
 
 from model.base import Base
-from sqlalchemy import Column, String, Integer, ForeignKey, PickleType, Boolean
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, PickleType, Boolean
 from sqlalchemy.orm import relationship, backref
 
 
@@ -40,6 +40,38 @@ class PlayerInput():
         self.entity_id = entity_id
         self.data = [] if data is None else data
 
+
+class DBPosition(Base):
+    __compname__ = "db_position"
+    __tablename__ = "db_position"
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    x = Column(Float)
+    y = Column(Float)
+
+    def __init__(self, entity_id, x, y):
+        self.entity_id = entity_id
+        self.x = x
+        self.y = y
+
+class Persisted():
+
+    def __init__(entity_id, persisted_properties=None):
+        self.entity_id = entity_id
+        #PersistedProperties is a dict mapping component name to the name of the db_component that persists it
+        self.persisted_properties = {} if persisted_properties == None else persisted_properties
+
+class InstanceComponents(Base):
+    __compname__ = "instance_components"
+    __tablename__ = "instance_components"
+
+    id = Column(Integer, primary_key=True)
+    entity_id = Column(String, ForeignKey("entity.id"))
+    components = Column(String)
+
+    def __init__(self, entity_id, components="{}"):
+        self.entity_id = entity_id
+        self.components = components
 
 class Position():
 
@@ -240,11 +272,14 @@ components = {
     "sector": Sector,
     "area": Area,
     "collidable": Collidable,
-    "colliding": Colliding
+    "colliding": Colliding,
+    "persisted": Persisted
 }
 
 db_components = {
     "inventory": Inventory,
     "money": Money,
-    "player_controlled": PlayerControlled
+    "player_controlled": PlayerControlled,
+    "instance_components": InstanceComponents,
+    "db_position": DBPosition
 }

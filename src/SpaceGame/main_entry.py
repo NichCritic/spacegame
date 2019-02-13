@@ -13,7 +13,7 @@ from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler,
 from objects.components import components, db_components
 import objects.item
 
-from startup_scripts import register_systems, setup_commands, setup_db, setup_objects, create_spacestations
+from startup_scripts import register_systems, setup_commands, setup_db, setup_objects, create_spacestations, unpack_db_objects
 
 
 all_db_components = {}
@@ -30,6 +30,8 @@ with session_manager.get_session() as session:
         all_db_components, all_components, session)
     object_db.set_session(session)
     create_spacestations(node_factory, session)
+    unpack_db_objects(node_factory)
+    
 
 
 command_handler = setup_commands(node_factory, session_manager, object_db)

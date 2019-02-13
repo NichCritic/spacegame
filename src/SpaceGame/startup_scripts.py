@@ -49,6 +49,23 @@ def setup_objects(all_db_components, all_components, session):
 
     return avatar_factory, node_factory, object_db, player_factory, account_utils
 
+def unpack_db_objects(node_factory):
+    import json
+    node_list = node_factory.create_node_list(["instance_components"],[])
+
+    for node in node_list:
+        icomp = json.loads(node.instance_components.components)
+        for component, data in icomp:
+            if isinstance(s, str):
+                node.add_or_attach_component(data, {})
+                node.add_or_attach_component(component, {})
+                node.components[component].__dict__.update(node.components[data].__dict__)
+            else:
+                node.add_or_attach_component(component, data)
+
+
+
+
 
 def create_spacestations(node_factory, session):
     import math
