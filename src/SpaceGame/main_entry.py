@@ -30,7 +30,7 @@ with session_manager.get_session() as session:
         all_db_components, all_components, session)
     object_db.set_session(session)
     create_spacestations(db_node_factory, session)
-    # unpack_db_objects(db_node_factory)
+    unpack_db_objects(db_node_factory)
 
 
 command_handler = setup_commands(node_factory, session_manager, object_db)

@@ -71,6 +71,27 @@ var GameLoop = (function() {
         textures.asteroid.idle = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
         textures.asteroid.accelerating = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
 
+        textures.asteroid = {};
+        textures.asteroid.idle = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
+        textures.asteroid.accelerating = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
+
+        textures.planet2 = {};
+        textures.planet2.idle = [PIXI.loader.resources["static/assets/planet2.png"].texture];
+        textures.planet2.accelerating = [PIXI.loader.resources["static/assets/planet2.png"].texture];
+
+        textures.planet3 = {};
+        textures.planet3.idle = [PIXI.loader.resources["static/assets/planet3.png"].texture];
+        textures.planet3.accelerating = [PIXI.loader.resources["static/assets/planet3.png"].texture];
+
+        textures.planet4 = {};
+        textures.planet4.idle = [PIXI.loader.resources["static/assets/planet4.png"].texture];
+        textures.planet4.accelerating = [PIXI.loader.resources["static/assets/planet4.png"].texture];
+
+        textures.planet5 = {};
+        textures.planet5.idle = [PIXI.loader.resources["static/assets/planet5.png"].texture];
+        textures.planet5.accelerating = [PIXI.loader.resources["static/assets/planet5.png"].texture];
+
+
         textures.stars = stars;
         textures.bg = bg;
 

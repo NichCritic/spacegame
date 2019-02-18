@@ -81,64 +81,6 @@ def create_spacestations(node_factory, session):
     copper = objects.item.get_item_by_name(session, 'copper')
     crystal = objects.item.get_item_by_name(session, 'crystal')
 
-    # node_factory.create_new_node(
-    #     {
-    #         'position': {'x': 0, 'y': 0},
-    #         'area': {'radius': 250},
-    #         'collidable': {},
-    #         'type': {'type': 'bolfenn'},
-    #         'shop': {"shop_data":
-    #                  {
-    #                      "name": "Bolfenn shop",
-    #                      "items": [
-    #                          {"id": crystal.id, "pos": 0, "text": crystal.name,
-    #                           "cost": 100, "img": ""},
-    #                          {"id": gold.id, "pos": 1, "text": gold.name,
-    #                           "cost": 1000, "img": ""},
-    #                          {"id": silver.id, "pos": 2, "text": silver.name,
-    #                           "cost": 10000, "img": ""}
-    #                      ]
-    #                  }
-    #                  },
-    #         'money': {
-    #             "money": 0
-    #         },
-    #         "inventory": {
-    #             "inventory": f'{{"{gold.id}": {{"qty": 500}}, "{silver.id}": {{"qty": 500}}, "{crystal.id}": {{"qty": 500}}}}'
-    #         }
-    #     }
-
-    # )
-
-    node_factory.create_new_node(
-        {
-            'position': {'x': 0, 'y': 0},
-            'area': {'radius': 750},
-            'collidable': {},
-            'type': {'type': 'bolfenn'},
-            'shop': {"shop_data":
-                     {
-                         "name": "Not Bolfenn shop",
-                         "items": [
-                             {"id": crystal.id, "pos": 0, "text": crystal.name,
-                              "cost": 10000, "img": ""},
-                             {"id": gold.id, "pos": 1, "text": gold.name,
-                              "cost": 1000, "img": ""},
-                             {"id": silver.id, "pos": 2, "text": silver.name,
-                              "cost": 100, "img": ""}
-                         ]
-                     }
-                     },
-            'money': {
-                "money": 0
-            },
-            "inventory": {
-                "inventory": f'{{"{gold.id}": {{"qty": 500}}, "{silver.id}": {{"qty": 500}}, "{crystal.id}": {{"qty": 500}}}}'
-            }
-        }
-
-    )
-
     node_factory.create_new_node({
         "type": {"type": "asteroid"},
         "area": {"radius": 100},

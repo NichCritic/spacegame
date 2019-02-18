@@ -12,6 +12,401 @@ all_components = {}
 all_components.update(components)
 
 
+def create_planets(node_factory, session):
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -17290, 'y': 2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 36124, 'y': 13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 40573, 'y': 13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -35044, 'y': 14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 38813, 'y': 5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 17290, 'y': -2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -36124, 'y': -13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -40573, 'y': -13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 35044, 'y': -14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -38813, 'y': -5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 17290, 'y': 2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -36124, 'y': 13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -40573, 'y': 13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 35044, 'y': 14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -38813, 'y': 5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -17290, 'y': -2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 36124, 'y': -13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 40573, 'y': -13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -35044, 'y': -14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 38813, 'y': -5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    # Mark
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -17290, 'y': -2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 36124, 'y': -13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 40573, 'y': -13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -35044, 'y': -14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 38813, 'y': -5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 17290, 'y': 2344},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"bolfenn"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -36124, 'y': 13583},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet2"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -40573, 'y': 13528},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet3"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': 35044, 'y': 14508},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet4"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+    node_factory.create_new_node(
+        {
+            'db_position': {'x': -38813, 'y': 5533},
+            'instance_components': {
+                "components": '{\
+                    "type":{"type":"planet5"},\
+                    "position": "db_position",\
+                    "area":{"radius":750}\
+                }'
+            }
+        }
+    )
+
+
 def create_asteroids(node_factory, session):
     import math
     count = 1000
@@ -54,3 +449,4 @@ with session_manager.get_session() as session:
     session.add(Item("crystal"))
 
     create_asteroids(node_factory_db, session)
+    create_planets(node_factory_db, session)
