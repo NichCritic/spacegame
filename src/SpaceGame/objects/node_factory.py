@@ -29,7 +29,7 @@ class NodeFactoryDB(object):
             optional = []
 
         entities = self.component_manager.get_entities_with_components(
-            component_list)
+            component_list, entity_ids=entity_ids)
 
         # feels strange to do this again
         components = {}

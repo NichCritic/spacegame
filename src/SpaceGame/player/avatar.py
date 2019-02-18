@@ -31,11 +31,17 @@ class AvatarFactory(object):
         default_data = self.default_data
 
         if data and "pid" in data:
-            self.component_manager.add_component_to_object(
-                "player_controlled", avatar.id, {"pid": data["player_id"]})
+            self.component_manager.add_component_to_object("instance_components", avatar.id, {'components': '\
+                {\
+                    "player_controlled":{"pid":zzz}\
+                }\
+        '.replace('zzz', str(data["player_id"]))})
         else:
-            self.component_manager.add_component_to_object(
-                "player_controlled", avatar.id, {"pid": default_data["player_id"]})
+            self.component_manager.add_component_to_object("instance_components", avatar.id, {'components': '\
+                {\
+                    "player_controlled":{"pid":zzz}\
+                }\
+        '.replace('zzz', str(default_data["player_id"]))})
 
         return avatar
 
@@ -51,6 +57,12 @@ class AvatarFactory(object):
             "player_controlled", avatar, {"pid": data["player_id"]})
         self.component_manager.add_component_to_object("senses", avatar)
         self.component_manager.add_component_to_object("visible_names", avatar)
+
+        self.component_manager.add_component_to_object("instance_components", avatar, {'components': '\
+                {\
+                    "player_controlled":{"pid":zzz}\
+                }\
+        '.replace('zzz', data["player_id"])})
 
         node = self.node_factory.create_node(
             avatar.id, ["location", "names", "player_controlled"])

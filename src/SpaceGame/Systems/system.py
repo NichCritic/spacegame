@@ -1,4 +1,5 @@
 import time
+import logging
 
 
 class System(object):
@@ -12,8 +13,6 @@ class System(object):
     def process(self):
         nodes = self.get_nodes()
         for node in nodes:
-            # print(f"{self.__class__.__name__} system got message from
-            # {node.id}")
             self.handle(node)
             self.clean(node)
 

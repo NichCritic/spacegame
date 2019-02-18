@@ -71,7 +71,7 @@ class DBComponentSource():
             raise AttributeError(
                 "Can't add a component more than once to the same object")
 
-    def get_entities_with_components(self, component_list):
+    def get_entities_with_components(self, component_list, entity_ids=None):
         # import pdb
         # pdb.set_trace()
         if len(component_list) == 0:
@@ -91,9 +91,27 @@ class DBComponentSource():
 
     def get_component_for_entities(self, entity_ids, component_name):
         Table = self.component_list[component_name]
-        comps = self.session.query(Table).filter(
-            Table.entity_id.in_(entity_ids))
-        return comps
+
+        all_comps = []
+
+        limit = 500
+        i = 0
+        # import pdb
+        # pdb.set_trace()
+
+        while True:
+            i = i + 1
+            if i * limit < len(entity_ids):
+                comps = self.session.query(Table).filter(
+                    Table.entity_id.in_(entity_ids[(i - 1) * limit: i * limit])).all()
+                all_comps += comps
+            else:
+                comps = self.session.query(Table).filter(
+                    Table.entity_id.in_(entity_ids[(i - 1) * limit:])).all()
+
+                all_comps += comps
+                break
+        return all_comps
 
     def create_entity(self):
         e = Entity()
@@ -150,8 +168,8 @@ class ArrayComponentSource():
             raise AttributeError(
                 "Can't add a component more than once to the same object")
 
-    def get_entities_with_components(self, component_list):
-        entities = []
+    def get_entities_with_components(self, component_list, entity_ids=None):
+        entities = [] if entity_ids == None else [entity_ids]
         for component_name in component_list:
             entities.append(self.get_entities_for_component(component_name))
 
@@ -230,7 +248,7 @@ class ComponentManager(object):
                 break
         return entities
 
-    def get_entities_with_components(self, component_list):
+    def get_entities_with_components(self, component_list, entity_ids):
         entities_from_sources = []
         components_covered = []
         num_components_from_source = []
@@ -239,7 +257,7 @@ class ComponentManager(object):
             supported_components = component_source.get_supported_subset(
                 component_list)
             entities_from_sources.append(
-                component_source.get_entities_with_components(supported_components))
+                component_source.get_entities_with_components(supported_components, entity_ids=entity_ids))
             components_covered += supported_components
             num_components_from_source.append(len(supported_components))
 

@@ -26,12 +26,11 @@ all_components.update(components)
 session_manager = setup_db('sqlite:///main.db')
 
 with session_manager.get_session() as session:
-    avatar_factory, node_factory, object_db, player_factory, account_utils = setup_objects(
+    avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils = setup_objects(
         all_db_components, all_components, session)
     object_db.set_session(session)
-    create_spacestations(node_factory, session)
-    unpack_db_objects(node_factory)
-    
+    create_spacestations(db_node_factory, session)
+    # unpack_db_objects(db_node_factory)
 
 
 command_handler = setup_commands(node_factory, session_manager, object_db)

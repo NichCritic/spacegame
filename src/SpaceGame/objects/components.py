@@ -54,12 +54,15 @@ class DBPosition(Base):
         self.x = x
         self.y = y
 
+
 class Persisted():
 
     def __init__(entity_id, persisted_properties=None):
         self.entity_id = entity_id
-        #PersistedProperties is a dict mapping component name to the name of the db_component that persists it
+        # PersistedProperties is a dict mapping component name to the name of
+        # the db_component that persists it
         self.persisted_properties = {} if persisted_properties == None else persisted_properties
+
 
 class InstanceComponents(Base):
     __compname__ = "instance_components"
@@ -72,6 +75,7 @@ class InstanceComponents(Base):
     def __init__(self, entity_id, components="{}"):
         self.entity_id = entity_id
         self.components = components
+
 
 class Position():
 
@@ -121,26 +125,14 @@ class Shop():
         self.shop_data = shop_data
 
 
-class Money(Base):
-    __compname__ = "money"
-    __tablename__ = "money"
-    id = Column(Integer, primary_key=True)
-
-    entity_id = Column(String, ForeignKey("entity.id"))
-    money = Column(Integer)
+class Money():
 
     def __init__(self, entity_id, money):
         self.entity_id = entity_id
         self.money = money
 
 
-class Inventory(Base):
-    __compname__ = "inventory"
-    __tablename__ = "inventory"
-    id = Column(Integer, primary_key=True)
-
-    entity_id = Column(String, ForeignKey("entity.id"))
-    inv = Column(String)
+class Inventory():
 
     def __init__(self, entity_id, inventory):
         self.entity_id = entity_id
@@ -273,13 +265,13 @@ components = {
     "area": Area,
     "collidable": Collidable,
     "colliding": Colliding,
-    "persisted": Persisted
+    "persisted": Persisted,
+    "player_controlled": PlayerControlled,
+    "inventory": Inventory,
+    "money": Money
 }
 
 db_components = {
-    "inventory": Inventory,
-    "money": Money,
-    "player_controlled": PlayerControlled,
     "instance_components": InstanceComponents,
     "db_position": DBPosition
 }

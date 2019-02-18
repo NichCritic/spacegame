@@ -1,4 +1,5 @@
 import time
+import logging
 '''
 Created on 2014-03-23
 
@@ -18,6 +19,7 @@ class SystemSet(object):
         self.systems.append(system)
 
     def process(self):
+
         for sys in self.systems:
             sys.process()
 

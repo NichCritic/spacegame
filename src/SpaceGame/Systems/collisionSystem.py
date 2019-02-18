@@ -1,6 +1,7 @@
 from Systems.system import System
 import math
 import logging
+import time
 
 
 class CollisionSystem(System):
@@ -24,6 +25,7 @@ class CollisionSystem(System):
             if node.id == nnode.id:
                 return
             dist = self.distance(node.position, nnode.position)
+
             if dist == 0:
                 dist = 0.01
 

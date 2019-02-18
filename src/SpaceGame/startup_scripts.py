@@ -22,7 +22,7 @@ from Systems.game_state_request import GameStateRequestSystem
 from Systems.shooting_system import ShootingSystem
 from Systems.server_update_system import ServerUpdateSystem
 from Systems.historySystem import HistorySystem
-from Systems.system_set import DBSystemSet
+from Systems.system_set import SystemSet
 from Systems.spatial_system import SpatialSystem
 from Systems.transaction_system import TransactionSystem
 from Systems.collisionSystem import CollisionSystem
@@ -38,33 +38,36 @@ from command.command_handler import CommandHandler
 def setup_objects(all_db_components, all_components, session):
     object_db = DBComponentSource(all_db_components, session)
     object_array = ArrayComponentSource(all_components)
-    component_manager = ComponentManager([object_db, object_array])
+    component_manager = ComponentManager([object_array])
+    db_component_manager = ComponentManager([object_db, object_array])
     node_factory = NodeFactoryDB(component_manager)
+    db_node_factory = NodeFactoryDB(db_component_manager)
     player_factory = PlayerFactory(component_manager)
     default_room = "6cb2fa80-ddb1-47bb-b980-31b01d97add5"
-    avatar_factory = AvatarFactory(node_factory, component_manager, {
+    avatar_factory = AvatarFactory(db_node_factory, db_component_manager, {
         "starting_room": default_room,
         "player_id": 0})
     account_utils = AccountUtils(avatar_factory)
 
-    return avatar_factory, node_factory, object_db, player_factory, account_utils
+    return avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils
+
 
 def unpack_db_objects(node_factory):
     import json
-    node_list = node_factory.create_node_list(["instance_components"],[])
+    node_list = node_factory.create_node_list(["instance_components"], [])
 
     for node in node_list:
         icomp = json.loads(node.instance_components.components)
-        for component, data in icomp:
-            if isinstance(s, str):
+        # import pdb
+        # pdb.set_trace()
+        for component, data in icomp.items():
+            if isinstance(data, str):
                 node.add_or_attach_component(data, {})
                 node.add_or_attach_component(component, {})
-                node.components[component].__dict__.update(node.components[data].__dict__)
+                node.components[component].__dict__.update(
+                    node.components[data].__dict__)
             else:
                 node.add_or_attach_component(component, data)
-
-
-
 
 
 def create_spacestations(node_factory, session):
@@ -78,39 +81,39 @@ def create_spacestations(node_factory, session):
     copper = objects.item.get_item_by_name(session, 'copper')
     crystal = objects.item.get_item_by_name(session, 'crystal')
 
+    # node_factory.create_new_node(
+    #     {
+    #         'position': {'x': 0, 'y': 0},
+    #         'area': {'radius': 250},
+    #         'collidable': {},
+    #         'type': {'type': 'bolfenn'},
+    #         'shop': {"shop_data":
+    #                  {
+    #                      "name": "Bolfenn shop",
+    #                      "items": [
+    #                          {"id": crystal.id, "pos": 0, "text": crystal.name,
+    #                           "cost": 100, "img": ""},
+    #                          {"id": gold.id, "pos": 1, "text": gold.name,
+    #                           "cost": 1000, "img": ""},
+    #                          {"id": silver.id, "pos": 2, "text": silver.name,
+    #                           "cost": 10000, "img": ""}
+    #                      ]
+    #                  }
+    #                  },
+    #         'money': {
+    #             "money": 0
+    #         },
+    #         "inventory": {
+    #             "inventory": f'{{"{gold.id}": {{"qty": 500}}, "{silver.id}": {{"qty": 500}}, "{crystal.id}": {{"qty": 500}}}}'
+    #         }
+    #     }
+
+    # )
+
     node_factory.create_new_node(
         {
             'position': {'x': 0, 'y': 0},
-            'area': {'radius': 250},
-            'collidable': {},
-            'type': {'type': 'bolfenn'},
-            'shop': {"shop_data":
-                     {
-                         "name": "Bolfenn shop",
-                         "items": [
-                             {"id": crystal.id, "pos": 0, "text": crystal.name,
-                              "cost": 100, "img": ""},
-                             {"id": gold.id, "pos": 1, "text": gold.name,
-                              "cost": 1000, "img": ""},
-                             {"id": silver.id, "pos": 2, "text": silver.name,
-                              "cost": 10000, "img": ""}
-                         ]
-                     }
-                     },
-            'money': {
-                "money": 0
-            },
-            "inventory": {
-                "inventory": f'{{"{gold.id}": {{"qty": 500}}, "{silver.id}": {{"qty": 500}}, "{crystal.id}": {{"qty": 500}}}}'
-            }
-        }
-
-    )
-
-    node_factory.create_new_node(
-        {
-            'position': {'x': 0, 'y': 5000},
-            'area': {'radius': 250},
+            'area': {'radius': 750},
             'collidable': {},
             'type': {'type': 'bolfenn'},
             'shop': {"shop_data":
@@ -178,7 +181,7 @@ def setup_commands(node_factory, session_manager, db_comps):
 
 
 def register_systems(session_manager, object_db, node_factory, player_factory):
-    system_set = DBSystemSet(object_db, session_manager)
+    system_set = SystemSet()
     nms = NetworkMessageSystem(node_factory, player_factory)
     insys = InputSystem(node_factory)
     sersys = ServerUpdateSystem(node_factory)

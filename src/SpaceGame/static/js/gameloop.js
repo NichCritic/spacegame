@@ -167,6 +167,12 @@ var GameLoop = (function() {
                 let entity = replay_state.render_state.entities[e];
                 if(!(e in sprites)){
                     sprites[e] = new PIXI.Sprite(textures[entity.type].idle[0]);
+
+                    if (entity.radius) {
+                        sprites[e].width = 2*entity.radius;
+                        sprites[e].height = 2*entity.radius;
+                    }
+
                     sprites[e].x = stage.width/2 - sprites[e].width/2;
                     sprites[e].y = stage.height/2 - sprites[e].height/2;
                     sprites[e].anchor.x = 0.5;
