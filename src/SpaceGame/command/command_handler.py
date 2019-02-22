@@ -47,7 +47,7 @@ class CommandHandler():
 
         with self.session_manager.get_session() as session:
             self.db_comps.set_session(session)
-            av.add_or_attach_component('inventory', {'inventory': '{}'})
+            av.add_or_attach_component('inventory', {'inventory': {}})
             av.add_or_attach_component('money', {'money': 10000})
 
         return ("success",)

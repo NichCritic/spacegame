@@ -51,6 +51,7 @@ function getServerData(unlock_fn, args){
         unlock_fn();
     }, function error(result){
         unlock_fn();
+        window.location.replace("/auth/login");
     });
     
 }

@@ -91,6 +91,10 @@ var GameLoop = (function() {
         textures.planet5.idle = [PIXI.loader.resources["static/assets/planet5.png"].texture];
         textures.planet5.accelerating = [PIXI.loader.resources["static/assets/planet5.png"].texture];
 
+        textures.target = {};
+        textures.target.idle = [PIXI.loader.resources["static/assets/target.png"].texture];
+        textures.target.accelerating = [PIXI.loader.resources["static/assets/target.png"].texture];
+
 
         textures.stars = stars;
         textures.bg = bg;
@@ -115,7 +119,7 @@ var GameLoop = (function() {
             left: keys.left.isDown,
             right: keys.right.isDown,
             thrust: keys.up.isDown,
-            brake: keys.d.isDown,
+            brake: !keys.d.isDown,
             shoot: keys.f.isDown,
             time: time,
             dt: sim_time,

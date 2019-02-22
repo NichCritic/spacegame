@@ -16,6 +16,7 @@
         <script src="static/js/shopMenu.js"></script>
         <script src="static/js/invMenu.js"></script>
         <script src="static/js/menu.js"></script>
+        <script src="static/js/map.js"></script>
     </head>
     <body>
 
@@ -58,6 +59,7 @@
                    .add('static/assets/planet3.png')
                    .add('static/assets/planet4.png')
                    .add('static/assets/planet5.png')
+                   .add('static/assets/target.png')
 
                    .load(setup)
 
@@ -89,7 +91,12 @@
 
             game_mode = GameLoop();
             game_mode.init();
+
+            map_mode = MapState();
+            map_mode.init();
+
             mode = game_mode
+
 
             keys.c = keyboard(67);
             keys.c.press = function() {
@@ -108,6 +115,17 @@
                     mode = game_mode;
                 }else{
                     mode = inv_mode;
+                }
+
+            }
+
+            keys.m = keyboard(77);
+            keys.m.press = function() {
+                if(mode == map_mode){
+                    mode = game_mode;
+                }else{
+                    map_mode.poll();
+                    mode = map_mode;
                 }
 
             }

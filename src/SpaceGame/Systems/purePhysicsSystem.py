@@ -8,6 +8,7 @@ class PhysicsSystem(System):
 
     manditory = ["position", "velocity",
                  "mass", "acceleration", "force", "rotation", "physics_update"]
+    optional = ["inventory_mass"]
     handles = []
 
     def __init__(self, node_factory):
@@ -15,10 +16,12 @@ class PhysicsSystem(System):
         self.sim_time = 0
 
     def physics(self, node, packet, pos, vel, mass):
-        node.force.x = packet.force.x
-        node.force.y = packet.force.y
-        node.rotation.rotation = packet.rotation
         dt = packet.dt
+        node.force.x = packet.force.x + \
+            (-vel.x) * 0.03 * dt * (0 if packet.force.x == 0 else 1)
+        node.force.y = packet.force.y + \
+            (-vel.y) * 0.03 * dt * (0 if packet.force.y == 0 else 1)
+        node.rotation.rotation = packet.rotation
 
         # print(f"{node.force.y}, {dt}")
 
@@ -48,7 +51,11 @@ class PhysicsSystem(System):
         for packet in physics_packets:
             pos = node.position
             vel = node.velocity
-            mass = node.mass.mass
+
+            if node.has("inventory_mass"):
+                mass = node.mass.mass + node.inventory_mass.inventory_mass
+            else:
+                mass = node.mass.mass
 
             self.physics(node, packet, pos, vel, mass)
 

@@ -7,6 +7,7 @@ Created on 2013-11-03
 from model.base import Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, PickleType, Boolean
 from sqlalchemy.orm import relationship, backref
+import time
 
 
 class NetworkMessages(object):
@@ -125,6 +126,13 @@ class Shop():
         self.shop_data = shop_data
 
 
+class ShopSpec():
+
+    def __init__(self, entity_id, shop_data):
+        self.entity_id = entity_id
+        self.shop_data = shop_data
+
+
 class Money():
 
     def __init__(self, entity_id, money):
@@ -137,6 +145,13 @@ class Inventory():
     def __init__(self, entity_id, inventory):
         self.entity_id = entity_id
         self.inv = inventory
+
+
+class InventoryMass():
+
+    def __init__(self, entity_id, inventory_mass=0):
+        self.entity_id = entity_id
+        self.inventory_mass = inventory_mass
 
 
 class Transaction():
@@ -242,11 +257,20 @@ class Renderable():
         self.entity_id = entity_id
 
 
+class Processor():
+
+    def __init__(self, entity_id, processes, last_update=None):
+        self.entity_id = entity_id
+        self.processes = processes
+        self.last_update = time.time() * 1000 if last_update is None else last_update
+
+
 components = {
     "acceleration": Acceleration,
     "force": Force,
     "game_state_request": GameStateRequest,
     "mass": Mass,
+    "inventory_mass": InventoryMass,
     "network_messages": NetworkMessages,
     "physics_update": PhysicsUpdate,
     "player_input": PlayerInput,
@@ -260,6 +284,7 @@ components = {
     "camera": Camera,
     "renderable": Renderable,
     "shop": Shop,
+    "shop_spec": ShopSpec,
     "transaction": Transaction,
     "sector": Sector,
     "area": Area,
@@ -268,7 +293,8 @@ components = {
     "persisted": Persisted,
     "player_controlled": PlayerControlled,
     "inventory": Inventory,
-    "money": Money
+    "money": Money,
+    "processor": Processor
 }
 
 db_components = {

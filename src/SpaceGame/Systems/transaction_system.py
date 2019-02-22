@@ -25,13 +25,27 @@ class TransactionSystem(System):
             seller = self.node_factory.create_node(
                 s_id, ["inventory", "money"])
 
-            # TODO: Verify that the buyer actually has the money
+            if buyer.money.money < cost:
+                # skip the transaction
+                continue
+
+            seller_inv = seller.inventory.inv
+            if i_id not in seller_inv:
+                continue
+
+            if "qty" not in seller_inv[i_id]:
+                # If the item in the inventory has no qty
+                continue
+            if not seller_inv[i_id]["qty"] >= qty:
+                # If the qty is too low to sell
+                continue
+
             buyer.money.money -= cost
             seller.money.money += cost
 
-            buyer_inv = json.loads(buyer.inventory.inv)
+            buyer_inv = buyer.inventory.inv
 
-            seller_inv = json.loads(seller.inventory.inv)
+            seller_inv[i_id]["qty"] -= qty
 
             if i_id in buyer_inv:
                 if "qty" in buyer_inv[i_id]:
@@ -40,15 +54,5 @@ class TransactionSystem(System):
                     buyer_inv[i_id]["qty"] = qty
             else:
                 buyer_inv[i_id] = {"qty": qty}
-
-            # TODO Verify seller actually has the item
-            if i_id in seller_inv:
-                if "qty" in seller_inv[i_id]:
-                    seller_inv[i_id]["qty"] -= qty
-                else:
-                    seller_inv[i_id]["qty"] = 0
-
-            buyer.inventory.inv = json.dumps(buyer_inv)
-            seller.inventory.inv = json.dumps(seller_inv)
 
         node.transaction.transactions = []

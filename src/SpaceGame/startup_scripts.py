@@ -28,6 +28,9 @@ from Systems.transaction_system import TransactionSystem
 from Systems.collisionSystem import CollisionSystem
 from Systems.collisionMovementSystem import CollisionMovementSystem
 from Systems.collisionSink import CollisionSink
+from Systems.shopUnpackSystem import ShopUnpackSystem
+from Systems.processorSystem import ProcessorSystem
+from Systems.inventoryMassSystem import InventoryMassSystem
 
 import objects.item
 
@@ -76,11 +79,6 @@ def create_spacestations(node_factory, session):
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
-    gold = objects.item.get_item_by_name(session, 'gold')
-    silver = objects.item.get_item_by_name(session, 'silver')
-    copper = objects.item.get_item_by_name(session, 'copper')
-    crystal = objects.item.get_item_by_name(session, 'crystal')
-
     node_factory.create_new_node({
         "type": {"type": "asteroid"},
         "area": {"radius": 100},
@@ -124,7 +122,9 @@ def setup_commands(node_factory, session_manager, db_comps):
 
 def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = SystemSet()
+    shopUnpackSystem = ShopUnpackSystem(node_factory, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
+    invmass = InventoryMassSystem(node_factory)
     insys = InputSystem(node_factory)
     sersys = ServerUpdateSystem(node_factory)
     hissys = HistorySystem(node_factory)
@@ -134,9 +134,12 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     collision = CollisionSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
     transaction = TransactionSystem(node_factory)
+    processor = ProcessorSystem(node_factory)
     coll_sink = CollisionSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
+    system_set.register(shopUnpackSystem)
     system_set.register(nms)
+    system_set.register(invmass)
     system_set.register(insys)
     system_set.register(hissys)
     system_set.register(sersys)
@@ -146,6 +149,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(collision)
     system_set.register(coll_mov)
     system_set.register(transaction)
+    system_set.register(processor)
     system_set.register(coll_sink)
     system_set.register(game_state_req)
 

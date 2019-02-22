@@ -155,7 +155,9 @@ class ShopHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         closest = self.get_closest_shop()
+        closest.add_or_attach_component('inventory', {'inventory': {}})
         data = closest.shop.shop_data
+        data['inventory'] = closest.inventory.inv
 
         self.finish(data)
 
@@ -167,9 +169,15 @@ class ShopHandler(BaseHandler):
 
         shop_data = closest_shop.shop.shop_data
 
-        items = shop_data["items"]
+        items = shop_data["buy_items"] if json_data[
+            'msg'] == 'sell' else shop_data["sale_items"]
 
-        selected_item = items[json_data["item_index"]]
+        item_id = json_data["item_id"]
+
+        selected_item = None
+        for i in items:
+            if i["id"] == item_id:
+                selected_item = i
 
         player = self.get_player()
 
@@ -184,7 +192,7 @@ class ShopHandler(BaseHandler):
             av.transaction.transactions.append({
                 "buyer_id": av.id,
                 "seller_id": closest_shop.id,
-                "item_id": selected_item["id"],
+                "item_id": item_id,
                 "quantity": 1,
                 "price": selected_item["cost"]
             })
@@ -193,9 +201,9 @@ class ShopHandler(BaseHandler):
             av.transaction.transactions.append({
                 "buyer_id": closest_shop.id,
                 "seller_id": av.id,
-                "item_id": selected_item["id"],
+                "item_id": item_id,
                 "quantity": 1,
-                "price": selected_item["cost"] / 2
+                "price": selected_item["cost"]
             })
 
         self.finish()
@@ -226,7 +234,7 @@ class InventoryHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["inventory"], [])
 
         with self.session_manager.get_session() as session:
-            inventory = json.loads(av.inventory.inv)
+            inventory = av.inventory.inv
             items = [{"name": objects.item.get_item_by_id(
                 session, it).name, "id": it, "qty": inventory[it]["qty"]} for it in inventory]
 
@@ -259,6 +267,39 @@ class MoneyHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["money"], [])
 
         data = {"money": av.money.money}
+
+        self.finish(data)
+
+
+class MinimapHandler(BaseHandler):
+
+    def initialize(self, account_utils, player_factory, session_manager, node_factory):
+        self.account_utils = account_utils
+        self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.node_factory = node_factory
+
+    def get_player(self):
+        if not self.current_user['id'] in self.player_factory.players:
+            self.clear()
+            self.set_status(500)
+            self.finish("No currently signed in user")
+            return
+
+        player = self.player_factory.players[self.current_user['id']]
+        return player
+
+    @tornado.web.authenticated
+    def get(self):
+        nodes = self.node_factory.create_node_list(["position", "area"], [])
+        player = self.get_player()
+        av = self.node_factory.create_node(
+            player.avatar_id, ["position", "area"], [])
+
+        data = {"positions": [{"id": n.id, "radius": n.area.radius, "x": n.position.x,
+                               "y": n.position.y} for n in nodes if n.area.radius > 90],
+                "player": {"id": av.id, "radius": av.area.radius, "x": av.position.x,
+                           "y": av.position.y}}
 
         self.finish(data)
 
@@ -433,12 +474,18 @@ class MessageUpdatesHandler(BaseHandler):
     @tornado.web.asynchronous
     def post(self):
         # print(self.current_user["id"])
-        cursor = self.get_argument("cursor", None)
-        if not self.current_user['id'] in self.player_factory.players:
-            self.create_player()
+        try:
+            cursor = self.get_argument("cursor", None)
+            if not self.current_user['id'] in self.player_factory.players:
+                self.create_player()
 
-        self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
-                                                                                              cursor=cursor)
+            self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
+                                                                                                  cursor=cursor)
+        except:
+            self.clear()
+            self.set_status(500)
+            self.finish("No currently signed in user")
+            return
 
     def on_new_messages(self, messages):
         # Closed client connection

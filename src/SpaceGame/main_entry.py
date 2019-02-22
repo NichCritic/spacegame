@@ -8,7 +8,7 @@ import tornado.ioloop
 import os.path
 import keys
 from tornado.options import options, parse_command_line
-from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler, InventoryHandler, MoneyHandler
+from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler, MessageUpdatesHandler, CommandMessageHandler, CharacterSelectHandler, CharacterCreateHandler, TestHandler, ShopHandler, InventoryHandler, MoneyHandler, MinimapHandler
 
 from objects.components import components, db_components
 import objects.item
@@ -61,7 +61,9 @@ def main():
             (r"/inv", InventoryHandler, dict(account_utils=account_utils,
                                              player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/money", MoneyHandler, dict(account_utils=account_utils,
-                                           player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
+                                           player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+            (r"/minimap", MinimapHandler, dict(account_utils=account_utils,
+                                               player_factory=player_factory, session_manager=session_manager, node_factory=node_factory))
         ],
         cookie_secret=keys.cookie_secret,
         login_url="/auth/login",

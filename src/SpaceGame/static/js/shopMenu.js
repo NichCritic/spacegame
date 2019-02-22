@@ -11,6 +11,7 @@ var shopMenu = (function() {
         sell_items:[
 
         ],
+        shop_inv:{},
         selector_index:0,
         selector_menu:'buy'
     };
@@ -23,7 +24,7 @@ var shopMenu = (function() {
     var menu_style = {
         title_x:50, title_y:15,
         buy_text_x:50, buy_text_y:50,
-        x:50, y:100, width:350, height:500,
+        x:50, y:150, width:350, height:500,
         selector_width: 346, selector_height:50, selector_margin_left:3, selector_margin_top:3,
         item_top_margin:5, item_bottom_margin:5, item_right_margin:5, item_left_margin:5, item_height:50,
         money_bottom_margin:20
@@ -56,12 +57,12 @@ var shopMenu = (function() {
         fontSize: 22,
         fill: "white",
         stroke: '#000000',
-        strokeThickness: 4,
+        strokeThickness: 2,
         dropShadow: true,
         dropShadowColor: "#000000",
-        dropShadowBlur: 4,
+        dropShadowBlur: 2,
         dropShadowAngle: Math.PI / 6,
-        dropShadowDistance: 6,
+        dropShadowDistance: 3,
     }
 
     function render_static_elems(menu){
@@ -98,12 +99,29 @@ var shopMenu = (function() {
             selector.y = menu_style.y + menu_style.selector_margin_top;
             selector.zOrder=-1;
 
+        let style = new PIXI.TextStyle(menu_text_style);
+        elems.b_name = new PIXI.Text("item", style);
+        elems.b_name.position.set(50, 125);
+        elems.b_price = new PIXI.Text("price", style);
+        elems.b_price.position.set(155, 125);
+        elems.b_qty = new PIXI.Text("qty", style);
+        elems.b_qty.position.set(300, 125);
+
+
+        elems.s_name = new PIXI.Text("item", style);
+        elems.s_name.position.set(410, 125);
+        elems.s_price = new PIXI.Text("price", style);
+        elems.s_price.position.set(660, 125);
+        elems.s_qty = new PIXI.Text("qty", style);
+        elems.s_qty.position.set(810, 125);
+        
+
         
         elems.bg = bg;
         elems.sell_bg = sell_bg;
         elems.selector = selector;
 
-        let style = new PIXI.TextStyle(menu_text_style);
+        
 
         elems.money = new PIXI.Text(menu_state.money, style);
         elems.money.position.set(sell_menu_style.x + sell_menu_style.width - sell_menu_style.money_right_margin, sell_menu_style.height - sell_menu_style.money_bottom_margin);
@@ -111,6 +129,12 @@ var shopMenu = (function() {
         menu.addChild(elems.bg);
         menu.addChild(elems.sell_bg);
         menu.addChild(elems.selector);
+        menu.addChild(elems.b_name);
+        menu.addChild(elems.b_qty);
+        menu.addChild(elems.b_price)    ;
+        menu.addChild(elems.s_name);
+        menu.addChild(elems.s_qty);
+        menu.addChild(elems.s_price)    ;
         menu.addChild(elems.money);
         menu.addChild(elems.title);
         menu.addChild(elems.buy_text);
@@ -137,17 +161,22 @@ var shopMenu = (function() {
 
         let style = new PIXI.TextStyle(menu_text_style);
 
-        let item_text = new PIXI.Text(item.text, style);
+        let item_text = new PIXI.Text(item.name, style);
         item_text.position.set(x_pos, y_pos);
 
-        let price_text = new PIXI.Text(""+item.cost, style);
-        price_text.position.set(menu_style.width-100, y_pos);
+        let qty_text = new PIXI.Text(""+item.qty, style);
+        qty_text.position.set(x_pos+menu_style.width-100, y_pos);
+
+        let price_text = new PIXI.Text(""+item.cost, style)
+        price_text.position.set(x_pos+menu_style.width-250, y_pos);
 
         menu.addChild(item_text);
+        menu.addChild(qty_text);
         menu.addChild(price_text);
 
         renderable.item_text = item_text;
         renderable.price_text = price_text;
+        renderable.qty_text = qty_text;
         renderable.bg = bg;
         renderable.item = item;
 
@@ -178,11 +207,16 @@ var shopMenu = (function() {
         let qty_text = new PIXI.Text(""+item.qty, style);
         qty_text.position.set(sell_menu_style.x+sell_menu_style.width-100, y_pos);
 
+        let price_text = new PIXI.Text(""+item.cost, style)
+        price_text.position.set(sell_menu_style.x+sell_menu_style.width-250, y_pos);
+
         menu.addChild(item_text);
         menu.addChild(qty_text);
+        menu.addChild(price_text);
 
         renderable.item_text = item_text;
         renderable.qty_text = qty_text;
+        renderable.price_text = price_text;
         renderable.bg = bg;
         renderable.item = item;
 
@@ -192,11 +226,15 @@ var shopMenu = (function() {
     }
 
     function update_buy_item(r_item, item) {
+        r_item.item_text = item.name;
         r_item.price_text.text = item.cost;
+        r_item.qty_text.text = item.qty
     }
 
     function update_sell_item(r_item, item) {
+        r_item.item_text = item.name;
         r_item.qty_text.text = item.qty;
+        r_item.price_text.text = item.cost;
     }
 
     var menu_keys = (function(){
@@ -213,8 +251,14 @@ var shopMenu = (function() {
 
         keys.down = keyboard(40);
         keys.down.press = function(){
-            if(menu_state.selector_index < menu_state.items.length-1) {
-                menu_state.selector_index++;
+            if(menu_state.selector_menu == 'buy') {
+                if(menu_state.selector_index < menu_state.items.length-1) {
+                    menu_state.selector_index++;
+                }
+            } else if (menu_state.selector_menu == 'sell') {
+                if(menu_state.selector_index < menu_state.sell_items.length-1) {
+                    menu_state.selector_index++;
+                }
             }
         };
 
@@ -223,6 +267,9 @@ var shopMenu = (function() {
             if(menu_state.selector_menu == 'sell') {
                 menu_state.selector_menu = 'buy'
                 menu_state.selector_index = Math.min(menu_state.items.length-1, menu_state.selector_index);
+                if(menu_state.selector_index < 0) {
+                    menu_state.selector_index = 0;
+                }
             }
         };
 
@@ -231,6 +278,9 @@ var shopMenu = (function() {
             if(menu_state.selector_menu == 'buy') {
                 menu_state.selector_menu = 'sell'
                 menu_state.selector_index = Math.min(menu_state.sell_items.length-1, menu_state.selector_index);
+                if(menu_state.selector_index < 0) {
+                    menu_state.selector_index = 0;
+                }
             }
         };
 
@@ -238,7 +288,7 @@ var shopMenu = (function() {
 
         keys.enter.press = function() {
             if(menu_state.selector_menu === 'buy') {
-                $.postJSON("/shop", {msg: "purchase", "item_index":menu_state.selector_index}, 
+                $.postJSON("/shop", {msg: "purchase", "item_id":menu_state.items[menu_state.selector_index].id}, 
                 function(){
                     
                 },
@@ -246,7 +296,7 @@ var shopMenu = (function() {
                     console.warn(err);
                 })
             } else if (menu_state.selector_menu === 'sell') {
-                $.postJSON("/shop", {msg: "sell", "item_index":menu_state.selector_index}, 
+                $.postJSON("/shop", {msg: "sell", "item_id":menu_state.sell_items[menu_state.selector_index].id}, 
                 function(){
                     
                 },
@@ -274,8 +324,19 @@ var shopMenu = (function() {
 
     function get_inv_data(unlock_fn) {
         $.getJSON("/inv", function success(data){
+            menu_state.sell_items = []
+            for(let i in data.inventory){
+                let item = data.inventory[i];
+                for(let j in menu_state.buy_items){
+                    if(item.id === menu_state.buy_items[j].id){
+                        item.cost = menu_state.buy_items[j].cost;
+                        menu_state.sell_items.push(item);
+                    }
+                }
+            }
 
-            menu_state.sell_items = data.inventory;
+            
+            data.inventory;
             unlock_fn();
         }, function failure(err){
             console.warn(err);
@@ -287,11 +348,29 @@ var shopMenu = (function() {
     function get_shop_data(unlock_fn) {
         $.getJSON("/shop", function success(data){
             menu_state.shop_name = data.name;
-            menu_state.items = data.items;
+            menu_state.items = data.sale_items;
+            menu_state.buy_items = data.buy_items;
+            menu_state.shop_inv = data.inventory;
+
+            for(let i in menu_state.items) {
+                let item = menu_state.items[i];
+                if(item.id in menu_state.shop_inv) {
+                    item.qty = menu_state.shop_inv[item.id].qty;
+                } else {
+                    item.qty = 0;
+                }
+            }
+
+            menu_keys.set_menu_state(menu_state);
+
             unlock_fn();
         }, function failure(err){
             console.warn(err);
-            menu_state = {items:[]}
+            menu_state = {
+                items:[],
+                selector_index:0,
+                selector_menu:'buy'
+            }
             unlock_fn();
         });
         return menu_state;
@@ -312,6 +391,19 @@ var shopMenu = (function() {
 
     function renderItems(menu){
         let cnt = 0;
+        for(let ii in renderables) {
+            for(let ij in renderables[ii]){
+                menu.removeChild(renderables[ii][ij]);
+            }
+        }
+        for(let ii in s_renderables) {
+            for(let ij in s_renderables[ii]){
+                menu.removeChild(s_renderables[ii][ij]);
+            }
+        }
+        renderables = {};
+        s_renderables = {};
+
         for(let i in menu_state.items) {
             let item = menu_state.items[i];
             if(!(item.id in renderables)) {

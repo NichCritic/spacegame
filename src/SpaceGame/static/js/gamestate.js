@@ -103,13 +103,13 @@ function physics(entity, control, time) {
 	var new_entity = new Entity();
 	new_entity.mass = entity.mass;
 
-	let rot_left = (entity.rotation - 1/new_entity.mass * dt);
-	let rot_right = (entity.rotation + 1/new_entity.mass * dt);
+	let rot_left = (entity.rotation - 1/200 * dt);
+	let rot_right = (entity.rotation + 1/200 * dt);
 
 	new_entity.rotation = control.left ? rot_left : (control.right ? rot_right : entity.rotation);
 	
-	new_entity.force.x = control.thrust ? dt * 0.1* Math.sin(new_entity.rotation) : 0;
-	new_entity.force.y = control.thrust ? -dt * 0.1 * Math.cos(new_entity.rotation) : 0;
+	new_entity.force.x = control.thrust ? dt * 0.05 * Math.sin(new_entity.rotation) + (-0.03*entity.velocity.x*dt): 0;
+	new_entity.force.y = control.thrust ? -dt * 0.05 * Math.cos(new_entity.rotation) + (-0.03*entity.velocity.y*dt) : 0;
 
 	new_entity.acceleration.x = new_entity.force.x/new_entity.mass
     new_entity.acceleration.y = new_entity.force.y/new_entity.mass

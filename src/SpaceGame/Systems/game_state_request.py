@@ -14,13 +14,15 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"], entity_ids=pnode.sector.neighbours)
+            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
 
             velx = node.velocity.x if node.has('velocity') else 0
             vely = node.velocity.y if node.has('velocity') else 0
-            mass = node.mass.mass if node.has('mass') else 1
+            mass = (node.mass.mass if node.has('mass') else 1) + \
+                (node.inventory_mass.inventory_mass if node.has(
+                    "inventory_mass") else 0)
             radius = node.area.radius if node.has('area') else 1
             accelx = node.acceleration.x if node.has('acceleration') else 0
             accely = node.acceleration.y if node.has('acceleration') else 0

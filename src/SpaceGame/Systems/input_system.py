@@ -31,7 +31,7 @@ class PhysicsPacket():
 
 class InputSystem(System):
 
-    manditory = ["player_input", "rotation", "physics_update", "mass"]
+    manditory = ["player_input", "rotation", "physics_update"]
     handles = []
 
     def get_unhandled_input(self, input_data_list):
@@ -46,9 +46,8 @@ class InputSystem(System):
         for inp in inputs:
             dt = inp['dt']
 
-            mass = node.mass.mass
-            leftrot = rot - 1 / mass * dt
-            rightrot = rot + 1 / mass * dt
+            leftrot = rot - 1 / 200 * dt
+            rightrot = rot + 1 / 200 * dt
 
             p = PhysicsPacket()
             p.rotation = leftrot if inp[
@@ -56,10 +55,10 @@ class InputSystem(System):
             rot = p.rotation
 
             p.force.x = math.sin(p.rotation) * \
-                dt * 0.1 if inp["thrust"] else 0
+                dt * 0.05 if inp["thrust"] else 0
             p.force.y = - \
                 math.cos(p.rotation) * dt * \
-                0.1 if inp["thrust"] else 0
+                0.05 if inp["thrust"] else 0
 
             p.time = inp['time']
             p.dt = inp['dt']
