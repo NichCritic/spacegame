@@ -99,14 +99,14 @@ class MainHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.render("client\\index2.html", messages=[])
+        self.render("client/index2.html", messages=[])
 
 
 class TestHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.render("client\\index4.html", messages=[])
+        self.render("client/index4.html", messages=[])
 
 
 class ShopHandler(BaseHandler):
