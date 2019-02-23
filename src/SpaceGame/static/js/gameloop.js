@@ -2,6 +2,7 @@ var GameLoop = (function() {
     var gamestate_buffer = new circularArrayBuffer(10);
      //Create a container object called the `stage`
     var stage; stage = new PIXI.Container();
+    var lasers; lasers = new PIXI.Container();
 
     var textures, sprites;
 
@@ -101,6 +102,7 @@ var GameLoop = (function() {
 
         stage.addChild(textures.bg);
         stage.addChild(textures.stars);
+        stage.addChild(lasers);
     }
 
     function update_gamestate(state, sim_time, unprocessed_input) {
@@ -108,6 +110,8 @@ var GameLoop = (function() {
             update_enemies(state, sim_time);
             state = update_player(state, unprocessed_input, sim_time);
             detect_and_resolve_collisions(state);
+            handle_mining(state)
+
             state.camera = camera_track(camera, state.entities[state.player_id]);
         }
         return state;
@@ -121,6 +125,7 @@ var GameLoop = (function() {
             thrust: keys.up.isDown,
             brake: !keys.d.isDown,
             shoot: keys.f.isDown,
+            mining: keys.space.isDown,
             time: time,
             dt: sim_time,
             was_processed: false,
@@ -149,6 +154,9 @@ var GameLoop = (function() {
             inputs:inputs.list
         });
     }
+
+    
+    
 
     function render_game(renderer, gamestate, stage){
         var camera = {
@@ -181,6 +189,35 @@ var GameLoop = (function() {
                 sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
                 sprite.frame += 0.5;
             //}
+        }
+
+        if(gamestate && gamestate.mining_entities) {
+            lasers.removeChildren();
+            camera = gamestate.camera;
+            for(var min_id in gamestate.mining_entities) {
+                let miner = gamestate.mining_entities[min_id];
+                let p_from_x = miner["from"].position.x - camera.x;
+                let p_from_y = miner["from"].position.y - camera.y;
+                let p_to_x = miner["to"].position.x - camera.x;
+                let p_to_y = miner["to"].position.y - camera.y;
+
+                let myGraph = new PIXI.Graphics();
+                lasers.addChild(myGraph);
+
+                // Move it to the beginning of the line
+                //myGraph.position.set(p_from_x, p_from_y);
+
+                // Draw the line (endPoint should be relative to myGraph's position)
+                myGraph.lineStyle(4, 0xff0000)
+                       .moveTo(p_from_x, p_from_y)
+                       .lineTo(p_to_x, p_to_y)
+                       .lineStyle(2, 0x770022)
+                       .moveTo(p_from_x+4, p_from_y+4)
+                       .lineTo(p_to_x+4, p_to_y+4)
+                       .moveTo(p_from_x-4, p_from_y-4)
+                       .lineTo(p_to_x-4, p_to_y-4);
+            }
+
         }
 
         if(replay_state && replay_state.render_state){

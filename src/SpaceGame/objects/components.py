@@ -227,6 +227,22 @@ class Shooting():
         self.entity_id = entity_id
         self.time = time
 
+class Mining():
+    def __init__(self, entity_id, time):
+        self.entity_id = entity_id,
+        self.time = time
+
+class Minable():
+    def __init__(self, entity_id, products):
+        self.entity_id = entity_id
+        self.products = products
+
+class Proximity():
+    def __init__(self, entity_id, proximity_map=None):
+        self.entity_id = entity_id
+        self.proximity_map = {} if proximity_map is None else proximity_map
+
+
 
 class ServerUpdated():
 
@@ -267,34 +283,37 @@ class Processor():
 
 components = {
     "acceleration": Acceleration,
-    "force": Force,
-    "game_state_request": GameStateRequest,
-    "mass": Mass,
-    "inventory_mass": InventoryMass,
-    "network_messages": NetworkMessages,
-    "physics_update": PhysicsUpdate,
-    "player_input": PlayerInput,
-    "position": Position,
-    "server_updated": ServerUpdated,
-    "shooting": Shooting,
-    "state_history": StateHistory,
-    "type": Type,
-    "rotation": Rotation,
-    "velocity": Velocity,
-    "camera": Camera,
-    "renderable": Renderable,
-    "shop": Shop,
-    "shop_spec": ShopSpec,
-    "transaction": Transaction,
-    "sector": Sector,
     "area": Area,
+    "camera": Camera,
     "collidable": Collidable,
     "colliding": Colliding,
-    "persisted": Persisted,
-    "player_controlled": PlayerControlled,
+    "force": Force,
+    "game_state_request": GameStateRequest,
     "inventory": Inventory,
+    "inventory_mass": InventoryMass,
+    "mass": Mass,
+    "minable": Minable,
+    "mining": Mining,
     "money": Money,
-    "processor": Processor
+    "network_messages": NetworkMessages,
+    "persisted": Persisted,
+    "physics_update": PhysicsUpdate,
+    "player_controlled": PlayerControlled,
+    "player_input": PlayerInput,
+    "position": Position,
+    "processor": Processor,
+    "proximity": Proximity,
+    "renderable": Renderable,
+    "rotation": Rotation,
+    "sector": Sector,
+    "server_updated": ServerUpdated,
+    "shooting": Shooting,
+    "shop": Shop,
+    "shop_spec": ShopSpec,
+    "state_history": StateHistory,
+    "transaction": Transaction,
+    "type": Type,
+    "velocity": Velocity,
 }
 
 db_components = {

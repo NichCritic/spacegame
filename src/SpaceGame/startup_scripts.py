@@ -18,6 +18,7 @@ from objects.component_manager import ComponentManager, DBComponentSource, Array
 from Systems.NetworkMessageSystem import NetworkMessageSystem
 from Systems.input_system import InputSystem
 from Systems.purePhysicsSystem import PhysicsSystem
+from Systems.proximitySystem import ProximitySystem
 from Systems.game_state_request import GameStateRequestSystem
 from Systems.shooting_system import ShootingSystem
 from Systems.server_update_system import ServerUpdateSystem
@@ -84,14 +85,15 @@ def create_spacestations(node_factory, session):
         "area": {"radius": 100},
         "position": {"x": 1500, "y": 0},
         "rotation": {"rotation": 10},
-        "velocity": {"x": 0.05, "y": 0.08},
+        "velocity": {"x": 0.00, "y": 0.00},
         "collidable": {},
         'force': {},
         'acceleration': {},
         'mass': {},
         'server_updated': {},
         'physics_update': {},
-        'state_history': {}
+        'state_history': {},
+        'minable': {"products":[]}
 
     })
 
@@ -131,6 +133,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
+    proximity = ProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
     transaction = TransactionSystem(node_factory)
@@ -146,6 +149,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(physys)
     system_set.register(shoot)
     system_set.register(spatial)
+    system_set.register(proximity)
     system_set.register(collision)
     system_set.register(coll_mov)
     system_set.register(transaction)

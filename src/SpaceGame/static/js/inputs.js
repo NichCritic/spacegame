@@ -4,6 +4,7 @@ function Input(data){
 	this.thrust = data.thrust || false;
 	this.brake = data.brake || false;
     this.shoot = data.shoot || false;
+    this.mining = data.mining || false;
     this.time = data.time || 0;
     this.dt = data.dt || 0;
     this.was_processed = false;

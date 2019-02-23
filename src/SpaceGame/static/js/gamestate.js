@@ -18,6 +18,8 @@ function Entity() {
 	this.rotation = 0;
 	this.last_update = 0;
 	this.type = 'bolt';
+	this.mining = false;
+	this.minable = false;
 }
 
 function clone_entity(entity) {
@@ -37,6 +39,8 @@ function clone_entity(entity) {
 	new_entity.rotation = entity.rotation;
 	new_entity.last_update = entity.last_update;
 	new_entity.type = entity.type;
+	new_entity.mining = entity.mining;
+	new_entity.minable = entity.minable;
 	return new_entity;
 }
 
@@ -44,6 +48,7 @@ function Gamestate(time) {
 	this.player_id = "player";
 	this.client_entities = []
 	this.entities = {};
+	this.mining_entities = [];
 	this.time = time;
 	this.camera = {};
 }
@@ -93,6 +98,7 @@ function physics(entity, control, time) {
             thrust: false,
             brake: false,
             shoot: false,
+            mining: false,
             time: 0,
             dt: 100,
             was_processed: false,
@@ -128,6 +134,8 @@ function physics(entity, control, time) {
     new_entity.control = control;
 
     new_entity.state = control.thrust ? 'accelerating' : 'idle';
+
+    new_entity.mining = control.mining;
 
     new_entity.type = entity.type;
 
@@ -246,6 +254,50 @@ function update_enemies(gamestate, dt) {
 	replay_state.tick(dt);
 }
 
+
+function dist(e1, e2) {
+	return Math.sqrt((e1.position.x-e2.position.x)*(e1.position.x-e2.position.x)+(e1.position.y-e2.position.y)*(e1.position.y-e2.position.y));
+}
+
+function handle_mining(gamestate) {
+	var MAX_MINING_DIST = 250;
+	gamestate.mining_entities = [];
+	for(var e1_id in gamestate.entities) {
+		var e1 = clone_entity(gamestate.entities[e1_id]);
+
+		if (!e1.mining) {
+			continue
+		}
+
+		var mined_entity = null;
+		//Might as well be infinity
+		var mined_entity_distance = 10000000;
+		// If any entity is mining 		
+		for(var e2_id in gamestate.entities){
+			if(e1_id == e2_id) {
+				continue;
+			}
+			var e2 = clone_entity(gamestate.entities[e2_id]);
+			if(!e2.minable){
+				continue
+			}
+			var distance = dist(e1, e2);
+			if(distance < mined_entity_distance && distance < MAX_MINING_DIST) {
+				mined_entity = e2;
+				mined_entity_distance = dist;
+			}
+		} 
+
+		if(mined_entity) {
+			gamestate.mining_entities.push({
+				"from":e1,
+				"to":mined_entity
+			});
+		}
+	}
+
+}
+
 /*
 	TODO: Doesn't handle two objects in motion very well
 */
@@ -261,12 +313,12 @@ function detect_and_resolve_collisions(gamestate) {
 		for(var e2_id in gamestate.entities) {
 			if(e1_id != e2_id) {
 				var e2 = clone_entity(gamestate.entities[e2_id]);
-				var dist = Math.sqrt((e1.position.x-e2.position.x)*(e1.position.x-e2.position.x)+(e1.position.y-e2.position.y)*(e1.position.y-e2.position.y));
-				if(dist < e1.radius+e2.radius){
-					let delta = e1.radius + e2.radius - dist;
+				var vdist = dist(e1, e2);
+				if(vdist < e1.radius+e2.radius){
+					let delta = e1.radius + e2.radius - vdist;
 					let norm_vec = {
-						x: (e1.position.x - e2.position.x) / dist,
-						y: (e1.position.y - e2.position.y) / dist
+						x: (e1.position.x - e2.position.x) / vdist,
+						y: (e1.position.y - e2.position.y) / vdist
 					}
 					e1.position.x = e1.position.x + norm_vec.x * delta;
 					e1.position.y = e1.position.y + norm_vec.y * delta;
