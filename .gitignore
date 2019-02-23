@@ -104,3 +104,6 @@ ENV/
 
 #keys
 keys.py
+
+#logs
+nohup*
