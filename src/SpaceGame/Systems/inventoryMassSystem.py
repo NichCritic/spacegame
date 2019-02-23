@@ -13,7 +13,8 @@ class InventoryMassSystem(System):
         self.sim_time = 0
 
     def handle(self, node):
-        inv_mass = 50 * len(node.inventory.inv.keys())
+        inv_mass = 50 * sum([i["qty"]
+                             for _, i in node.inventory.inv.items() if "qty" in i])
 
         node.add_or_attach_component("inventory_mass", {})
         node.inventory_mass.inventory_mass = inv_mass
