@@ -20,7 +20,7 @@ class PickupSystem(System):
                 continue
 
             inv = c_node.inventory.inv
-            i_id = node.pickup.item_id
+            i_id = str(node.pickup.item_id)
             qty = node.pickup.qty
 
             if i_id in inv:
