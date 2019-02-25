@@ -35,6 +35,11 @@ class DBComponentSource():
     def remove_component(self, entity_id, component_name):
         self.session.delete(self.get_component(entity_id, component_name))
 
+    def remove_all_components(self, entity_id):
+        for component_name in self.component_list:
+            if self.entity_has(component_name, entity_id):
+                self.remove_component(entity_id, component_name)
+
     def has(self, component_name):
         return component_name in self.component_list
 
@@ -142,6 +147,10 @@ class ArrayComponentSource():
         if self.has_entity(component_name, entity_id):
             self.component_object[component_name].pop(entity_id)
 
+    def remove_all_components(self, entity_id):
+        for comp in self.component_list:
+            self.remove_component(entity_id, comp)
+
     def has(self, component_name):
         return component_name in self.component_list
 
@@ -219,6 +228,10 @@ class ComponentManager(object):
                 break
         else:
             raise AttributeError("Component not found")
+
+    def remove_all_components(self, entity_id):
+        for component_source in self.component_sources:
+            component_source.remove_all_components(entity_id)
 
     def add_component_to_object(self, component_name, entity_id, data=None):
         for component_source in self.component_sources:

@@ -21,7 +21,10 @@ class SystemSet(object):
     def process(self):
 
         for sys in self.systems:
+            # before = time.time()
             sys.process()
+            # after = time.time()
+            # logging.info(f"{sys.__class__.__name__} took {after-before}")
 
 
 class DBSystemSet(SystemSet):

@@ -16,7 +16,7 @@ class CollisionSystem(System):
 
     def handle(self, node):
         nnodes = self.node_factory.create_node_list(
-            ["area"], entity_ids=node.proximity.proximity_map.keys())
+            ["area", "collidable"], entity_ids=node.proximity.proximity_map.keys())
 
         for nnode in nnodes:
             if node.id == nnode.id:

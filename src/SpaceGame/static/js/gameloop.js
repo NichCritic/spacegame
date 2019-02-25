@@ -3,6 +3,7 @@ var GameLoop = (function() {
      //Create a container object called the `stage`
     var stage; stage = new PIXI.Container();
     var lasers; lasers = new PIXI.Container();
+    var entities; entities = new PIXI.Container();
 
     var textures, sprites;
 
@@ -96,13 +97,24 @@ var GameLoop = (function() {
         textures.target.idle = [PIXI.loader.resources["static/assets/target.png"].texture];
         textures.target.accelerating = [PIXI.loader.resources["static/assets/target.png"].texture];
 
+        textures.iron_ore_pickup = {};
+        textures.iron_ore_pickup.idle = [PIXI.loader.resources["static/assets/iron_ore_pickup.png"].texture];
+        textures.iron_ore_pickup.accelerating = [PIXI.loader.resources["static/assets/iron_ore_pickup.png"].texture];
 
+        textures.silver_ore_pickup = {};
+        textures.silver_ore_pickup.idle = [PIXI.loader.resources["static/assets/silver_ore_pickup.png"].texture];
+        textures.silver_ore_pickup.accelerating = [PIXI.loader.resources["static/assets/silver_ore_pickup.png"].texture];
+
+        textures.gold_ore_pickup = {};
+        textures.gold_ore_pickup.idle = [PIXI.loader.resources["static/assets/gold_ore_pickup.png"].texture];
+        textures.gold_ore_pickup.accelerating = [PIXI.loader.resources["static/assets/gold_ore_pickup.png"].texture];
         textures.stars = stars;
         textures.bg = bg;
 
         stage.addChild(textures.bg);
         stage.addChild(textures.stars);
         stage.addChild(lasers);
+        stage.addChild(entities);
     }
 
     function update_gamestate(state, sim_time, unprocessed_input) {
@@ -165,30 +177,29 @@ var GameLoop = (function() {
             width: 1,
             height: 1
         }
+        entities.removeChildren();
         if(gamestate) {
-            //for(var e in gamestate.entities){
-                camera = gamestate.camera;
-                let entity = gamestate.entities[gamestate.player_id];
-                if(!(gamestate.player_id in sprites)){
-                    sprites[gamestate.player_id] = new PIXI.Sprite(textures[entity.type].idle[0]);
-                    sprites[gamestate.player_id].x = stage.width/2 - sprites[gamestate.player_id].width/2;
-                    sprites[gamestate.player_id].y = stage.height/2 - sprites[gamestate.player_id].height/2;
-                    sprites[gamestate.player_id].anchor.x = 0.5;
-                    sprites[gamestate.player_id].anchor.y = 0.5;
-                    sprites[gamestate.player_id].frame = 0;
+            camera = gamestate.camera;
+            let entity = gamestate.entities[gamestate.player_id];
+            // if(!(gamestate.player_id in sprites)){
+            sprites[gamestate.player_id] = new PIXI.Sprite(textures[entity.type].idle[0]);
+            sprites[gamestate.player_id].x = stage.width/2 - sprites[gamestate.player_id].width/2;
+            sprites[gamestate.player_id].y = stage.height/2 - sprites[gamestate.player_id].height/2;
+            sprites[gamestate.player_id].anchor.x = 0.5;
+            sprites[gamestate.player_id].anchor.y = 0.5;
+            sprites[gamestate.player_id].frame = 0;
 
-                    stage.addChild(sprites[gamestate.player_id])
-                }   
-                let sprite = sprites[gamestate.player_id];
+            entities.addChild(sprites[gamestate.player_id])
+            // }   
+            let sprite = sprites[gamestate.player_id];
 
-                sprite.x = entity.position.x - camera.x;
-                sprite.y = entity.position.y - camera.y;
-                sprite.rotation = entity.rotation;
-                entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
-                let texture = textures[entity.type][entity.state]
-                sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
-                sprite.frame += 0.5;
-            //}
+            sprite.x = entity.position.x - camera.x;
+            sprite.y = entity.position.y - camera.y;
+            sprite.rotation = entity.rotation;
+            entity.state = entity.force.x != 0 || entity.force.y != 0 ? 'accelerating' : 'idle';
+            let texture = textures[entity.type][entity.state]
+            sprite.texture = texture[Math.floor(sprite.frame)%texture.length];
+            sprite.frame += 0.5;
         }
 
         if(gamestate && gamestate.mining_entities) {
@@ -227,22 +238,20 @@ var GameLoop = (function() {
                     continue;
                 }
                 let entity = replay_state.render_state.entities[e];
-                if(!(e in sprites)){
-                    sprites[e] = new PIXI.Sprite(textures[entity.type].idle[0]);
+                sprites[e] = new PIXI.Sprite(textures[entity.type].idle[0]);
 
-                    if (entity.radius) {
-                        sprites[e].width = 2*entity.radius;
-                        sprites[e].height = 2*entity.radius;
-                    }
+                if (entity.radius) {
+                    sprites[e].width = 2*entity.radius;
+                    sprites[e].height = 2*entity.radius;
+                }
 
-                    sprites[e].x = stage.width/2 - sprites[e].width/2;
-                    sprites[e].y = stage.height/2 - sprites[e].height/2;
-                    sprites[e].anchor.x = 0.5;
-                    sprites[e].anchor.y = 0.5;
-                    sprites[e].frame = 0;
+                sprites[e].x = stage.width/2 - sprites[e].width/2;
+                sprites[e].y = stage.height/2 - sprites[e].height/2;
+                sprites[e].anchor.x = 0.5;
+                sprites[e].anchor.y = 0.5;
+                sprites[e].frame = 0;
 
-                    stage.addChild(sprites[e])    
-                }   
+                entities.addChild(sprites[e])    
                 let sprite = sprites[e];
 
                 sprite.x = entity.position.x - camera.x;

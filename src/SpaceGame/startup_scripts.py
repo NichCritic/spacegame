@@ -15,23 +15,26 @@ from player.avatar import AvatarFactory
 from player.player import PlayerFactory
 from objects.component_manager import ComponentManager, DBComponentSource, ArrayComponentSource
 
-from Systems.NetworkMessageSystem import NetworkMessageSystem
-from Systems.input_system import InputSystem
-from Systems.purePhysicsSystem import PhysicsSystem
-from Systems.proximitySystem import ProximitySystem
-from Systems.game_state_request import GameStateRequestSystem
-from Systems.shooting_system import ShootingSystem
-from Systems.server_update_system import ServerUpdateSystem
-from Systems.historySystem import HistorySystem
-from Systems.system_set import SystemSet
-from Systems.spatial_system import SpatialSystem
-from Systems.transaction_system import TransactionSystem
-from Systems.collisionSystem import CollisionSystem
 from Systems.collisionMovementSystem import CollisionMovementSystem
 from Systems.collisionSink import CollisionSink
-from Systems.shopUnpackSystem import ShopUnpackSystem
-from Systems.processorSystem import ProcessorSystem
+from Systems.collisionSystem import CollisionSystem
+from Systems.game_state_request import GameStateRequestSystem
+from Systems.historySystem import HistorySystem
+from Systems.input_system import InputSystem
 from Systems.inventoryMassSystem import InventoryMassSystem
+from Systems.miningSystem import MiningSystem
+from Systems.NetworkMessageSystem import NetworkMessageSystem
+from Systems.processorSystem import ProcessorSystem
+from Systems.proximitySystem import ProximitySystem
+from Systems.purePhysicsSystem import PhysicsSystem
+from Systems.server_update_system import ServerUpdateSystem
+from Systems.shooting_system import ShootingSystem
+from Systems.shopUnpackSystem import ShopUnpackSystem
+from Systems.spatial_system import SpatialSystem
+from Systems.system_set import SystemSet
+from Systems.transaction_system import TransactionSystem
+from Systems.expirySystem import ExpirySystem
+from Systems.pickupSystem import PickupSystem
 
 import objects.item
 
@@ -77,6 +80,12 @@ def unpack_db_objects(node_factory):
 def create_spacestations(node_factory, session):
     import math
     import random
+
+    gold_ore = objects.item.get_item_by_name(session, 'gold ore').static_copy()
+    silver_ore = objects.item.get_item_by_name(
+        session, 'silver ore').static_copy()
+    iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
+
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
@@ -93,7 +102,7 @@ def create_spacestations(node_factory, session):
         'server_updated': {},
         'physics_update': {},
         'state_history': {},
-        'minable': {"products":[]}
+        'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1}
 
     })
 
@@ -126,6 +135,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set = SystemSet()
     shopUnpackSystem = ShopUnpackSystem(node_factory, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
+    expiry = ExpirySystem(node_factory)
     invmass = InventoryMassSystem(node_factory)
     insys = InputSystem(node_factory)
     sersys = ServerUpdateSystem(node_factory)
@@ -135,13 +145,16 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     spatial = SpatialSystem(node_factory)
     proximity = ProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
+    pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
+    mining = MiningSystem(node_factory)
     transaction = TransactionSystem(node_factory)
     processor = ProcessorSystem(node_factory)
     coll_sink = CollisionSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
+    system_set.register(expiry)
     system_set.register(invmass)
     system_set.register(insys)
     system_set.register(hissys)
@@ -151,7 +164,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(spatial)
     system_set.register(proximity)
     system_set.register(collision)
+    system_set.register(pickup)
     system_set.register(coll_mov)
+    system_set.register(mining)
     system_set.register(transaction)
     system_set.register(processor)
     system_set.register(coll_sink)

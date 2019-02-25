@@ -16,7 +16,11 @@ class CollisionMovementSystem(System):
     def handle(self, node):
         for collision in node.colliding.collisions:
             c_node = self.node_factory.create_node(
-                collision["collider"], ["position"])
+                collision["collider"], [], ["position"])
+
+            # Another system could have removed the node before we got to it
+            if not c_node.has("position"):
+                continue
 
             x = (node.position.x - c_node.position.x) / collision["dist"]
             y = (node.position.y - c_node.position.y) / collision["dist"]

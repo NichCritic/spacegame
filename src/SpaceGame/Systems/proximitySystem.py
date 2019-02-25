@@ -6,7 +6,7 @@ import time
 
 class ProximitySystem(System):
 
-    manditory = ["position", "sector"]
+    manditory = ["position", "sector", "velocity"]
     optional = []
     handles = []
 
@@ -26,7 +26,7 @@ class ProximitySystem(System):
 
         for nnode in nnodes:
             if node.id == nnode.id:
-                return
+                continue
             dist = self.distance(node.position, nnode.position)
 
             if dist == 0:

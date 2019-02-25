@@ -154,6 +154,10 @@ class Node(object):
         if component_name in self.components:
             del self.components[component_name]
 
+    def remove_all_components(self):
+        self.component_manager.remove_all_components(self.id)
+        self.components = {}
+
     def message(self, text):
         self.add_or_attach_component('network_messages', None)
         self.network_messages.send(text)

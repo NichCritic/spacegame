@@ -83,4 +83,4 @@ def get_shop_data(session):
         "process": [{"id": None, "amt": 0, "products": {gasoline.id: 5}}]
     }}
 
-    return [jeweler, oil_refinery, ore_refinery, gold_mine, silver_mine]
+    return [ore_refinery, ]  # jeweler, oil_refinery, gold_mine, silver_mine]

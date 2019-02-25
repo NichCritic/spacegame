@@ -23,8 +23,19 @@ class System(object):
         [node.remove_component(c) for c in self.handles]
 
     def get_nodes(self):
-        return self.node_factory.create_node_list(self.manditory,
-                                                  self.optional)
+
+        nodes = self.node_factory.create_node_list(self.manditory,
+                                                   self.optional)
+        # for n in nodes:
+        #     for c in self.manditory:
+        #         if not n.has(c):
+        #             logging.error(f"PANIC: {n.id} does not have manditory component {c} requested by {self.__class__.__name__}")
+        #             import pdb
+        #             pdb.set_trace()
+        #             nodes = self.node_factory.create_node_list(self.manditory,
+        #                                                        self.optional)
+
+        return nodes
 
 
 class TimedSystem(System):

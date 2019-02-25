@@ -164,6 +164,7 @@ var EnemyState = (function(){
 
 	function _tick(dt) {
 		if(!this.previous_state){
+			this.update(this.server_state);
 			return;
 		}
 		if(this.render_state.time >= this.server_state.time){
@@ -182,7 +183,7 @@ var EnemyState = (function(){
 			if(e === this.server_state.player_id){
 				continue;
 			}
-			if(!(e in this.server_state) || !(e in this.previous_state)) {
+			if(!(e in this.server_state.entities) || !(e in this.previous_state.entities)) {
 				continue
 			}
 			let prv = this.previous_state.entities[e];

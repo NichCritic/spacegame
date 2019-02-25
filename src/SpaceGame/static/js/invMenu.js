@@ -155,6 +155,13 @@ var invMenu = (function() {
 
     function renderItems(menu){
         let cnt = 0;
+        for(let ii in renderables) {
+            for(let ij in renderables[ii]){
+                menu.removeChild(renderables[ii][ij]);
+            }
+        }
+        renderables= {};
+
         for(let i in menu_state.items) {
             let item = menu_state.items[i];
             if(!(item.id in renderables)) {

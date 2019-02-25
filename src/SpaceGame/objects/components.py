@@ -99,6 +99,14 @@ class Collidable():
         self.entity_id = entity_id
 
 
+class Pickup():
+
+    def __init__(self, entity_id, item_id, qty):
+        self.entity_id = entity_id
+        self.item_id = item_id
+        self.qty = qty
+
+
 class Colliding():
 
     def __init__(self, entity_id, collisions):
@@ -227,21 +235,26 @@ class Shooting():
         self.entity_id = entity_id
         self.time = time
 
+
 class Mining():
+
     def __init__(self, entity_id, time):
-        self.entity_id = entity_id,
+        self.entity_id = entity_id
         self.time = time
 
+
 class Minable():
+
     def __init__(self, entity_id, products):
         self.entity_id = entity_id
         self.products = products
 
+
 class Proximity():
+
     def __init__(self, entity_id, proximity_map=None):
         self.entity_id = entity_id
         self.proximity_map = {} if proximity_map is None else proximity_map
-
 
 
 class ServerUpdated():
@@ -281,12 +294,21 @@ class Processor():
         self.last_update = time.time() * 1000 if last_update is None else last_update
 
 
+class Expires():
+
+    def __init__(self, entity_id, expiry_time_ms, creation_time):
+        self.entity_id = entity_id
+        self.expiry_time_ms = expiry_time_ms
+        self.creation_time = creation_time
+
+
 components = {
     "acceleration": Acceleration,
     "area": Area,
     "camera": Camera,
     "collidable": Collidable,
     "colliding": Colliding,
+    "expires": Expires,
     "force": Force,
     "game_state_request": GameStateRequest,
     "inventory": Inventory,
@@ -298,6 +320,7 @@ components = {
     "network_messages": NetworkMessages,
     "persisted": Persisted,
     "physics_update": PhysicsUpdate,
+    "pickup": Pickup,
     "player_controlled": PlayerControlled,
     "player_input": PlayerInput,
     "position": Position,
