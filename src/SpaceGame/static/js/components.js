@@ -34,8 +34,11 @@ var components = (function(){
 	};
 
 	var Renderable = function(entity_id, data) {
-		this.entity_id = entity_id
-		this.spritesheet = data.spritesheet
+		this.entity_id = entity_id;
+		this.spritesheet = data.spritesheet;
+		this.image = data.image;
+		this.width = data.width;
+		this.height = data.height;
 		//this.transform = data.transform
 	};
 	var State = function(entity_id, data) {
@@ -76,6 +79,12 @@ var components = (function(){
 		this.entity_id = entity_id;
 		this.radius = data.radius;
 	}
+
+	var Animated = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.update_rate = data.update_rate;
+		this.frame = data.frame ? data.frame:0;
+	}
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -91,7 +100,8 @@ var components = (function(){
 		"server_controlled": ServerControlled,
 		"server_update": ServerUpdate,
 		"inputs":Inputs,
-		"area": Area
+		"area": Area,
+		"animated":Animated
 	};
 
 	return components

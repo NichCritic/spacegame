@@ -15,6 +15,7 @@ var GameLoop = (function() {
     var render_system;
     var player_server_update_system;
     var server_update_system;
+    var animation_system;
 
     var camera_track_system;
     var systems;
@@ -132,9 +133,11 @@ var GameLoop = (function() {
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
         
+        animation_system = new AnimationSystem(node_factory);
+
         render_system = new RenderSystem(node_factory, entities);
 
-        systems = [player_server_update_system, server_update_system, physics_system, camera_track_system, render_system];
+        systems = [player_server_update_system, server_update_system, physics_system, camera_track_system, animation_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -206,12 +209,18 @@ var GameLoop = (function() {
 
 
 
-                n.add_or_update("renderable", {spritesheet: {default: textures[entity.type].idle}});
+
                 n.add_or_update("area", {"radius":entity.radius});
+                n.add_or_update("renderable", {spritesheet: textures[entity.type],
+                                               image:textures[entity.type].idle[0],
+                                               width: n.area.radius*2,
+                                               height: n.area.radius*2});
 
                 if(entities[i] === serverState.player_id){
                     n.add_or_update('player');
                     n.add_or_update('inputs', {inputs:inputs});
+                    //TODO: We know that the player can be animated but this should really be based on server data
+                    n.add_or_update('animated', {update_rate: 0.5});
                     
 
                 } else {

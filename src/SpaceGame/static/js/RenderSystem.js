@@ -84,7 +84,7 @@ var RenderSystem = (function() {
 		}
 
 		if(entering) {
-			this.displayObjects[node.id] = new PIXI.Sprite(node.renderable.spritesheet["default"][0]);
+			this.displayObjects[node.id] = new PIXI.Sprite(node.renderable.image);
 			this.displayObjects[node.id].anchor.x = 0.5;
             this.displayObjects[node.id].anchor.y = 0.5;
             this.canvas.addChild(this.displayObjects[node.id]);
@@ -94,10 +94,11 @@ var RenderSystem = (function() {
 		let x_pos = node.position.x - camera.position.x;
 		let y_pos = node.position.y - camera.position.y;
 
+		this.displayObjects[node.id].texture = node.renderable.image;
 		this.displayObjects[node.id].x = x_pos;
 		this.displayObjects[node.id].y = y_pos;
-		this.displayObjects[node.id].width = node.area.radius * 2;
-		this.displayObjects[node.id].height = node.area.radius * 2;
+		this.displayObjects[node.id].width = node.renderable.width;
+		this.displayObjects[node.id].height = node.renderable.height;
 
 		if(node.has("rotation")) {
 			this.displayObjects[node.id].rotation = node.rotation.rotation;
