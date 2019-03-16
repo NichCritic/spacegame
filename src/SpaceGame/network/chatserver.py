@@ -106,7 +106,7 @@ class TestHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.render("client/index4.html", messages=[])
+        self.render("client/index5.html", messages=[])
 
 
 class ShopHandler(BaseHandler):

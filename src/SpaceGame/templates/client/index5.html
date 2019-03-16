@@ -12,18 +12,15 @@
         <script src="static/js/circularArrayBuffer.js"></script>
         <script src="static/js/camera.js"></script>
         <script src="static/js/inputs.js"></script>
-        <script src="static/js/components.js"></script>
-        <script src="static/js/RenderSystem.js"></script>
-        <script src="static/js/physics.js"></script>
-        <script src="static/js/PlayerServerUpdateSystem.js"></script>
-        <script src="static/js/ServerUpdateSystem.js"></script>
-        <script src="static/js/LocalPhysicsSystem.js"></script>
-        <script src="static/js/CameraFollowSystem.js"></script>
-        <script src="static/js/gameloop2.js"></script>
+        <script src="static/js/gameloop.js"></script>
         <script src="static/js/shopMenu.js"></script>
         <script src="static/js/invMenu.js"></script>
         <script src="static/js/menu.js"></script>
         <script src="static/js/map.js"></script>
+        <script src="static/js/components.js"></script>
+        <script src="static/js/RenderSystem.js"></script>
+        <script src="static/js/LocalPhysicsSystem.js"></script>
+
 
     </head>
     <body>
@@ -74,18 +71,40 @@
 
                    .load(setup)
 
+        
+        
+        
        
+        function getTexturesFromSpritesheet(mySpriteSheetImage, count, rows, imgW, imgH){
+            var textures = [];
+            var countPerRow = Math.floor(count/rows);
 
-
-        
-        
-
-        function initSprite(id, type){
-            
+            for(var i = 0; i < count; i++) {
+                let x = (i % countPerRow) * imgW;
+                let y = Math.floor(i/countPerRow) * imgH;
+                let frame = new PIXI.Rectangle(x, y, imgW, imgH);
+                let texture = new PIXI.Texture(mySpriteSheetImage, frame);
+                textures.push(texture);
+            }
+            return textures
         }
 
+        
+        
+        var entity_manager;
+        var entity_components;
+        var component_manager;
+        var node_factory;
+        var physics_system;
+        var stage;
+        var entities; 
+        var render_system;
+        var systems;
+        var camera;
+        var ship;
+
         function setup() {
-            
+            var ship_idle = PIXI.BaseTexture.fromImage("static/assets/ship_idle.png"); 
             
             keys.up = keyboard(38);
             keys.left = keyboard(37);
@@ -93,62 +112,44 @@
             keys.d = keyboard(68);
             keys.f = keyboard(70);
             keys.space = keyboard(32);
+
+            entity_manager = new EntityManager();
+            entity_manager.init();
+            var entity_components = {};
+            var component_manager = ComponentManager;
+            component_manager.init(entity_components, components);
+
+            node_factory = NodeFactory(entity_manager, component_manager);
+
+            physics_system = new LocalPhysicsSystem(node_factory);
             
+            stage = new PIXI.Container();
+            entities = new PIXI.Container();
+            stage.addChild(entities);
 
-            menu_mode = MenuState(shopMenu);
-            menu_mode.init();
+            render_system = new RenderSystem(node_factory, entities);
 
-            inv_mode = MenuState(invMenu);
-            inv_mode.init();
+            systems = [physics_system, render_system];
 
-            game_mode = GameLoop();
-            game_mode.init();
+            camera = node_factory.create_node({
+                position:{x:0, y:0},
+                camera: {}
+            });
 
-            map_mode = MapState();
-            map_mode.init();
-
-            mode = game_mode
-
-
-            keys.c = keyboard(67);
-            keys.c.press = function() {
-                if(mode == menu_mode) {
-                    mode = game_mode;
-                }
-                else
-                {
-                    mode = menu_mode;
-                }
-            }
-
-            keys.i = keyboard(73);
-            keys.i.press = function() {
-                if(mode == inv_mode){
-                    mode = game_mode;
-                }else{
-                    mode = inv_mode;
-                }
-
-            }
-
-            keys.m = keyboard(77);
-            keys.m.press = function() {
-                if(mode == map_mode){
-                    mode = game_mode;
-                }else{
-                    map_mode.poll();
-                    mode = map_mode;
-                }
-
-            }
-
-            keys.esc = keyboard(27);
-            keys.esc.press = function() {
-                mode = game_mode
-            }
-
-
-
+            ship = node_factory.create_node({
+                position:{x:600, y:300},
+                renderable:{
+                    spritesheet: {default: getTexturesFromSpritesheet(ship_idle, 10, 2, 16, 24)}
+                },
+                "velocity": {x:0, y:0}, 
+                "acceleration": {x:0, y:0}, 
+                "force": {x:0, y:0},
+                "thrust": {x:1, y:1},
+                "rotation": {rotation:0},
+                "mass": {mass:500},
+                "player_controlled": {}
+            });
+            
             requestAnimationFrame(update)
         }
 
@@ -160,41 +161,21 @@
 
         
 
-        var sim_time= 0;
         var inputs = new InputList();
-        var last_time = Date.now();
-        var framecounter = 0
-        
-
         
         
-
-        
-
-        
-
         function update() {
 
-            requestAnimationFrame(update)
-            // Sample clock to find start time
-            var time = Date.now();
-            sim_time = time - last_time;
+            requestAnimationFrame(update);
 
-            var unprocessed_input = mode.get_input(inputs, keys, time, sim_time);
-            
-            
+            let player = node_factory.create_node_list(["player_controlled", "position"])[0];
+            player.add_or_attach("control", {"left": true, "right":false, "thrust":true, "dt":10});
 
-            state = mode.get_state();
+            for(let i = 0; i < systems.length; i++) {
+                systems[i].process();
+            }
 
-            state = mode.update(state, sim_time, unprocessed_input);
-
-            // Render Scene
-            mode.render(renderer, state, mode.stage);
-            // Sample clock to find end time
-            last_time = time;
-            
-            mode.update_server();
-            
+            renderer.render(stage);
         }
         
        

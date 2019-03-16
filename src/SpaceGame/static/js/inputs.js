@@ -30,6 +30,25 @@ InputList.prototype = {
 	},
 	push: function(item){
 		this.list.push(item)
-	}
+	},
+    update: function(time) {
+        for(let i = this.list.length-1; i >= 0; i--){
+            let inp = this.list[i];
+            if(inp.was_processed){
+                break;
+            }
+            if(inp.time <= time){
+                inp.was_processed = true;
+            }
+        }
+        var new_inputs = [];
+        for(let i = 0; i < this.list.length; i++){
+            let inp = this.list[i];
+            if(inp.was_processed === false){
+                new_inputs.push(inp);
+            }
+        }
+        this.list = new_inputs
+    }
 
 }

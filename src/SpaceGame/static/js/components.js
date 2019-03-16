@@ -20,9 +20,8 @@ var components = (function(){
 		this.y = data.y
 	};
 	var Thrust = function(entity_id, data) {
-		this.entity_id = entity_id
-		this.x = data.x
-		this.y = data.y	
+		this.entity_id = entity_id;
+		this.thrust = data.thrust;
 	};
 	var Mass = function(entity_id, data) {
 		this.entity_id = entity_id;
@@ -32,18 +31,51 @@ var components = (function(){
 	var Rotation = function(entity_id, data) {
 		this.entity_id = entity_id;
 		this.rotation = data.rotation;
-	}
+	};
 
 	var Renderable = function(entity_id, data) {
 		this.entity_id = entity_id
 		this.spritesheet = data.spritesheet
 		//this.transform = data.transform
-	},
+	};
 	var State = function(entity_id, data) {
 		this.entity_id = entity_id;
 		this.state = data.state;
+	};
+	var Camera = function(entity_id) {
+		this.entity_id = entity_id;
+	};
+
+	var Control = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.left = data.left;
+		this.right = data.right;
+		this.thrust = data.thrust;
+		this.brake = data.brake;
+		this.dt = data.dt;
+	};
+	var PlayerControlled = function(entity_id) {
+		this.entity_id = entity_id;
 	}
 
+	var ServerControlled = function(entity_id) {
+		this.entity_id = entity_id;
+	}
+
+	var ServerUpdate= function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.data = data.data;
+	}
+	
+	var Inputs = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.inputs = data.inputs;
+	}
+
+	var Area = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.radius = data.radius;
+	}
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -52,8 +84,15 @@ var components = (function(){
 		"thrust":Thrust,
 		"mass": Mass,
 		"rotation": Rotation,
-		"renderable": Renderable
-	}
+		"renderable": Renderable,
+		"camera": Camera,
+		"control": Control, 
+		"player": PlayerControlled,
+		"server_controlled": ServerControlled,
+		"server_update": ServerUpdate,
+		"inputs":Inputs,
+		"area": Area
+	};
 
 	return components
 })();
@@ -73,7 +112,7 @@ var EntityManager = (function(){
 	}
  
 	return EntityManager;
-});
+})();
 
 var NodeFactory = (function(entity_manager, component_manager) {
 	function NodeFactory(entity_manager, component_manager) {
@@ -85,26 +124,30 @@ var NodeFactory = (function(entity_manager, component_manager) {
 
 	}
 
-	NodeFactory.prototype.create_node = function(components) {
-		let n = Node();
-		n.init(this.entity_manager.new_entity(), []);
+	NodeFactory.prototype.create_node = function(components, entity_id) {
+		let n = Node(this.component_manager);
 
-		let components = Object.keys(components);
-		for(let c in components) {
-			n.add_or_attach_component(c, components[c]);
+		e_id = entity_id ? entity_id : this.entity_manager.new_entity();
+
+		n.init(e_id, []);
+
+		let component_ids = Object.keys(components);
+		for(let c in component_ids) {
+			let comp = component_ids[c];
+			n.add_or_attach(comp, components[comp]);
 		}
-
+		return n;
 	}
 
 	NodeFactory.prototype.create_node_list = function(mandatory, optional, entity_ids) {
-		let optional = optional ? optional : [];
+		optional = optional ? optional : [];
 
 		let nodes = [];
 		entities = this.component_manager.get_entities_with_components(mandatory);
 
 		let all_components = []
-		all_components.concat(mandatory);
-		all_components.concat(optional);
+		all_components = all_components.concat(mandatory);
+		all_components = all_components.concat(optional);
 
 		for(let i = 0; i < entities.length; i++) {
 			var n = Node(this.component_manager);
@@ -116,10 +159,10 @@ var NodeFactory = (function(entity_manager, component_manager) {
 					n.add_or_attach(comp, {});
 				}
 			}
-			nodes.append(n);
+			nodes.push(n);
 
 		}
-
+		return nodes;
 
 	}
 	var Node = (function(component_manager) {
@@ -132,8 +175,8 @@ var NodeFactory = (function(entity_manager, component_manager) {
 		Node.prototype.init = function(entity_id, components) {
 			this.id = entity_id
 			this.component_list = Object.keys(components)
-			for(let i in component_list){
-				c = component_list[i];
+			for(let i in this.component_list){
+				c = this.component_list[i];
 				this[c] = components[c];
 			}
 		}
@@ -149,20 +192,20 @@ var NodeFactory = (function(entity_manager, component_manager) {
 			if(!this.component_manager.entity_has_component(this.id, comp)) {
 				this.component_manager.add_component_to_entity(this.id, comp, comp_data)
 			}
-			component_list.push(comp);
-			this[c] = this.component_manager.get_component_data_for_entity(this.id, comp);
+			this.component_list.push(comp);
+			this[comp] = this.component_manager.get_component_data_for_entity(this.id, comp);
 
 		};
 
 		Node.prototype.add_or_update = function(comp, comp_data) {
 			this.component_manager.update_component_for_entity(this.id, comp, comp_data);
-			component_list.push(comp);
-			this[c] = this.component_manager.get_component_data_for_entity(this.id, comp);
+			this.component_list.push(comp);
+			this[comp] = this.component_manager.get_component_data_for_entity(this.id, comp);
 		};
 
 		Node.prototype.remove_component = function(comp) {
 			delete this[comp];
-			this.components = this.components.filter(function(i){i !== comp});
+			this.component_list = this.component_list.filter(function(i){i !== comp});
 		};
 
 		Node.prototype.delete_component = function(comp) {
@@ -245,22 +288,31 @@ var ComponentManager = (function(){
 	}
 
 	ComponentManager.prototype.get_entities_with_component = function(component_id) {
-		return Object.keys(this.component_objects[component_id]);
+		if(this.component_objects[component_id]) {
+			return Object.keys(this.component_objects[component_id]);
+		}
+		return [];
 	}
 
 	ComponentManager.prototype.get_entities_with_components = function(components_list, entity_ids) {
 		let intersection = [];
 
-		var entities0 = entity_ids ? entity_ids : [];
-		for(let i = 0; i < components_list.length; i++) {
-			let entities = this.get_entities_with_component(components_list[0]);
+		var entities0 = entity_ids ? entity_ids : this.get_entities_with_component(components_list[0]);
+
+		var start = entity_ids ? 0 : 1;
+
+		for(let i = start; i < components_list.length; i++) {
+			let entities = this.get_entities_with_component(components_list[i]);
 			for(let j = 0; j < entities.length; j++) {
 				let entity = entities[j];
 				if (entities0.indexOf(entity) > -1) {
-					intersection.add(entity);
+					intersection.push(entity);
 				} 
 			}
+			entities0 = intersection;
+			intersection = [];
 		}
+		intersection = entities0;
 		return intersection;
 	}
 
@@ -272,4 +324,4 @@ var ComponentManager = (function(){
 	}
 
 	return new ComponentManager();
-});
+})();

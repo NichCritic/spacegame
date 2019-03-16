@@ -1,7 +1,7 @@
 var RenderSystem = (function() {
-	var manditory = ["renderable", "position"]
-	var optional = ["rotation"]
-	var handles = ["renderable"]
+	var manditory = ["renderable", "position", "area"];
+	var optional = ["rotation"];
+	var handles = [];
 	function RenderSystem(node_factory, canvas) {
 		this.node_factory = node_factory
 		this.canvas = canvas
@@ -22,7 +22,7 @@ var RenderSystem = (function() {
 		for(let i = 0; i < nodes.length; i++) {
 			let n_id = nodes[i].id;
 			ids.push(n_id);
-			entering = thie.onScreen.indexOf(n_id) == -1;
+			let entering = this.onScreen.indexOf(n_id) == -1;
 			if(entering) {
 				newEntering.push(n_id);
 			}
@@ -32,12 +32,12 @@ var RenderSystem = (function() {
 		
 
 		for(let i = 0; i < this.onScreen.length; i++) {
-			e_id = this.onScreen[i];
-			on_screen = ids.indexOf(e_id) !== -1;
-			leaving = !on_screen
+			let e_id = this.onScreen[i];
+			let on_screen = ids.indexOf(e_id) !== -1;
+			let leaving = !on_screen;
 
 			if (on_screen) {
-				newOnScreenEntities.push(e_id);
+				newOnScreen.push(e_id);
 			}
 			if (leaving) {
 				newLeaving.push(e_id)
@@ -54,6 +54,7 @@ var RenderSystem = (function() {
 	RenderSystem.prototype.process = function() {
 		let nodes = this.node_factory.create_node_list(manditory, optional);
 
+		this.categorize(nodes);
 		let camera = this.node_factory.create_node_list(["camera", "position"])[0];
 
 		for(let i = 0; i < nodes.length; i++) {
@@ -86,6 +87,8 @@ var RenderSystem = (function() {
 			this.displayObjects[node.id] = new PIXI.Sprite(node.renderable.spritesheet["default"][0]);
 			this.displayObjects[node.id].anchor.x = 0.5;
             this.displayObjects[node.id].anchor.y = 0.5;
+            this.canvas.addChild(this.displayObjects[node.id]);
+            this.onScreen.push(node.id);
 		}
 
 		let x_pos = node.position.x - camera.position.x;
@@ -93,6 +96,8 @@ var RenderSystem = (function() {
 
 		this.displayObjects[node.id].x = x_pos;
 		this.displayObjects[node.id].y = y_pos;
+		this.displayObjects[node.id].width = node.area.radius * 2;
+		this.displayObjects[node.id].height = node.area.radius * 2;
 
 		if(node.has("rotation")) {
 			this.displayObjects[node.id].rotation = node.rotation.rotation;
@@ -100,6 +105,6 @@ var RenderSystem = (function() {
 
 	}
 
-	return RenderSystem
-})
+	return RenderSystem;
+})();
 
