@@ -27,6 +27,10 @@ var RenderSystem = (function() {
 				newEntering.push(n_id);
 			}
 
+			if(nodes[i].entity_has("to_be_removed")) {
+				newLeaving.push(n_id);
+			}
+
 		}
 
 		
@@ -38,10 +42,7 @@ var RenderSystem = (function() {
 
 			if (on_screen) {
 				newOnScreen.push(e_id);
-			}
-			if (leaving) {
-				newLeaving.push(e_id)
-			}
+			}			
 		}
 
 		this.entering = newEntering;
@@ -80,6 +81,9 @@ var RenderSystem = (function() {
 		if(leaving) {
 			this.canvas.removeChild(this.displayObjects[node.id]);
 			delete this.displayObjects[node.id];
+			if(node.entity_has("to_be_removed")) {
+				node.delete_all_components();
+			}
 			return;
 		}
 

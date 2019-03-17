@@ -85,6 +85,10 @@ var components = (function(){
 		this.update_rate = data.update_rate;
 		this.frame = data.frame ? data.frame:0;
 	}
+
+	var ToBeRemoved = function(entity_id) {
+		this.entity_id = entity_id;
+	}
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -101,7 +105,8 @@ var components = (function(){
 		"server_update": ServerUpdate,
 		"inputs":Inputs,
 		"area": Area,
-		"animated":Animated
+		"animated":Animated,
+		"to_be_removed": ToBeRemoved
 	};
 
 	return components
@@ -195,6 +200,10 @@ var NodeFactory = (function(entity_manager, component_manager) {
 			return this.component_list.indexOf(compo) > -1;
 		};
 
+		Node.prototype.entity_has = function(comp) {
+			return this.component_manager.entity_has_component(this.id, comp);
+		}
+
 		Node.prototype.add_or_attach = function(comp, comp_data) {
 			if(this.has(comp)){
 				return;
@@ -224,8 +233,8 @@ var NodeFactory = (function(entity_manager, component_manager) {
 		}
 
 		Node.prototype.delete_all_components = function(comp) {
-			for(let i = 0; i < this.components.length; i++) {
-				this.remove_component(this.components[i]);
+			for(let i = 0; i < this.component_list.length; i++) {
+				this.remove_component(this.component_list[i]);
 			}
 			this.component_manager.remove_all_components_from_entity(this.id);
 		}	
