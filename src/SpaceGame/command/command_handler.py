@@ -25,6 +25,9 @@ class CommandHandler():
         av.player_input.data.extend(command['inputs'])
 
         av.add_or_attach_component(
+            'health', {"health": 1000, "max_health": 1000})
+
+        av.add_or_attach_component(
             'position', {})
         av.add_or_attach_component('area', {'radius': 8})
         av.add_or_attach_component('collidable', {})

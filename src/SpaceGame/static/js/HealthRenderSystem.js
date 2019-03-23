@@ -1,8 +1,8 @@
-var RenderSystem = (function() {
-	var manditory = ["renderable", "position"];
-	var optional = ["rotation"];
+var HealthRenderSystem = (function() {
+	var manditory = ["renderable", "position", "health"];
+	var optional = [];
 	var handles = [];
-	function RenderSystem(node_factory, canvas) {
+	function HealthRenderSystem(node_factory, canvas) {
 		this.node_factory = node_factory
 		this.canvas = canvas
 
@@ -13,7 +13,7 @@ var RenderSystem = (function() {
 		this.displayObjects = {};
 	}
 
-	RenderSystem.prototype.categorize = function(nodes) {
+	HealthRenderSystem.prototype.categorize = function(nodes) {
 		let ids = [];
 		let newEntering = [];
 		let newOnScreen = [];
@@ -52,7 +52,7 @@ var RenderSystem = (function() {
 	}
 
 
-	RenderSystem.prototype.process = function() {
+	HealthRenderSystem.prototype.process = function() {
 		let nodes = this.node_factory.create_node_list(manditory, optional);
 
 		this.categorize(nodes);
@@ -66,14 +66,14 @@ var RenderSystem = (function() {
 
 	};
 
-	RenderSystem.prototype.cleanup = function(node) {
+	HealthRenderSystem.prototype.cleanup = function(node) {
 		for(let i = 0; i < handles.length; i++) {
 			var comp = handles[i];
 			node.delete_component(comp);
 		}
 	}
 
-	RenderSystem.prototype.handle = function(node, camera) { 
+	HealthRenderSystem.prototype.handle = function(node, camera) { 
 		let entering = this.entering.indexOf(node.id) !== -1;
 		let leaving = this.leaving.indexOf(node.id) !== -1;
 		let onScreen = this.onScreen.indexOf(node.id) !== -1;
@@ -81,35 +81,28 @@ var RenderSystem = (function() {
 		if(leaving) {
 			this.canvas.removeChild(this.displayObjects[node.id]);
 			delete this.displayObjects[node.id];
-			if(node.entity_has("to_be_removed")) {
-				node.delete_all_components();
-			}
 			return;
 		}
 
+		let x_pos = node.position.x - camera.position.x - node.renderable.width/2;
+		let y_pos = node.position.y - camera.position.y - node.renderable.height/2 - 10;
+
 		if(entering) {
-			this.displayObjects[node.id] = new PIXI.Sprite(node.renderable.image);
-			this.displayObjects[node.id].anchor.x = 0.5;
-            this.displayObjects[node.id].anchor.y = 0.5;
+			this.displayObjects[node.id] = new PIXI.Graphics(node.renderable.image);
+            this.displayObjects[node.id].beginFill(0x33FF55);
+            this.displayObjects[node.id].drawRect(0, 0, node.renderable.width, 2);
+            this.displayObjects[node.id].endFill();
+
             this.canvas.addChild(this.displayObjects[node.id]);
             this.onScreen.push(node.id);
 		}
 
-		let x_pos = node.position.x - camera.position.x;
-		let y_pos = node.position.y - camera.position.y;
-
-		this.displayObjects[node.id].texture = node.renderable.image;
 		this.displayObjects[node.id].x = x_pos;
 		this.displayObjects[node.id].y = y_pos;
-		this.displayObjects[node.id].width = node.renderable.width;
-		this.displayObjects[node.id].height = node.renderable.height;
-
-		if(node.has("rotation")) {
-			this.displayObjects[node.id].rotation = node.rotation.rotation;
-		}
+		this.displayObjects[node.id].width = node.renderable.width * node.health.health / node.health.max_health;
 
 	}
 
-	return RenderSystem;
+	return HealthRenderSystem;
 })();
 

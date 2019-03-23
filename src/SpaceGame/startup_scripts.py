@@ -18,6 +18,7 @@ from objects.component_manager import ComponentManager, DBComponentSource, Array
 from Systems.collisionMovementSystem import CollisionMovementSystem
 from Systems.collisionSink import CollisionSink
 from Systems.collisionSystem import CollisionSystem
+from Systems.collisionDamageSystem import CollisionDamageSystem
 from Systems.game_state_request import GameStateRequestSystem
 from Systems.historySystem import HistorySystem
 from Systems.input_system import InputSystem
@@ -35,6 +36,8 @@ from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
 from Systems.expirySystem import ExpirySystem
 from Systems.pickupSystem import PickupSystem
+from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
+from Systems.proximityTargetSystem import ProximityTargetSystem
 
 import objects.item
 
@@ -106,6 +109,23 @@ def create_spacestations(node_factory, session):
 
     })
 
+    node_factory.create_new_node({
+        "type": {"type": "ship"},
+        "area": {"radius": 25},
+        "position": {"x": 100, "y": 100},
+        "rotation": {"rotation": 0},
+        "velocity": {"x": 0, "y": 0},
+        'force': {},
+        'acceleration': {},
+        'mass': {},
+        'physics_update': {},
+        'state_history': {},
+        'orient_towards_target': {},
+        'proximity_target_behaviour': {},
+        'health': {'health': 100, 'max_health': 100},
+        'collidable': {}
+    })
+
 
 def setup_db(db):
     db_engine = base.engine(db)
@@ -145,12 +165,16 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     spatial = SpatialSystem(node_factory)
     proximity = ProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
+    collision_dam = CollisionDamageSystem(node_factory)
     pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
     mining = MiningSystem(node_factory)
     transaction = TransactionSystem(node_factory)
     processor = ProcessorSystem(node_factory)
+    proxy_target = ProximityTargetSystem(node_factory)
+    ai_orient_tow_tar = AIOrientTowardsTargetSystem(node_factory)
     coll_sink = CollisionSink(node_factory)
+
     game_state_req = GameStateRequestSystem(node_factory)
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
@@ -164,11 +188,14 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(spatial)
     system_set.register(proximity)
     system_set.register(collision)
+    system_set.register(collision_dam)
     system_set.register(pickup)
     system_set.register(coll_mov)
     system_set.register(mining)
     system_set.register(transaction)
     system_set.register(processor)
+    system_set.register(proxy_target)
+    system_set.register(ai_orient_tow_tar)
     system_set.register(coll_sink)
     system_set.register(game_state_req)
 

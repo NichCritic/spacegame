@@ -1,7 +1,7 @@
 from Systems.system import System
 import math
 from itertools import takewhile
-import time
+import logging
 
 
 class Vector():
@@ -36,13 +36,18 @@ class InputSystem(System):
     handles = []
 
     def get_unhandled_input(self, input_data_list):
-        return reversed(list(takewhile(lambda l: not l["was_processed"], reversed(input_data_list))))
+        rev_list = reversed(input_data_list)
+        unprocessed = takewhile(lambda l: not l["was_processed"], rev_list)
+        unprocessed_list = list(unprocessed)
+        return reversed(unprocessed_list)
 
     def handle(self, node):
+        logging.info(f"input processing {node.id}")
         packets = []
 
         inputs = self.get_unhandled_input(node.player_input.data)
         rot = node.rotation.rotation
+
         for inp in inputs:
             dt = inp['dt']
 

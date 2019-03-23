@@ -4,6 +4,7 @@ var GameLoop = (function() {
     var stage; stage = new PIXI.Container();
     var lasers; lasers = new PIXI.Container();
     var entities; entities = new PIXI.Container();
+    var health_bars; health_bars = new PIXI.Container();
 
     var textures, sprites;
 
@@ -119,6 +120,7 @@ var GameLoop = (function() {
         stage.addChild(textures.stars);
         stage.addChild(lasers);
         stage.addChild(entities);
+        stage.addChild(health_bars);
 
         entity_manager = new EntityManager();
         entity_manager.init();
@@ -137,9 +139,10 @@ var GameLoop = (function() {
         
         animation_system = new AnimationSystem(node_factory);
 
+        health_render_system = new HealthRenderSystem(node_factory, health_bars);
         render_system = new RenderSystem(node_factory, entities);
 
-        systems = [player_server_update_system, server_update_system, physics_system, camera_track_system, animation_system, render_system];
+        systems = [player_server_update_system, server_update_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -201,13 +204,16 @@ var GameLoop = (function() {
 
                 let n = node_factory.create_node([], entity.id);
 
-                n.add_or_update("server_update", {data: {'acceleration': entity.acceleration,
-                'force': entity.force,
-                'mass': {mass:entity.mass},
-                'position': entity.position,
-                'rotation': {rotation: entity.rotation},
-                'velocity': entity.velocity,
-                'thrust': {thrust:0.05}}});
+                n.add_or_update("server_update", {data: {
+                    'acceleration': entity.acceleration,
+                    'force': entity.force,
+                    'mass': {mass:entity.mass},
+                    'position': entity.position,
+                    'rotation': {rotation: entity.rotation},
+                    'velocity': entity.velocity,
+                    'thrust': {thrust:0.05},
+                    'time': serverState.time
+                }});
 
 
 
@@ -218,11 +224,18 @@ var GameLoop = (function() {
                                                width: n.area.radius*2,
                                                height: n.area.radius*2});
 
+                n.add_or_update("type", {"type":entity.type})
+
+                if(entity.health) {
+                    n.add_or_update('health', entity.health);
+                }
+
                 if(entities[i] === serverState.player_id){
                     n.add_or_update('player');
                     n.add_or_update('inputs', {inputs:inputs});
                     //TODO: We know that the player can be animated but this should really be based on server data
                     n.add_or_update('animated', {update_rate: 0.5});
+                    
                     
 
                 } else {

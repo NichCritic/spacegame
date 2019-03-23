@@ -35,6 +35,15 @@ var ServerUpdateSystem = (function() {
 		node.add_or_update("thrust", node.server_update.data.thrust);
 		node.add_or_update("rotation", node.server_update.data.rotation);
 		node.add_or_update("mass", node.server_update.data.mass);
+
+		node.add_or_attach("type", {"type":"unknown"})
+
+		if(node.type.type === "bolt") {
+			let dt = Date.now() - node.server_update.data.time;
+
+			node.position.x = node.position.x + node.velocity.x * dt;
+			node.position.y = node.position.y + node.velocity.y * dt;
+		}
 	}
 
 	return ServerUpdateSystem; 

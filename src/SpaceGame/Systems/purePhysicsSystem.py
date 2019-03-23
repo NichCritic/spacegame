@@ -2,6 +2,7 @@ from Systems.system import System
 import math
 import time
 from itertools import takewhile
+import logging
 
 
 class PhysicsSystem(System):
@@ -23,12 +24,8 @@ class PhysicsSystem(System):
             (-vel.y) * 0.03 * dt * (0 if packet.force.y == 0 else 1)
         node.rotation.rotation = packet.rotation
 
-        # print(f"{node.force.y}, {dt}")
-
         node.acceleration.x = node.force.x / mass
         node.acceleration.y = node.force.y / mass
-
-        # print(f'{node.acceleration.x}, {node.acceleration.y}')
 
         node.velocity.x = vel.x + node.acceleration.x * dt
         node.velocity.y = vel.y + node.acceleration.y * dt
@@ -37,16 +34,11 @@ class PhysicsSystem(System):
             node.velocity.x = node.velocity.x * (0.99 ** dt)
             node.velocity.y = node.velocity.y * (0.99 ** dt)
 
-        # print(f'{node.velocity.x}, {node.velocity.y}')
-
         node.position.x = pos.x + node.velocity.x * dt
         node.position.y = pos.y + node.velocity.y * dt
 
     def handle(self, node):
-
         physics_packets = node.physics_update.packets
-
-        # print(list(inputlist))
 
         for packet in physics_packets:
             pos = node.position

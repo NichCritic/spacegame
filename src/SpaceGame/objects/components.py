@@ -302,6 +302,40 @@ class Expires():
         self.creation_time = creation_time
 
 
+class Target():
+
+    def __init__(self, entity_id, target_id):
+        self.entity_id = entity_id
+        self.id = target_id
+
+
+class OrientTowardsTarget():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class ProximityTargetBehaviour():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class Health():
+
+    def __init__(self, entity_id, health, max_health):
+        self.entity_id = entity_id
+        self.health = health
+        self.max_health = max_health
+
+
+class CollisionDamage():
+
+    def __init__(self, entity_id, damage):
+        self.entity_id = entity_id
+        self.damage = damage
+
+
 components = {
     "acceleration": Acceleration,
     "area": Area,
@@ -337,6 +371,11 @@ components = {
     "transaction": Transaction,
     "type": Type,
     "velocity": Velocity,
+    "target": Target,
+    "orient_towards_target": OrientTowardsTarget,
+    "proximity_target_behaviour": ProximityTargetBehaviour,
+    "health": Health,
+    "collision_damage": CollisionDamage
 }
 
 db_components = {

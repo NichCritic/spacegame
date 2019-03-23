@@ -89,6 +89,18 @@ var components = (function(){
 	var ToBeRemoved = function(entity_id) {
 		this.entity_id = entity_id;
 	}
+
+	var Health = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.health = data.health;
+		this.max_health = data.max_health;
+	}
+
+	var Type = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.type = data.type;
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -106,7 +118,9 @@ var components = (function(){
 		"inputs":Inputs,
 		"area": Area,
 		"animated":Animated,
-		"to_be_removed": ToBeRemoved
+		"to_be_removed": ToBeRemoved,
+		"health": Health,
+		"type": Type
 	};
 
 	return components
