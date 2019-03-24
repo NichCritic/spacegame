@@ -49,12 +49,22 @@ var components = (function(){
 		this.entity_id = entity_id;
 	};
 
+	var ShipControl = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.left = data.left;
+		this.right = data.right;
+		this.thrust = data.thrust;
+		this.brake = data.brake;
+		this.dt = data.dt;
+	}
+
 	var Control = function(entity_id, data) {
 		this.entity_id = entity_id;
 		this.left = data.left;
 		this.right = data.right;
 		this.thrust = data.thrust;
 		this.brake = data.brake;
+		this.shoot = data.shoot;
 		this.dt = data.dt;
 	};
 	var PlayerControlled = function(entity_id) {
@@ -101,6 +111,12 @@ var components = (function(){
 		this.type = data.type;
 	}
 
+	var Shooting = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.start_time = data.time;
+		this.dt = data.time;
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -120,7 +136,9 @@ var components = (function(){
 		"animated":Animated,
 		"to_be_removed": ToBeRemoved,
 		"health": Health,
-		"type": Type
+		"type": Type,
+		"ship_control": ShipControl,
+		"shooting": Shooting
 	};
 
 	return components

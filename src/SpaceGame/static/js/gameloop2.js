@@ -129,7 +129,7 @@ var GameLoop = (function() {
         component_manager.init(entity_components, components);
 
         node_factory = NodeFactory(entity_manager, component_manager);
-
+        input_system = new InputSystem(node_factory);
         physics_system = new LocalPhysicsSystem(node_factory);
 
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
@@ -142,7 +142,7 @@ var GameLoop = (function() {
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
         render_system = new RenderSystem(node_factory, entities);
 
-        systems = [player_server_update_system, server_update_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
+        systems = [player_server_update_system, server_update_system, input_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
