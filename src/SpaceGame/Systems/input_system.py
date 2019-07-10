@@ -42,7 +42,7 @@ class InputSystem(System):
         return reversed(unprocessed_list)
 
     def handle(self, node):
-        logging.info(f"input processing {node.id}")
+        # logging.info(f"input processing {node.id}")
         packets = []
 
         inputs = self.get_unhandled_input(node.player_input.data)

@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="nav">
-      <b>You are logged in as {{ current_user["name"] }}. Your email is {{ current_user["email"] }}</b> -
+      <b>You are logged in {{ current_user["email"] }}</b> -
       <a href="/auth/logout">{{ _("Sign out") }}</a>
     </div>
     <div id="body">

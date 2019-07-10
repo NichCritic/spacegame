@@ -18,38 +18,38 @@ var MapState = (function(mapData) {
     }
 
     function get_data() {
-        $.getJSON("/minimap", function success(data){
-            map_data = data;
-            map.removeChildren();
-            var p = new PIXI.Graphics();
-            p.beginFill(0x00FF00);
-            p.drawRect(0, 0, 5, 5);
-            p.endFill();
+        // $.getJSON("/minimap", function success(data){
+        //     map_data = data;
+        //     map.removeChildren();
+        //     var p = new PIXI.Graphics();
+        //     p.beginFill(0x00FF00);
+        //     p.drawRect(0, 0, 5, 5);
+        //     p.endFill();
 
-            //Center is 600, 300
-            let x = map_data.player.x;
-            let y = map_data.player.y;
-            p.x = 600+ (x / 50000)*250;
-            p.y = 300+ (y / 50000)*250;
-            map.addChild(p);
+        //     //Center is 600, 300
+        //     let x = map_data.player.x;
+        //     let y = map_data.player.y;
+        //     p.x = 600+ (x / 50000)*250;
+        //     p.y = 300+ (y / 50000)*250;
+        //     map.addChild(p);
             
-            for(var i in map_data.positions) {
-                let x = map_data.positions[i].x
-                let y = map_data.positions[i].y
-                var item = new PIXI.Graphics();
-                item.beginFill(0xFF0000);
-                item.drawRect(0, 0, 5, 5);
-                item.endFill();
+        //     for(var i in map_data.positions) {
+        //         let x = map_data.positions[i].x
+        //         let y = map_data.positions[i].y
+        //         var item = new PIXI.Graphics();
+        //         item.beginFill(0xFF0000);
+        //         item.drawRect(0, 0, 5, 5);
+        //         item.endFill();
 
-                //Center is 600, 300
-                item.x = 600+ (x / 50000)*250;
-                item.y = 300+ (y / 50000)*250;
-                map.addChild(item);
-            }
+        //         //Center is 600, 300
+        //         item.x = 600+ (x / 50000)*250;
+        //         item.y = 300+ (y / 50000)*250;
+        //         map.addChild(item);
+        //     }
 
-        }, function failure(err){
-            console.warn(err);
-        });
+        // }, function failure(err){
+        //     console.warn(err);
+        // });
     }
 
 

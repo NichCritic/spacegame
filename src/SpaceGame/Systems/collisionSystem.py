@@ -33,4 +33,4 @@ class CollisionSystem(System):
                     "delta": comb_radius - dist
                 })
 
-                logging.info(f"{node.id} is colliding with {nnode.id}")
+                # logging.info(f"{node.id} is colliding with {nnode.id}")

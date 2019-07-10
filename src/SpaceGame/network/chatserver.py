@@ -435,7 +435,7 @@ class CommandMessageHandler(BaseHandler):
     def post(self):
         message = {
             "id": str(uuid.uuid4()),
-            "from": self.current_user["given_name"],
+            "from": self.current_user["email"],
             "body": self.get_argument("body"),
         }
         # logging.info(self.current_user)
@@ -519,9 +519,8 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
             user = yield self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v1/userinfo",
                 access_token=access["access_token"])
-            # print(user)
+            logging.info(user)
             with self.session_manager.get_session() as session:
-
                 acct = self.account_utils.handle_login(
                     user, self.player_factory, session)
                 player = self.player_factory.create_player(

@@ -108,7 +108,7 @@ class AccountUtils():
     def handle_login(self, user, player_factory, session):
         db_user = self.get(user["email"], session)
         if db_user is None:
-            db_user = self.make_account(user["given_name"], user["family_name"], user["email"], session)
+            db_user = self.make_account("", "", user["email"], session)
         return db_user
     
 #Base.metadata.create_all(engine)

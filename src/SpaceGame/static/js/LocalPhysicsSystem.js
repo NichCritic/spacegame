@@ -48,6 +48,9 @@ var LocalPhysicsSystem = (function() {
 
 	LocalPhysicsSystem.prototype.process = function() {
 		var nodes = this.node_factory.create_node_list(["ship_control", "rotation"]);
+		if(nodes.length === 0){
+			return
+		}
 		let control = nodes[0].ship_control;
 		let dt = nodes[0].ship_control.dt;
 
