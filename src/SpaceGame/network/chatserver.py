@@ -17,7 +17,7 @@
 import logging
 import tornado.auth
 import tornado.escape
-
+import tornado.locks
 import tornado.web
 
 import uuid
@@ -34,36 +34,27 @@ define("port", default=8888, help="run on the given port", type=int)
 class MessageBuffer(object):
 
     def __init__(self):
-        self.waiters = set()
+        self.cond = tornado.locks.Condition()
         self.cache = []
         self.cache_size = 200
 
-    def wait_for_messages(self, callback, cursor=None):
-        if cursor:
-            new_count = 0
-            for msg in reversed(self.cache):
-                if msg["id"] == cursor:
-                    break
-                new_count += 1
-            if new_count:
-                callback(self.cache[-new_count:])
-                return
-        self.waiters.add(callback)
-
-    def cancel_wait(self, callback):
-        self.waiters.remove(callback)
+    
+    def get_messages_since(self, cursor=None):
+        results = []
+        for msg in reversed(self.cache):
+            if msg["id"] == cursor:
+                break
+            results.append(msg)
+        results.reverse()
+        return results
+                
 
     def new_messages(self, messages):
         # logging.info("Sending new message to %r listeners", len(self.waiters))
-        for callback in self.waiters:
-            try:
-                callback(messages)
-            except:
-                logging.error("Error in waiter callback", exc_info=True)
-        self.waiters = set()
         self.cache.extend(messages)
         if len(self.cache) > self.cache_size:
             self.cache = self.cache[-self.cache_size:]
+        self.cond.notify_all()
 
 
 # Making this a non-singleton is left as an exercise for the reader.
@@ -124,6 +115,7 @@ class ShopHandler(BaseHandler):
         if not self.current_user['id'] in self.player_factory.players:
             self.clear()
             self.set_status(500)
+            logging.info("Finish called get_player")
             self.finish("No currently signed in user")
             return
 
@@ -141,6 +133,7 @@ class ShopHandler(BaseHandler):
         if not shops:
             self.clear()
             self.set_status(404)
+            logging.info("Finish called get_closest_shop")
             self.finish("Not near any shops")
             return
 
@@ -158,9 +151,10 @@ class ShopHandler(BaseHandler):
         closest.add_or_attach_component('inventory', {'inventory': {}})
         data = closest.shop.shop_data
         data['inventory'] = closest.inventory.inv
-
+        logging.info("Finish called closest_shop get")
         self.finish(data)
 
+    @tornado.web.authenticated
     def post(self):
         post_data = self.get_argument("body")
         json_data = json.loads(post_data)
@@ -205,7 +199,7 @@ class ShopHandler(BaseHandler):
                 "quantity": 1,
                 "price": selected_item["cost"]
             })
-
+        logging.info("Finish called shop post")
         self.finish()
 
 
@@ -221,6 +215,7 @@ class InventoryHandler(BaseHandler):
         if not self.current_user['id'] in self.player_factory.players:
             self.clear()
             self.set_status(500)
+            logging.info("Finish called inv get_player")
             self.finish("No currently signed in user")
             return
 
@@ -239,7 +234,7 @@ class InventoryHandler(BaseHandler):
                 session, it).name, "id": it, "qty": inventory[it]["qty"]} for it in inventory]
 
         data = {"inventory": items}
-
+        logging.info("Finish called items get")
         self.finish(data)
 
 
@@ -255,6 +250,7 @@ class MoneyHandler(BaseHandler):
         if not self.current_user['id'] in self.player_factory.players:
             self.clear()
             self.set_status(500)
+            logging.info("Finish called MoneyHandler get_player")
             self.finish("No currently signed in user")
             return
 
@@ -267,7 +263,7 @@ class MoneyHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["money"], [])
 
         data = {"money": av.money.money}
-
+        logging.info("Finish called MoneyHandler get")
         self.finish(data)
 
 
@@ -283,6 +279,7 @@ class MinimapHandler(BaseHandler):
         if not self.current_user['id'] in self.player_factory.players:
             self.clear()
             self.set_status(500)
+            logging.info("Finish called Minimap get_player")
             self.finish("No currently signed in user")
             return
 
@@ -300,7 +297,7 @@ class MinimapHandler(BaseHandler):
                                "y": n.position.y} for n in nodes if n.area.radius > 90],
                 "player": {"id": av.id, "radius": av.area.radius, "x": av.position.x,
                            "y": av.position.y}}
-
+        logging.info("Finish called Minimap get")
         self.finish(data)
 
 
@@ -337,6 +334,7 @@ class CharacterCreateHandler(BaseHandler):
 
         # print(self.request.body)
         self.write({"result": "ok"})
+        logging.info("Finish called CharacterCreateHandler get")
         self.finish()
         # if self.get_argument("next", None):
         #    self.redirect(self.get_argument("next"))
@@ -387,7 +385,6 @@ class CharacterSelectHandler(BaseHandler):
             self.render("character_select.html", characters=self.av)
 
     @tornado.web.authenticated
-    @tornado.web.asynchronous
     def post(self):
         # print(self.request.body)
         with self.session_manager.get_session() as session:
@@ -416,6 +413,7 @@ class CharacterSelectHandler(BaseHandler):
                 self.redirect(self.get_argument("next"))
             else:
                 self.write(tornado.escape.to_basestring("ok"))
+                logging.info("Finish called CharacterSelectHandler post")
                 self.finish()
 
         # if self.get_argument("next", None):
@@ -431,7 +429,6 @@ class CommandMessageHandler(BaseHandler):
         self.account_utils = account_utils
 
     @tornado.web.authenticated
-    @tornado.web.asynchronous
     def post(self):
         message = {
             "id": str(uuid.uuid4()),
@@ -471,54 +468,65 @@ class MessageUpdatesHandler(BaseHandler):
         self.node_factory = node_factory
 
     @tornado.web.authenticated
-    @tornado.web.asynchronous
-    def post(self):
+    async def post(self):
         # print(self.current_user["id"])
         try:
             cursor = self.get_argument("cursor", None)
             if not self.current_user['id'] in self.player_factory.players:
                 self.create_player()
+            msg_buffer = self.player_factory.players[self.current_user["id"]].message_buffer
+            messages = msg_buffer.get_messages_since(cursor=cursor)
+            while not messages:
+                self.wait_future = msg_buffer.cond.wait()
+                try:
+                    await self.wait_future
+                except asyncio.CancelledError:
+                    return
+                message = msg_buffer.get_messages_since(cursor)
+            if self.request.connection.stream.closed():
+                return
+            self.write(dict(messages=messages))
 
-            self.player_factory.players[self.current_user["id"]].message_buffer.wait_for_messages(self.on_new_messages,
-                                                                                                  cursor=cursor)
-        except:
+        except Exception as e:
+            logging.error(e)
             self.clear()
             self.set_status(500)
+            logging.info("Finish called post")
             self.finish("No currently signed in user")
             return
 
     def on_new_messages(self, messages):
         # Closed client connection
-        if self.request.connection.stream.closed():
-            return
+        
+        logging.info("Finish called on_new_messages")
+        
 
-        self.finish(dict(
-            messages=messages,
-        ))
 
     def on_connection_close(self):
-        self.player_factory.players[self.current_user[
-            "id"]].message_buffer.cancel_wait(self.on_new_messages)
+        self.wait_future.cancel()
 
 
-class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
+class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixin):
 
     def initialize(self, account_utils, player_factory, session_manager):
         self.account_utils = account_utils
         self.player_factory = player_factory
         self.session_manager = session_manager
 
-    @gen.coroutine
-    def get(self):
+    
+    async def get(self):
         # print(self.get_query_argument("code", False))
         if self.get_query_argument("code", False):
 
-            access = yield self.get_authenticated_user(
+            access = await self.get_authenticated_user(
                 redirect_uri='http://naelick.com:8888/auth/login',
                 code=self.get_query_argument('code'))
-            user = yield self.oauth2_request(
-                "https://www.googleapis.com/oauth2/v1/userinfo",
+
+            logging.info(access)
+            user = await self.oauth2_request(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
                 access_token=access["access_token"])
+            
             logging.info(user)
             with self.session_manager.get_session() as session:
                 acct = self.account_utils.handle_login(
@@ -533,13 +541,13 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleOAuth2Mixin):
                                        tornado.escape.json_encode(user))
 
                 self.redirect("/character_select")
-                return
-        self.authorize_redirect(
-            redirect_uri='http://naelick.com:8888/auth/login',
-            client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
-            scope=['email'],
-            response_type='code',
-            extra_params={'approval_prompt': 'auto'})
+        else:
+            self.authorize_redirect(
+                redirect_uri='http://naelick.com:8888/auth/login',
+                client_id="746170306889-840qspkc0dcdlb3sur4ml7daalll4uvo.apps.googleusercontent.com",
+                scope=['profile', 'email'],
+                response_type='code',
+                extra_params={'approval_prompt': 'auto'})
 
 
 class AuthLogoutHandler(BaseHandler):
