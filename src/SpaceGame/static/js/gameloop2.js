@@ -134,6 +134,7 @@ var GameLoop = (function() {
 
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
+        shooting_system = new ShootingSystem(node_factory);
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
         
@@ -142,7 +143,7 @@ var GameLoop = (function() {
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
         render_system = new RenderSystem(node_factory, entities);
 
-        systems = [player_server_update_system, server_update_system, input_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
+        systems = [player_server_update_system, server_update_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -202,6 +203,11 @@ var GameLoop = (function() {
             for(let i = 0; i < entities.length; i++) {
                 let entity = serverState.entities[entities[i]];
 
+                if(entity.type && entity.type=== 'bolt') {
+                    //Temporarily don't sync bullets
+                    continue    
+                } 
+
                 let n = node_factory.create_node([], entity.id);
 
                 n.add_or_update("server_update", {data: {
@@ -223,6 +229,8 @@ var GameLoop = (function() {
                                                image:textures[entity.type].idle[0],
                                                width: n.area.radius*2,
                                                height: n.area.radius*2});
+
+
 
                 n.add_or_update("type", {"type":entity.type})
 

@@ -66,6 +66,7 @@ var components = (function(){
 		this.brake = data.brake;
 		this.shoot = data.shoot;
 		this.dt = data.dt;
+		this.time = data.time;
 	};
 	var PlayerControlled = function(entity_id) {
 		this.entity_id = entity_id;

@@ -38,16 +38,15 @@ class MessageBuffer(object):
         self.cache = []
         self.cache_size = 200
 
-    
     def get_messages_since(self, cursor=None):
         results = []
         for msg in reversed(self.cache):
-            if msg["id"] == cursor:
+            # logging.info(msg)
+            if msg.id == cursor:
                 break
             results.append(msg)
         results.reverse()
         return results
-                
 
     def new_messages(self, messages):
         # logging.info("Sending new message to %r listeners", len(self.waiters))
@@ -474,7 +473,8 @@ class MessageUpdatesHandler(BaseHandler):
             cursor = self.get_argument("cursor", None)
             if not self.current_user['id'] in self.player_factory.players:
                 self.create_player()
-            msg_buffer = self.player_factory.players[self.current_user["id"]].message_buffer
+            msg_buffer = self.player_factory.players[
+                self.current_user["id"]].message_buffer
             messages = msg_buffer.get_messages_since(cursor=cursor)
             while not messages:
                 self.wait_future = msg_buffer.cond.wait()
@@ -485,9 +485,11 @@ class MessageUpdatesHandler(BaseHandler):
                 message = msg_buffer.get_messages_since(cursor)
             if self.request.connection.stream.closed():
                 return
-            self.write(dict(messages=messages))
+            self.write(dict(messages=[m.msg for m in messages]))
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             logging.error(e)
             self.clear()
             self.set_status(500)
@@ -497,10 +499,8 @@ class MessageUpdatesHandler(BaseHandler):
 
     def on_new_messages(self, messages):
         # Closed client connection
-        
-        logging.info("Finish called on_new_messages")
-        
 
+        logging.info("Finish called on_new_messages")
 
     def on_connection_close(self):
         self.wait_future.cancel()
@@ -513,7 +513,6 @@ class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixi
         self.player_factory = player_factory
         self.session_manager = session_manager
 
-    
     async def get(self):
         # print(self.get_query_argument("code", False))
         if self.get_query_argument("code", False):
@@ -526,7 +525,7 @@ class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixi
             user = await self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v2/userinfo",
                 access_token=access["access_token"])
-            
+
             logging.info(user)
             with self.session_manager.get_session() as session:
                 acct = self.account_utils.handle_login(

@@ -26,9 +26,11 @@ var ShootingSystem = (function() {
 	}
 
 	ShootingSystem.prototype.handle = function(node) {
-		var x_vel = math.sin(node.rotation.rotation) + node.velocity.x * 50
-        var y_vel = -math.cos(node.rotation.rotation) + node.velocity.y * 50
-		var bullet = node_factory.create_node(
+		var x_vel = Math.sin(node.rotation.rotation) + node.velocity.x * 50;
+        var y_vel = -Math.cos(node.rotation.rotation) + node.velocity.y * 50;
+        var x_pos = node.position.x;
+        var y_pos = node.position.y;
+		var bullet = this.node_factory.create_node(
 			{
             'force': {},
             'acceleration': {},
@@ -37,7 +39,7 @@ var ShootingSystem = (function() {
             'rotation': {'rotation': node.rotation.rotation},
             'area': {'radius': 6},
             'mass': {},
-            // 'server_updated': {},
+            'server_controlled': {},
             'type': {'type': 'bolt'},
             // 'physics_update': {'last_update': now},
             // 'state_history': {},

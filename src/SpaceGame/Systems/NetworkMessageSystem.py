@@ -16,7 +16,7 @@ class NetworkMessage(object):
         self.msg = msg
 
     def __repr__(self):
-        return "<" + str(self.id) + ">:<" + self.msg + ">"
+        return "<" + str(self.id) + ">:<" + repr(self.msg) + ">"
 
 
 class NetworkMessageSystem(object):
@@ -24,6 +24,7 @@ class NetworkMessageSystem(object):
     def __init__(self, node_factory, player_factory):
         self.node_factory = node_factory
         self.player_factory = player_factory
+        self.running_id = 0
 
     def get_nodes(self):
         return self.node_factory.create_node_list(["player_controlled", "network_messages"])
@@ -44,8 +45,7 @@ class NetworkMessageSystem(object):
                 # print("happens")
                 message_buffer = players[p].message_buffer
                 # print("also happens")
-                for message in node.network_messages.msg:
-                    self.send_message(message_buffer, message)
+                message_buffer.new_messages(node.network_messages.msg)
             node.remove_component("network_messages")
 
 
