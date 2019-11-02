@@ -482,7 +482,7 @@ class MessageUpdatesHandler(BaseHandler):
                     await self.wait_future
                 except asyncio.CancelledError:
                     return
-                message = msg_buffer.get_messages_since(cursor)
+                messages = msg_buffer.get_messages_since(cursor)
             if self.request.connection.stream.closed():
                 return
             self.write(dict(messages=[m.msg for m in messages]))

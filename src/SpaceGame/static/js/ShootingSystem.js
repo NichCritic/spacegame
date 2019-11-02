@@ -2,10 +2,11 @@
 var ShootingSystem = (function() {
 	var manditory = ["shooting", "velocity", "rotation", "position"];
 	var optional = [];
-	var handles = [];
+	var handles = ["shooting"];
 
-	function ShootingSystem(node_factory, inputs) {
+	function ShootingSystem(node_factory, textures) {
 		this.node_factory = node_factory;
+		this.textures = textures;
 	}
 
 	ShootingSystem.prototype.process = function() {
@@ -26,21 +27,25 @@ var ShootingSystem = (function() {
 	}
 
 	ShootingSystem.prototype.handle = function(node) {
-		var x_vel = Math.sin(node.rotation.rotation) + node.velocity.x * 50;
-        var y_vel = -Math.cos(node.rotation.rotation) + node.velocity.y * 50;
+		var x_vel = Math.sin(node.rotation.rotation) * 0.1 + node.velocity.x ;
+        var y_vel = -Math.cos(node.rotation.rotation) * 0.1 + node.velocity.y ;
         var x_pos = node.position.x;
         var y_pos = node.position.y;
 		var bullet = this.node_factory.create_node(
 			{
-            'force': {},
-            'acceleration': {},
+            'force': {'x': 0, 'y': 0},
+            'acceleration': {'x':0, 'y': 0},
             'velocity': {'x': x_vel, 'y': y_vel},
             'position': {'x': x_pos, 'y': y_pos},
             'rotation': {'rotation': node.rotation.rotation},
             'area': {'radius': 6},
-            'mass': {},
+            'mass': {'mass':2},
             'server_controlled': {},
             'type': {'type': 'bolt'},
+             "renderable": {"spritesheet": this.textures["bolt"],
+                                               "image":this.textures["bolt"].idle[0],
+                                               "width": 12,
+                                               "height": 12}
             // 'physics_update': {'last_update': now},
             // 'state_history': {},
             // 'expires': {

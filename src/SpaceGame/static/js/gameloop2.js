@@ -134,7 +134,7 @@ var GameLoop = (function() {
 
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
-        shooting_system = new ShootingSystem(node_factory);
+        shooting_system = new ShootingSystem(node_factory, textures);
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
         
