@@ -116,6 +116,13 @@ var components = (function(){
 		this.entity_id = entity_id;
 		this.start_time = data.time;
 		this.dt = data.time;
+	
+	}
+
+	var Expires = function(entity_id, data) {
+		this.entity_id = entity_id
+		this.expiry_time_ms = data.expiry_time_ms;
+		this.creation_time = data.creation_time;
 	}
 
 	var components = {
@@ -139,7 +146,8 @@ var components = (function(){
 		"health": Health,
 		"type": Type,
 		"ship_control": ShipControl,
-		"shooting": Shooting
+		"shooting": Shooting,
+		"expires": Expires
 	};
 
 	return components

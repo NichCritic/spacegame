@@ -143,7 +143,9 @@ var GameLoop = (function() {
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
         render_system = new RenderSystem(node_factory, entities);
 
-        systems = [player_server_update_system, server_update_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
+        expiry_system = new ExpirySystem(node_factory);
+
+        systems = [player_server_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},

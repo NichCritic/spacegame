@@ -39,6 +39,6 @@ class ShootingSystem(System):
                 'expiry_time_ms': 2000,
                 'creation_time': now
             },
-            "collidable": {},
+            # "collidable": {},
             "collision_damage": {"damage": 10},
         })

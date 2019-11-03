@@ -123,7 +123,7 @@ def create_spacestations(node_factory, session):
         'orient_towards_target': {},
         'proximity_target_behaviour': {},
         'health': {'health': 100, 'max_health': 100},
-        'collidable': {}
+        # 'collidable': {}
     })
 
 
