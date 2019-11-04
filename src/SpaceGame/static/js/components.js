@@ -125,6 +125,16 @@ var components = (function(){
 		this.creation_time = data.creation_time;
 	}
 
+	var ServerSync = function(entity_id, data) {
+		this.entity_id = entity_id
+		this.sync_key = data.sync_key
+	}
+
+	var ClientSync = function(entity_id, data) {
+		this.entity_id = entity_id
+		this.sync_key = data.sync_key
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -147,7 +157,10 @@ var components = (function(){
 		"type": Type,
 		"ship_control": ShipControl,
 		"shooting": Shooting,
-		"expires": Expires
+		"expires": Expires,
+		"server_sync": ServerSync,
+		"client_sync": ClientSync
+
 	};
 
 	return components

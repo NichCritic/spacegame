@@ -67,6 +67,10 @@ class GameStateRequestSystem(System):
                     "health": node.health.health,
                     "max_health": node.health.max_health
                 }
+            if node.has('client_sync'):
+                game_state["entities"][node.id]["client_sync"] = {
+                    "sync_key": node.client_sync.sync_key
+                }
         # print("Returning game state request")
 
         pnode.message(game_state)

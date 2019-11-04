@@ -240,6 +240,10 @@ var GameLoop = (function() {
                     n.add_or_update('health', entity.health);
                 }
 
+                if(entity.client_sync) {
+                    n.add_or_update('client_sync', entity.client_sync)
+                }
+
                 if(entities[i] === serverState.player_id){
                     n.add_or_update('player');
                     n.add_or_update('inputs', {inputs:inputs});

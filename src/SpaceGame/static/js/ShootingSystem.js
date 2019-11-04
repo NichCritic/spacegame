@@ -50,9 +50,12 @@ var ShootingSystem = (function() {
 	            // 'physics_update': {'last_update': now},
 	            // 'state_history': {},
 	            'expires': {
-		            'expiry_time_ms': 500,
+		            'expiry_time_ms': 2000,
 		            'creation_time': now
             	},
+            	'server_sync': {
+            		'sync_key': node.shooting.start_time
+            	}
 		})
 	}
 

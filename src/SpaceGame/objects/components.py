@@ -336,6 +336,13 @@ class CollisionDamage():
         self.damage = damage
 
 
+class ClientSync():
+
+    def __init__(self, entity_id, sync_key):
+        self.entity_id = entity_id
+        self.sync_key = sync_key
+
+
 components = {
     "acceleration": Acceleration,
     "area": Area,
@@ -375,7 +382,8 @@ components = {
     "orient_towards_target": OrientTowardsTarget,
     "proximity_target_behaviour": ProximityTargetBehaviour,
     "health": Health,
-    "collision_damage": CollisionDamage
+    "collision_damage": CollisionDamage,
+    "client_sync": ClientSync
 }
 
 db_components = {
