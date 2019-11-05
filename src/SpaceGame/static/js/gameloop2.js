@@ -133,6 +133,7 @@ var GameLoop = (function() {
         physics_system = new LocalPhysicsSystem(node_factory);
 
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
+        PCE_update_system = new PCEUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
         shooting_system = new ShootingSystem(node_factory, textures);
 
@@ -145,7 +146,9 @@ var GameLoop = (function() {
 
         expiry_system = new ExpirySystem(node_factory);
 
-        systems = [player_server_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
+        server_sync_system = new ServerSyncSystem(node_factory);
+
+        systems = [server_sync_system, player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, /*physics_system,*/ camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -198,17 +201,17 @@ var GameLoop = (function() {
         let inputs = args.inputs;
         let gamestate_buffer = args.gamestate_buffer;
         $.postJSON('./a/message/updates', {}, function success(result){
-            let serverState = result.messages[0];
+            let serverState = result.messages[result.messages.length-1];
 
             inputs.update(serverState.time);
             let entities = Object.keys(serverState.entities);
             for(let i = 0; i < entities.length; i++) {
                 let entity = serverState.entities[entities[i]];
 
-                if(entity.type && entity.type=== 'bolt') {
-                    //Temporarily don't sync bullets
-                    continue    
-                } 
+                // if(entity.type && entity.type=== 'bolt') {
+                //     //Temporarily don't sync bullets
+                //     continue    
+                // } 
 
                 let n = node_factory.create_node([], entity.id);
 

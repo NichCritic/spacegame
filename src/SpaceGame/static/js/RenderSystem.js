@@ -39,10 +39,17 @@ var RenderSystem = (function() {
 			let e_id = this.onScreen[i];
 			let on_screen = ids.indexOf(e_id) !== -1;
 			let leaving = !on_screen;
+			let node = this.node_factory.create_node([], e_id);
+			if(node.entity_has("to_be_removed")) {
+				newLeaving.push(e_id);
+				continue;
+			}
 
 			if (on_screen) {
 				newOnScreen.push(e_id);
-			}			
+			}
+
+
 		}
 
 		this.entering = newEntering;
@@ -84,6 +91,11 @@ var RenderSystem = (function() {
 			if(node.entity_has("to_be_removed")) {
 				node.delete_all_components();
 			}
+			if(onScreen) {
+				delete this.onScreen[this.onScreen.indexOf(node.id)]
+				onScreen = false;
+			}
+
 			return;
 		}
 
@@ -95,17 +107,19 @@ var RenderSystem = (function() {
             this.onScreen.push(node.id);
 		}
 
-		let x_pos = node.position.x - camera.position.x;
-		let y_pos = node.position.y - camera.position.y;
+		if(onScreen) {
+			let x_pos = node.position.x - camera.position.x;
+			let y_pos = node.position.y - camera.position.y;
 
-		this.displayObjects[node.id].texture = node.renderable.image;
-		this.displayObjects[node.id].x = x_pos;
-		this.displayObjects[node.id].y = y_pos;
-		this.displayObjects[node.id].width = node.renderable.width;
-		this.displayObjects[node.id].height = node.renderable.height;
+			this.displayObjects[node.id].texture = node.renderable.image;
+			this.displayObjects[node.id].x = x_pos;
+			this.displayObjects[node.id].y = y_pos;
+			this.displayObjects[node.id].width = node.renderable.width;
+			this.displayObjects[node.id].height = node.renderable.height;
 
-		if(node.has("rotation")) {
-			this.displayObjects[node.id].rotation = node.rotation.rotation;
+			if(node.has("rotation")) {
+				this.displayObjects[node.id].rotation = node.rotation.rotation;
+			}
 		}
 
 	}

@@ -14,7 +14,7 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "health"], entity_ids=pnode.sector.neighbours)
+            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "health", "client_sync"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
 

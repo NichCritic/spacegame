@@ -135,6 +135,10 @@ var components = (function(){
 		this.sync_key = data.sync_key
 	}
 
+	var PlayerCreated = function(entity_id, data) {
+		this.entity_id = entity_id
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -159,8 +163,8 @@ var components = (function(){
 		"shooting": Shooting,
 		"expires": Expires,
 		"server_sync": ServerSync,
-		"client_sync": ClientSync
-
+		"client_sync": ClientSync,
+		"player_created": PlayerCreated
 	};
 
 	return components

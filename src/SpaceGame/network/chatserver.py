@@ -36,7 +36,7 @@ class MessageBuffer(object):
     def __init__(self):
         self.cond = tornado.locks.Condition()
         self.cache = []
-        self.cache_size = 200
+        self.cache_size = 20
 
     def get_messages_since(self, cursor=None):
         results = []

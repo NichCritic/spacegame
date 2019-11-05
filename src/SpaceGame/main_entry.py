@@ -75,7 +75,7 @@ def main():
     )
     app.listen(options.port)
     system_set_callback = tornado.ioloop.PeriodicCallback(
-        system_set.process, 200)
+        system_set.process, 100)
     system_set_callback.start()
 
     tornado.ioloop.IOLoop.instance().start()

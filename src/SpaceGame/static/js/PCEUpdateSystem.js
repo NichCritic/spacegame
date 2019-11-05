@@ -1,14 +1,15 @@
 
-var ServerUpdateSystem = (function() {
-	var manditory = ["server_update", "server_controlled"];
+var PCEUpdateSystem = (function() {
+	var manditory = ["server_update", "player_created"];
 	var optional = [];
 	var handles = ["server_update"];
 
-	function ServerUpdateSystem(node_factory) {
+
+	function PCEUpdateSystem(node_factory) {
 		this.node_factory = node_factory;
 	}
 
-	ServerUpdateSystem.prototype.process = function() {
+	PCEUpdateSystem.prototype.process = function() {
 		var nodes = this.node_factory.create_node_list(manditory, optional);
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
@@ -18,7 +19,7 @@ var ServerUpdateSystem = (function() {
 
 	};
 
-	ServerUpdateSystem.prototype.cleanup = function(node) {
+	PCEUpdateSystem.prototype.cleanup = function(node) {
 		for(let i = 0; i < handles.length; i++) {
 			var comp = handles[i];
 			node.delete_component(comp);
@@ -27,7 +28,10 @@ var ServerUpdateSystem = (function() {
 
 
 
-	ServerUpdateSystem.prototype.handle = function(node) {
+	PCEUpdateSystem.prototype.handle = function(node) {
+		let pnode = this.node_factory.create_node_list(["player", "inputs"], [])[0];
+		let inputs = pnode.inputs.inputs;
+		
 		node.add_or_update("position", node.server_update.data.position);
 		node.add_or_update("velocity", node.server_update.data.velocity);
 		node.add_or_update("acceleration", node.server_update.data.acceleration);
@@ -36,15 +40,14 @@ var ServerUpdateSystem = (function() {
 		node.add_or_update("rotation", node.server_update.data.rotation);
 		node.add_or_update("mass", node.server_update.data.mass);
 
-		node.add_or_attach("type", {"type":"unknown"})
-
-		// if(node.type.type === "bolt") {
-		// 	let dt = Date.now() - node.server_update.data.time;
-
-		// 	node.position.x = node.position.x + node.velocity.x * dt;
-		// 	node.position.y = node.position.y + node.velocity.y * dt;
-		// }
+		for(let i = 0; i < inputs.list.length-1; i++) {
+			let control = {};
+			control.dt = inputs.list[i].dt
+			control.brake = true;
+			do_physics(node, control, control.dt);
+		}
+		
 	}
 
-	return ServerUpdateSystem; 
+	return PCEUpdateSystem; 
 })();

@@ -66,6 +66,7 @@ var LocalPhysicsSystem = (function() {
 
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
+			let control = node.ship_control;
 			node.add_or_attach("force", {})
 			do_force(node, control, dt)
 		}
@@ -89,6 +90,7 @@ var LocalPhysicsSystem = (function() {
 		nodes = this.node_factory.create_node_list(["velocity", "ship_control"]);
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
+			let control = node.ship_control;
 			do_brake(node, control, dt)
 		}
 
