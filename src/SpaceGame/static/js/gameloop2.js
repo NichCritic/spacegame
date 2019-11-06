@@ -111,6 +111,10 @@ var GameLoop = (function() {
         textures.silver_ore_pickup = {};
         textures.silver_ore_pickup.idle = [PIXI.loader.resources["static/assets/silver_ore_pickup.png"].texture];
 
+        let explosion_idle = PIXI.BaseTexture.fromImage("static/assets/explosion.png")
+        textures.explosion = {}
+        textures.explosion.idle = getTexturesFromSpritesheet(explosion_idle, 5, 1, 16, 16);
+
         textures.gold_ore_pickup = {};
         textures.gold_ore_pickup.idle = [PIXI.loader.resources["static/assets/gold_ore_pickup.png"].texture];
         textures.stars = stars;
@@ -148,7 +152,7 @@ var GameLoop = (function() {
 
         server_sync_system = new ServerSyncSystem(node_factory);
 
-        systems = [server_sync_system, player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, /*physics_system,*/ camera_track_system, animation_system, health_render_system, render_system];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -208,21 +212,21 @@ var GameLoop = (function() {
             for(let i = 0; i < entities.length; i++) {
                 let entity = serverState.entities[entities[i]];
 
-                // if(entity.type && entity.type=== 'bolt') {
-                //     //Temporarily don't sync bullets
-                //     continue    
-                // } 
+                if(entity.type && entity.type=== 'bolt') {
+                    //Temporarily don't sync bullets
+                    continue    
+                } 
 
                 let n = node_factory.create_node([], entity.id);
 
                 n.add_or_update("server_update", {data: {
-                    'acceleration': entity.acceleration,
-                    'force': entity.force,
+                    'acceleration': {x:0, y:0},
+                    'force': {x:0, y:0},
                     'mass': {mass:entity.mass},
                     'position': entity.position,
                     'rotation': {rotation: entity.rotation},
-                    'velocity': entity.velocity,
-                    'thrust': {thrust:0.05},
+                    'velocity': {x:0, y:0},
+                    'thrust': {thrust:0.00},
                     'time': serverState.time
                 }});
 
@@ -252,7 +256,16 @@ var GameLoop = (function() {
                     n.add_or_update('inputs', {inputs:inputs});
                     //TODO: We know that the player can be animated but this should really be based on server data
                     n.add_or_update('animated', {update_rate: 0.5});
-                    
+                    n.add_or_update("server_update", {data: {
+                    'acceleration': entity.acceleration,
+                    'force': entity.force,
+                    'mass': {mass:entity.mass},
+                    'position': entity.position,
+                    'rotation': {rotation: entity.rotation},
+                    'velocity': entity.velocity,
+                    'thrust': {thrust:0.05},
+                    'time': serverState.time
+                }}); 
                     
 
                 } else {

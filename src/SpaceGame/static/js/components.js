@@ -114,9 +114,16 @@ var components = (function(){
 
 	var Shooting = function(entity_id, data) {
 		this.entity_id = entity_id;
-		this.start_time = data.time;
-		this.dt = data.time;
+		this.input = data.input;
+		this.firing_rate = data.firing_rate;
 	
+	}
+
+	var ShootingVars = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.last_update = Date.now();
+		this.bullets_fired = 0;
+		this.residual_cooldown = null; //Make null so it can be init to variable firing rate
 	}
 
 	var Expires = function(entity_id, data) {
@@ -161,6 +168,7 @@ var components = (function(){
 		"type": Type,
 		"ship_control": ShipControl,
 		"shooting": Shooting,
+		"shooting_vars": ShootingVars,
 		"expires": Expires,
 		"server_sync": ServerSync,
 		"client_sync": ClientSync,

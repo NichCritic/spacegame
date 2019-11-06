@@ -34,10 +34,8 @@ var InputSystem = (function() {
 		node.ship_control.dt = node.control.dt
 
 		if(node.control.shoot) {
-			node.add_or_attach("shooting", {time: node.control.time})
-			node.shooting.dt = node.control.dt
-		} else {
-			node.delete_component("shooting");
+			node.add_or_attach("shooting", {firing_rate:200});
+			node.shooting.input = {shoot: node.control.shoot, dt: node.control.dt};
 		}
 
 	}

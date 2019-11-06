@@ -231,9 +231,17 @@ class GameStateRequest():
 
 class Shooting():
 
-    def __init__(self, entity_id, time):
+    def __init__(self, entity_id, firing_rate, inputs=None):
         self.entity_id = entity_id
-        self.time = time
+        self.inputs = inputs if not inputs is None else []
+        self.firing_rate = firing_rate
+
+class ShootingVars():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.last_update = time.time() * 1000
+        self.bullets_fired = 0
+        self.residual_cooldown = None #Make none to use firing rate as a default since 0 is valid
 
 
 class Mining():
@@ -372,6 +380,7 @@ components = {
     "sector": Sector,
     "server_updated": ServerUpdated,
     "shooting": Shooting,
+    "shooting_vars": ShootingVars,
     "shop": Shop,
     "shop_spec": ShopSpec,
     "state_history": StateHistory,

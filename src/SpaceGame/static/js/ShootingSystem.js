@@ -26,9 +26,9 @@ var ShootingSystem = (function() {
 		}
 	}
 
-	ShootingSystem.prototype.handle = function(node) {
-		var x_vel = Math.sin(node.rotation.rotation) * 0.1 + node.velocity.x;
-        var y_vel = -Math.cos(node.rotation.rotation) * 0.1 + node.velocity.y;
+	ShootingSystem.prototype.create_bullet = function(node, count) {
+		var x_vel = Math.sin(node.rotation.rotation) * 0.5 + node.velocity.x;
+        var y_vel = -Math.cos(node.rotation.rotation) * 0.5 + node.velocity.y;
         var x_pos = node.position.x + Math.sin(node.rotation.rotation) * 15;
         var y_pos = node.position.y + -Math.cos(node.rotation.rotation) * 15;
         var now = Date.now();
@@ -54,9 +54,43 @@ var ShootingSystem = (function() {
 		            'creation_time': now
             	},
             	'server_sync': {
-            		'sync_key': node.shooting.start_time
+            		'sync_key': count
             	}
-		})
+		});
+		// console.log("bullets fired: " + count)
+		return bullet;
+	}
+
+	ShootingSystem.prototype.handle = function(node) {
+		node.add_or_attach("shooting_vars");
+
+		let input = node.shooting.input;
+		let firing_rate = node.shooting.firing_rate;
+
+		let now = Date.now();
+		let dt_last_time = now - node.shooting_vars.last_update
+
+		let running_time = node.shooting_vars.residual_cooldown == null ? firing_rate : Math.min(node.shooting_vars.residual_cooldown + dt_last_time, firing_rate);
+		
+		// console.log("Running time", running_time);
+
+		let bullets_fired = node.shooting_vars.bullets_fired;
+
+		let dt = input.dt;
+		if(running_time + dt >= firing_rate) {
+			this.create_bullet(node, bullets_fired)
+			running_time -= firing_rate;
+			bullets_fired++;
+		}
+
+		
+		running_time += dt;
+
+		node.shooting_vars.last_update = Date.now();
+		node.shooting_vars.bullets_fired = bullets_fired;
+		node.shooting_vars.residual_cooldown = running_time;
+
+		
 	}
 
 	return ShootingSystem; 

@@ -1,5 +1,5 @@
 from Systems.system import System
-
+import time
 
 class CollisionDamageSystem(System):
     """
@@ -26,3 +26,15 @@ class CollisionDamageSystem(System):
             # TODO: This is kind of crude. Should really add a damaged state to the node to give a chance
             # For other systems to respond
             c_node.health.health -= node.collision_damage.damage
+
+            if c_node.health.health <= 0:
+                now = time.time() * 1000
+                c_node.add_or_attach_component('position', {})
+                pos = c_node.position
+                c_node.remove_all_components()
+                c_node.add_or_update_component('type', {'type': 'explosion'})
+                c_node.add_or_update_component('position', {'x':pos.x, 'y':pos.y})
+                c_node.add_or_update_component('expires', {
+                    'expiry_time_ms': 5000,
+                    'creation_time': now
+                })

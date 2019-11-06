@@ -38,11 +38,11 @@ var ServerSyncSystem = (function() {
 			//Otherwise just ignore it, might turn up later?
 			//If this becomes an issue shove a timer on it, and delete them if the server fails 
 			//to create after X seconds. But in absence of a problem we'll ignore for now
-			var now = Date.now();
-			node.add_or_update("expires", {
-				creation_time:now,
-				expiry_time_ms: 1000
-			})
+			// var now = Date.now();
+			// node.add_or_update("expires", {
+			// 	creation_time:now,
+			// 	expiry_time_ms: 1000
+			// })
 		}
 	};
 
