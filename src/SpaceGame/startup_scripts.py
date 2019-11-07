@@ -38,6 +38,8 @@ from Systems.expirySystem import ExpirySystem
 from Systems.pickupSystem import PickupSystem
 from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
 from Systems.proximityTargetSystem import ProximityTargetSystem
+from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
+from Systems.EventActiveSystem import EventActiveSystem
 
 import objects.item
 
@@ -126,6 +128,17 @@ def create_spacestations(node_factory, session):
         'collidable': {}
     })
 
+    def test_script():
+        logging.info("Event fired!")
+
+    node_factory.create_new_node({
+        "area": {"radius": 100},
+        "position": {"x": -1500, "y": -1500},
+        "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
+        "event": {"script": test_script},
+        "event_proximity_trigger": {}
+    })
+
 
 def setup_db(db):
     db_engine = base.engine(db)
@@ -173,6 +186,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     processor = ProcessorSystem(node_factory)
     proxy_target = ProximityTargetSystem(node_factory)
     ai_orient_tow_tar = AIOrientTowardsTargetSystem(node_factory)
+    event_proxy = EventProximityTriggerSystem(node_factory)
+    event_active = EventActiveSystem(node_factory)
     coll_sink = CollisionSink(node_factory)
 
     game_state_req = GameStateRequestSystem(node_factory)
@@ -196,6 +211,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(processor)
     system_set.register(proxy_target)
     system_set.register(ai_orient_tow_tar)
+    system_set.register(event_proxy)
+    system_set.register(event_active)
     system_set.register(coll_sink)
     system_set.register(game_state_req)
 

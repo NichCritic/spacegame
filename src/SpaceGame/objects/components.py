@@ -236,12 +236,15 @@ class Shooting():
         self.inputs = inputs if not inputs is None else []
         self.firing_rate = firing_rate
 
+
 class ShootingVars():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.last_update = time.time() * 1000
         self.bullets_fired = 0
-        self.residual_cooldown = None #Make none to use firing rate as a default since 0 is valid
+        # Make none to use firing rate as a default since 0 is valid
+        self.residual_cooldown = None
 
 
 class Mining():
@@ -350,11 +353,34 @@ class ClientSync():
         self.entity_id = entity_id
         self.sync_key = sync_key
 
+
 class Animated():
 
     def __init__(self, entity_id, update_rate):
         self.entity_id = entity_id
         self.update_rate = update_rate
+
+
+class Event():
+
+    def __init__(self, entity_id, script, cooldown):
+        self.entity_id = entity_id
+        self.script = script
+        self.cooldown = 0
+        self.cooldown_time = cooldown
+
+
+class EventActive():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class EventProximityTrigger():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 components = {
     "acceleration": Acceleration,
@@ -363,6 +389,9 @@ components = {
     "camera": Camera,
     "collidable": Collidable,
     "colliding": Colliding,
+    "event": Event,
+    "event_active": EventActive,
+    "event_proximity_trigger": EventProximityTrigger,
     "expires": Expires,
     "force": Force,
     "game_state_request": GameStateRequest,
