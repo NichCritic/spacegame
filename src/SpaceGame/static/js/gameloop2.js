@@ -244,7 +244,9 @@ var GameLoop = (function() {
                 n.add_or_update("type", {"type":entity.type})
 
                 if(entity.animated) {
-                    n.add_or_update('animated', {update_rate: entity.animated.update_rate});
+                    //TODO This could cause a bug where the animation rate isn't updated between
+                    //two entity states
+                    n.add_or_attach('animated', {update_rate: entity.animated.update_rate});
                 }
 
 

@@ -1,6 +1,7 @@
 from Systems.system import System
 import time
 
+
 class CollisionDamageSystem(System):
     """
     Handles the colliding state by ignoring it, in case other systems haven't handled it, 
@@ -33,10 +34,14 @@ class CollisionDamageSystem(System):
                 pos = c_node.position
                 c_node.remove_all_components()
                 c_node.add_or_update_component('type', {'type': 'explosion'})
-                c_node.add_or_update_component('position', {'x':pos.x, 'y':pos.y})
-                # c_node.add_or_update_component('expires', {
-                #     'expiry_time_ms': 5000,
-                #     'creation_time': now
-                # })
+                c_node.add_or_update_component(
+                    'position', {'x': pos.x, 'y': pos.y})
+                # c_node.add_or_update_component(
+                #     'health', {'health': 0, 'max_health': 0})
+                c_node.add_or_update_component('expires', {
+                    'expiry_time_ms': 1000,
+                    'creation_time': now
+                })
                 c_node.add_or_attach_component('area', {'radius': 25})
-                c_node.add_or_attach_component('animated', {'update_rate':1000})
+                c_node.add_or_attach_component(
+                    'animated', {'update_rate': 200})
