@@ -4,6 +4,7 @@ Created on 2014-02-25
 @author: Nich
 '''
 
+import logging
 import model.base as base
 from model.base import SessionManager
 from model.account import AccountUtils
@@ -111,31 +112,30 @@ def create_spacestations(node_factory, session):
 
     })
 
-    node_factory.create_new_node({
-        "type": {"type": "ship"},
-        "area": {"radius": 25},
-        "position": {"x": 100, "y": 100},
-        "rotation": {"rotation": 0},
-        "velocity": {"x": 0, "y": 0},
-        'force': {},
-        'acceleration': {},
-        'mass': {},
-        'physics_update': {},
-        'state_history': {},
-        'orient_towards_target': {},
-        'proximity_target_behaviour': {},
-        'health': {'health': 100, 'max_health': 100},
-        'collidable': {}
-    })
-
     def test_script():
-        logging.info("Event fired!")
+        node_factory.create_new_node({
+            "type": {"type": "ship"},
+            "area": {"radius": 25},
+            "position": {"x": 100, "y": 100},
+            "rotation": {"rotation": 0},
+            "velocity": {"x": 0, "y": 0},
+            'force': {},
+            'acceleration': {},
+            'mass': {},
+            'physics_update': {},
+            'state_history': {},
+            'orient_towards_target': {},
+            'proximity_target_behaviour': {},
+            'health': {'health': 100, 'max_health': 100},
+            'collidable': {}
+        })
 
     node_factory.create_new_node({
         "area": {"radius": 100},
-        "position": {"x": -1500, "y": -1500},
+        "position": {"x": 0, "y": 0},
+        "type": {"type": "bolfenn"},
         "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-        "event": {"script": test_script},
+        "event": {"script": test_script, "cooldown": 5000},
         "event_proximity_trigger": {}
     })
 
