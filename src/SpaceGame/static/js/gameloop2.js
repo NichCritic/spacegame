@@ -243,6 +243,11 @@ var GameLoop = (function() {
 
                 n.add_or_update("type", {"type":entity.type})
 
+                if(entity.animated) {
+                    n.add_or_update('animated', {update_rate: entity.animated.update_rate});
+                }
+
+
                 if(entity.health) {
                     n.add_or_update('health', entity.health);
                 }
@@ -255,7 +260,7 @@ var GameLoop = (function() {
                     n.add_or_update('player');
                     n.add_or_update('inputs', {inputs:inputs});
                     //TODO: We know that the player can be animated but this should really be based on server data
-                    n.add_or_update('animated', {update_rate: 0.5});
+                    
                     n.add_or_update("server_update", {data: {
                     'acceleration': entity.acceleration,
                     'force': entity.force,

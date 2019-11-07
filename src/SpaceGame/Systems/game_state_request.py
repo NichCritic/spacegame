@@ -14,7 +14,7 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "health", "client_sync"], entity_ids=pnode.sector.neighbours)
+            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "animated", "health", "client_sync"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
 
@@ -37,6 +37,7 @@ class GameStateRequestSystem(System):
                 'state_history') else []
             mining = node.has("mining")
             minable = node.has("minable")
+            animated = {"update_rate":node.animated.update_rate} if node.has("animated") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -59,6 +60,7 @@ class GameStateRequestSystem(System):
                 "control": control,
                 "mining": mining,
                 "minable": minable,
+                "animated": animated,
                 "last_update": last_update,
                 "state_history": state_history
             }

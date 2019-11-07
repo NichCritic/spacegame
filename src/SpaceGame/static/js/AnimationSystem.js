@@ -6,6 +6,7 @@ var AnimationSystem = (function() {
 
 	function AnimationSystem(node_factory) {
 		this.node_factory = node_factory;
+		this.last_update = Date.now();
 	}
 
 	AnimationSystem.prototype.process = function() {
@@ -29,9 +30,20 @@ var AnimationSystem = (function() {
 		//TODO: only handles idle state
 		let spritesheet = node.renderable.spritesheet.idle;
 
-		node.animated.frame = (node.animated.frame + node.animated.update_rate) % spritesheet.length;
+		let now = Date.now();
+		dt = now - this.last_update;
+
+		node.animated.residual_cooldown += dt;
+
+		if(node.animated.residual_cooldown >= node.animated.update_rate) {
+			let frames = Math.floor(node.animated.residual_cooldown/node.animated.update_rate);
+			node.animated.frame = (node.animated.frame + frames) % spritesheet.length;
+			node.animated.residual_cooldown -= node.animated.update_rate * frames
+		}
 
 		node.renderable.image = spritesheet[Math.floor(node.animated.frame)];
+
+		last_update = now;
 
 	}
 

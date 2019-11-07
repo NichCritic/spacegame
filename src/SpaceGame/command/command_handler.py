@@ -47,6 +47,7 @@ class CommandHandler():
 
         av.add_or_attach_component('game_state_request', {})
         av.add_or_attach_component('state_history', {})
+        av.add_or_attach_component('animated', {'update_rate':0.5})
 
         with self.session_manager.get_session() as session:
             self.db_comps.set_session(session)

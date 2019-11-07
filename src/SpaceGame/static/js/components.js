@@ -95,6 +95,7 @@ var components = (function(){
 		this.entity_id = entity_id;
 		this.update_rate = data.update_rate;
 		this.frame = data.frame ? data.frame:0;
+		this.residual_cooldown = 0
 	}
 
 	var ToBeRemoved = function(entity_id) {

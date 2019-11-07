@@ -350,9 +350,15 @@ class ClientSync():
         self.entity_id = entity_id
         self.sync_key = sync_key
 
+class Animated():
+
+    def __init__(self, entity_id, update_rate):
+        self.entity_id = entity_id
+        self.update_rate = update_rate
 
 components = {
     "acceleration": Acceleration,
+    "animated": Animated,
     "area": Area,
     "camera": Camera,
     "collidable": Collidable,
