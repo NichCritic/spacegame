@@ -14,10 +14,11 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "animated", "health", "client_sync"], entity_ids=pnode.sector.neighbours)
+            ["position", "type"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "animated", "health", "client_sync", "no_sync"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
-
+            if node.has('no_sync'):
+                continue
             velx = node.velocity.x if node.has('velocity') else 0
             vely = node.velocity.y if node.has('velocity') else 0
             mass = (node.mass.mass if node.has('mass') else 1) + \
@@ -33,11 +34,12 @@ class GameStateRequestSystem(System):
                 -1] if node.has('player_input') else None,
             last_update = node.physics_update.last_update if node.has(
                 'physics_update') else 0
-            state_history = node.state_history.history if node.has(
-                'state_history') else []
+            # state_history = node.state_history.history if node.has(
+            # 'state_history') else []
             mining = node.has("mining")
             minable = node.has("minable")
-            animated = {"update_rate":node.animated.update_rate} if node.has("animated") else None
+            animated = {"update_rate": node.animated.update_rate} if node.has(
+                "animated") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -62,7 +64,7 @@ class GameStateRequestSystem(System):
                 "minable": minable,
                 "animated": animated,
                 "last_update": last_update,
-                "state_history": state_history
+                # "state_history": state_history
             }
             if node.has('health'):
                 game_state["entities"][node.id]["health"] = {

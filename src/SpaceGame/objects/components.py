@@ -382,6 +382,12 @@ class EventProximityTrigger():
         self.entity_id = entity_id
 
 
+class NoSync():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
 components = {
     "acceleration": Acceleration,
     "animated": Animated,
@@ -402,6 +408,7 @@ components = {
     "mining": Mining,
     "money": Money,
     "network_messages": NetworkMessages,
+    "no_sync": NoSync,
     "persisted": Persisted,
     "physics_update": PhysicsUpdate,
     "pickup": Pickup,

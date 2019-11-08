@@ -3,6 +3,7 @@ import math
 import time
 import logging
 
+
 class ShootingSystem(System):
 
     manditory = ["shooting", "position",
@@ -10,7 +11,7 @@ class ShootingSystem(System):
     handles = ["shooting"]
 
     def create_bullet(self, node, creation_time, count):
-        x_vel = math.sin(node.rotation.rotation) * 0.5+ node.velocity.x
+        x_vel = math.sin(node.rotation.rotation) * 0.5 + node.velocity.x
         y_vel = -math.cos(node.rotation.rotation) * 0.5 + node.velocity.y
 
         now = time.time() * 1000
@@ -21,8 +22,10 @@ class ShootingSystem(System):
         if dt < 0:
             dt = 0
 
-        x_pos = node.position.x + math.sin(node.rotation.rotation) * 15 + x_vel * dt
-        y_pos = node.position.y - math.cos(node.rotation.rotation) * 15 + y_vel * dt
+        x_pos = node.position.x + \
+            math.sin(node.rotation.rotation) * 15 + x_vel * dt
+        y_pos = node.position.y - \
+            math.cos(node.rotation.rotation) * 15 + y_vel * dt
 
         # logging.info("Bullets fired: "+str(count))
 
@@ -44,19 +47,21 @@ class ShootingSystem(System):
             },
             "collidable": {},
             "collision_damage": {"damage": 10},
-            "client_sync": {"sync_key": count}
+            # "client_sync": {"sync_key": count}
+            "no_sync": {}
         })
 
     def handle(self, node):
         node.add_or_attach_component("shooting_vars", {})
-        
+
         inputs = node.shooting.inputs
         firing_rate = node.shooting.firing_rate
 
         now = time.time() * 1000
         dt_last_update = now - node.shooting_vars.last_update
 
-        running_time = min(node.shooting_vars.residual_cooldown+dt_last_update, firing_rate) if node.shooting_vars.residual_cooldown is not None else firing_rate
+        running_time = min(node.shooting_vars.residual_cooldown + dt_last_update,
+                           firing_rate) if node.shooting_vars.residual_cooldown is not None else firing_rate
         # logging.info(running_time)
         total_time = 0
         bullets_fired = node.shooting_vars.bullets_fired
@@ -65,7 +70,7 @@ class ShootingSystem(System):
             dt = inp["dt"]
             if inp["shooting"]:
                 if running_time + dt >= firing_rate:
-                    self.create_bullet(node, total_time, bullets_fired)        
+                    self.create_bullet(node, total_time, bullets_fired)
                     running_time -= firing_rate
                     bullets_fired += 1
             running_time += dt
@@ -74,10 +79,3 @@ class ShootingSystem(System):
         node.shooting_vars.last_update = time.time() * 1000
         node.shooting_vars.bullets_fired = bullets_fired
         node.shooting_vars.residual_cooldown = running_time
-
-
-
-
-
-
-        

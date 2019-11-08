@@ -12,9 +12,13 @@ class System(object):
 
     def process(self):
         nodes = self.get_nodes()
+        start = time.time()
         for node in nodes:
             self.handle(node)
             self.clean(node)
+        end = time.time()
+        dt = end - start
+        logging.info(f"{self.__class__.__name__} took {dt}s to run")
 
     def handle(self, node):
         pass

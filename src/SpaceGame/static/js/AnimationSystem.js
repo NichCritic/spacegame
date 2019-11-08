@@ -39,7 +39,7 @@ var AnimationSystem = (function() {
 			let frames = Math.floor(node.animated.residual_cooldown/node.animated.update_rate);
 			node.animated.frame = (node.animated.frame + frames) % spritesheet.length;
 			node.animated.residual_cooldown -= node.animated.update_rate * frames
-			console.log(node.animated.frame);
+			// console.log(node.animated.frame);
 		}
 
 		node.renderable.image = spritesheet[Math.floor(node.animated.frame)];
