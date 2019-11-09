@@ -86,6 +86,8 @@ def unpack_db_objects(node_factory):
 def create_spacestations(node_factory, session):
     import math
     import random
+    import numpy.random
+    from math import floor
 
     gold_ore = objects.item.get_item_by_name(session, 'gold ore').static_copy()
     silver_ore = objects.item.get_item_by_name(
@@ -95,49 +97,64 @@ def create_spacestations(node_factory, session):
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
-    node_factory.create_new_node({
-        "type": {"type": "asteroid"},
-        "area": {"radius": 100},
-        "position": {"x": 1500, "y": 0},
-        "rotation": {"rotation": 10},
-        "velocity": {"x": 0.00, "y": 0.00},
-        "collidable": {},
-        'force': {},
-        'acceleration': {},
-        'mass': {},
-        'server_updated': {},
-        'physics_update': {},
-        'state_history': {},
-        'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1}
+    
+    for i in range(200):
 
-    })
+        x_pos = 10000 +int(floor(numpy.random.normal(scale = 1000.0)))
+        y_pos = int(floor(numpy.random.normal(scale = 2000.0)))
+        rot = int(floor(numpy.random.rand() * 2 * math.pi))
+        size = int(floor(numpy.random.normal(scale = 50)))
 
-    def test_script():
         node_factory.create_new_node({
-            "type": {"type": "ship"},
-            "area": {"radius": 25},
-            "position": {"x": 100, "y": 100},
+            "type": {"type": "asteroid"},
+            "area": {"radius": size},
+            "position": {"x": x_pos, "y": y_pos},
             "rotation": {"rotation": 0},
-            "velocity": {"x": 0, "y": 0},
+            "velocity": {"x": 0.00, "y": 0.00},
+            "collidable": {},
             'force': {},
             'acceleration': {},
             'mass': {},
+            'server_updated': {},
             'physics_update': {},
             'state_history': {},
-            'orient_towards_target': {},
-            'proximity_target_behaviour': {},
-            'health': {'health': 100, 'max_health': 100},
-            'collidable': {}
+            'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1}
+
         })
 
-    node_factory.create_new_node({
-        "area": {"radius": 100},
-        "position": {"x": 0, "y": 0},
-        "type": {"type": "bolfenn"},
-        "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-        "event": {"script": test_script, "cooldown": 5000},
-        "event_proximity_trigger": {}
-    })
+    def test_script(trigger_node):
+        import random
+        for i in range(10):
+            trigger_node.add_or_attach_component("position", {"x":0, "y":0})
+            node_factory.create_new_node({
+                "type": {"type": "ship"},
+                "area": {"radius": 10},
+                "position": {"x": trigger_node.position.x+random.random()*5, "y": trigger_node.position.y+random.random()*5},
+                "rotation": {"rotation": 0},
+                "velocity": {"x": 0, "y": 0},
+                'force': {},
+                'acceleration': {},
+                'mass': {},
+                'physics_update': {},
+                'state_history': {},
+                'orient_towards_target': {},
+                'proximity_target_behaviour': {},
+                'health': {'health': 100, 'max_health': 100},
+                'collidable': {}
+            })
+
+    for i in range(100):
+        x_pos = 10000 +floor(numpy.random.normal(scale = 1000.0))
+        y_pos = floor(numpy.random.normal(scale = 2000.0))
+        initial_cooldown = 600000 * numpy.random.rand()
+
+        node_factory.create_new_node({
+            "area": {"radius": 1000},
+            "position": {"x": x_pos, "y": y_pos},
+            "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
+            "event": {"script": test_script, "cooldown": 600000, "initial_cooldown": initial_cooldown},
+            "event_proximity_trigger": {}
+        })
 
 
 def setup_db(db):

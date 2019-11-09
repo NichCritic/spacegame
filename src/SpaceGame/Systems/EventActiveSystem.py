@@ -21,5 +21,5 @@ class EventActiveSystem(System):
             return
 
         node.event.cooldown = node.event.cooldown_time
-        node.event.script()
+        node.event.script(node)
         self.last_update = now

@@ -363,10 +363,10 @@ class Animated():
 
 class Event():
 
-    def __init__(self, entity_id, script, cooldown):
+    def __init__(self, entity_id, script, cooldown, initial_cooldown = 0):
         self.entity_id = entity_id
         self.script = script
-        self.cooldown = 0
+        self.cooldown = initial_cooldown
         self.cooldown_time = cooldown
 
 

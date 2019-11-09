@@ -56,5 +56,6 @@ class ShopUnpackSystem(System):
 
         node.add_or_attach_component("shop", {"shop_data": shop_data})
 
-        node.add_or_attach_component(
-            "processor", {"processes": node.shop_spec.shop_data["process"]})
+        if 'process' in node.shop_spec.shop_data:
+            node.add_or_attach_component(
+                "processor", {"processes": node.shop_spec.shop_data["process"]})
