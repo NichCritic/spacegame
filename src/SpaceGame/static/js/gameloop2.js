@@ -212,10 +212,10 @@ var GameLoop = (function() {
             for(let i = 0; i < entities.length; i++) {
                 let entity = serverState.entities[entities[i]];
 
-                if(entity.type && entity.type=== 'bolt') {
-                    //Temporarily don't sync bullets
-                    continue    
-                } 
+                // if(entity.type && entity.type=== 'bolt') {
+                //     //Temporarily don't sync bullets
+                //     continue    
+                // } 
 
                 let n = node_factory.create_node([], entity.id);
 

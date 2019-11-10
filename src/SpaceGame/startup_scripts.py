@@ -38,6 +38,7 @@ from Systems.transaction_system import TransactionSystem
 from Systems.expirySystem import ExpirySystem
 from Systems.pickupSystem import PickupSystem
 from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
+from Systems.aiShootAtTargetSystem import AIShootAtTargetSystem
 from Systems.ImpulseSystem import ImpulseSystem
 from Systems.proximityTargetSystem import ProximityTargetSystem
 from Systems.playerProximityTargetSystem import PlayerProximityTargetSystem
@@ -147,8 +148,7 @@ def create_spacestations(node_factory, session):
                 'acceleration': {},
                 'mass': {},
                 'physics_update': {},
-                'state_history': {},
-                'orient_towards_target': {},
+                'shoot_at_target': {},
                 'player_proximity_target_behaviour': {},
                 'health': {'health': 100, 'max_health': 100},
                 'collidable': {}
@@ -156,13 +156,13 @@ def create_spacestations(node_factory, session):
             ships.append(ship)
 
         for s in ships:
-            s.add_or_attach_component("allies", "allies":[s2.id for s2 in ships if s.id != s2.id])
+            s.add_or_attach_component("allies", {"allies":[s2.id for s2 in ships if s.id != s2.id]})
 
 
     for i in range(100):
         x_pos = 10000 + floor(numpy.random.normal(scale=1000.0))
         y_pos = floor(numpy.random.normal(scale=2000.0))
-        initial_cooldown = 3600000 * numpy.random.rand()
+        initial_cooldown = 0#3600000 * numpy.random.rand()
 
         node_factory.create_new_node({
             "area": {"radius": 100},
@@ -222,6 +222,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     proxy_target = ProximityTargetSystem(node_factory)
     player_proxy_target = PlayerProximityTargetSystem(node_factory)
     ai_orient_tow_tar = AIOrientTowardsTargetSystem(node_factory)
+    ai_shootat_tar = AIShootAtTargetSystem(node_factory)
     impulse = ImpulseSystem(node_factory)
     event_proxy = EventProximityTriggerSystem(node_factory)
     event_active = EventActiveSystem(node_factory)
@@ -250,6 +251,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(proxy_target)
     system_set.register(player_proxy_target)
     system_set.register(ai_orient_tow_tar)
+    system_set.register(ai_shootat_tar)
     system_set.register(impulse)
     system_set.register(event_proxy)
     system_set.register(event_active)

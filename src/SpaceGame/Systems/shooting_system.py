@@ -8,6 +8,7 @@ class ShootingSystem(System):
 
     manditory = ["shooting", "position",
                  "velocity", "rotation", "physics_update"]
+    optional = ["player_controlled"]
     handles = ["shooting"]
 
     def create_bullet(self, node, creation_time, count):
@@ -28,8 +29,7 @@ class ShootingSystem(System):
             math.cos(node.rotation.rotation) * 15 + y_vel * dt
 
         # logging.info("Bullets fired: "+str(count))
-
-        return self.node_factory.create_new_node({
+        bullet = self.node_factory.create_new_node({
             'force': {},
             'acceleration': {},
             'velocity': {'x': x_vel, 'y': y_vel},
@@ -48,8 +48,14 @@ class ShootingSystem(System):
             "collidable": {},
             "collision_damage": {"damage": 100},
             # "client_sync": {"sync_key": count}
-            "no_sync": {}
+            # "no_sync": {}
         })
+
+        if node.has("player_controlled"):
+            bullet.add_or_attach_component('no_sync', {})
+
+        return bullet
+
 
     def handle(self, node):
         node.add_or_attach_component("shooting_vars", {})

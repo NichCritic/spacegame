@@ -328,6 +328,11 @@ class OrientTowardsTarget():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class ShootAtTarget():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 class ProximityTargetBehaviour():
 
@@ -457,6 +462,7 @@ components = {
     "rotation": Rotation,
     "sector": Sector,
     "server_updated": ServerUpdated,
+    "shoot_at_target": ShootAtTarget,
     "shooting": Shooting,
     "shooting_vars": ShootingVars,
     "shop": Shop,
