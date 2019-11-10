@@ -387,6 +387,11 @@ class NoSync():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class Moved():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 components = {
     "acceleration": Acceleration,
@@ -407,6 +412,7 @@ components = {
     "minable": Minable,
     "mining": Mining,
     "money": Money,
+    "moved": Moved,
     "network_messages": NetworkMessages,
     "no_sync": NoSync,
     "persisted": Persisted,

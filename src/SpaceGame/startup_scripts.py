@@ -41,6 +41,7 @@ from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
 from Systems.proximityTargetSystem import ProximityTargetSystem
 from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
 from Systems.EventActiveSystem import EventActiveSystem
+from Systems.movementTrackingSystem import MovementTrackingSystem
 
 import objects.item
 
@@ -124,12 +125,19 @@ def create_spacestations(node_factory, session):
 
     def test_script(trigger_node):
         import random
+        logging.info("Triggered")
         for i in range(10):
             trigger_node.add_or_attach_component("position", {"x":0, "y":0})
+
+            x_pos = trigger_node.position.x + i * 30
+            y_pos = trigger_node.position.y + i * 30
+
+            logging.info(f"{x_pos}, {y_pos}")
+
             node_factory.create_new_node({
                 "type": {"type": "ship"},
                 "area": {"radius": 10},
-                "position": {"x": trigger_node.position.x+random.random()*5, "y": trigger_node.position.y+random.random()*5},
+                "position": {"x": x_pos, "y": y_pos},
                 "rotation": {"rotation": 0},
                 "velocity": {"x": 0, "y": 0},
                 'force': {},
@@ -146,13 +154,13 @@ def create_spacestations(node_factory, session):
     for i in range(100):
         x_pos = 10000 +floor(numpy.random.normal(scale = 1000.0))
         y_pos = floor(numpy.random.normal(scale = 2000.0))
-        initial_cooldown = 600000 * numpy.random.rand()
+        initial_cooldown = 0#36000 * numpy.random.rand()
 
         node_factory.create_new_node({
             "area": {"radius": 1000},
             "position": {"x": x_pos, "y": y_pos},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-            "event": {"script": test_script, "cooldown": 600000, "initial_cooldown": initial_cooldown},
+            "event": {"script": test_script, "cooldown": 36000, "initial_cooldown": initial_cooldown},
             "event_proximity_trigger": {}
         })
 
@@ -192,6 +200,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     hissys = HistorySystem(node_factory)
     physys = PhysicsSystem(node_factory)
     shoot = ShootingSystem(node_factory)
+    movetrack = MovementTrackingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
     proximity = ProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
@@ -217,9 +226,10 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(sersys)
     system_set.register(physys)
     system_set.register(shoot)
+    system_set.register(movetrack)
     system_set.register(spatial)
     system_set.register(proximity)
-    system_set.register(collision)
+    #system_set.register(collision)
     system_set.register(collision_dam)
     system_set.register(pickup)
     system_set.register(coll_mov)
