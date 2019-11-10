@@ -120,11 +120,14 @@ class Sector():
     neightbours has the list of all entities in the sector
     '''
 
-    def __init__(self, entity_id, sx, sy, neighbours):
+    def __init__(self, entity_id, sx, sy, fx, fy, neighbours, fine_neighbours):
         self.entity_id = entity_id
         self.sx = sx
         self.sy = sy
+        self.fx = fx
+        self.fy = fy
         self.neighbours = neighbours
+        self.fine_neighbours = fine_neighbours
 
 
 class Shop():
@@ -363,7 +366,7 @@ class Animated():
 
 class Event():
 
-    def __init__(self, entity_id, script, cooldown, initial_cooldown = 0):
+    def __init__(self, entity_id, script, cooldown, initial_cooldown=0):
         self.entity_id = entity_id
         self.script = script
         self.cooldown = initial_cooldown
@@ -386,6 +389,7 @@ class NoSync():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
+
 
 class Moved():
 

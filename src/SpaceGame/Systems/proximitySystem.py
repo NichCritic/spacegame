@@ -19,7 +19,7 @@ class ProximitySystem(System):
 
     def handle(self, node):
         nnodes = self.node_factory.create_node_list(
-            ["position", "area"], [], entity_ids=node.sector.neighbours)
+            ["position", "area"], [], entity_ids=node.sector.fine_neighbours)
 
         node.add_or_attach_component("proximity", {})
         node.proximity.proximity_map = {}
@@ -33,3 +33,5 @@ class ProximitySystem(System):
                 dist = 0.01
 
             node.proximity.proximity_map[nnode.id] = dist
+            nnode.add_or_attach_component("proximity", {})
+            nnode.proximity.proximity_map[node.id] = dist

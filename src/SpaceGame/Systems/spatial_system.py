@@ -11,36 +11,53 @@ class SpatialSystem(System):
     def __init__(self, node_factory):
         self.node_factory = node_factory
 
-    def process(self):
-        nodes = self.get_nodes()
-
+    def create_sector_dict(self, nodes, sector_size):
         sectors = defaultdict(list)
 
         for node in nodes:
-            sx = math.floor(node.position.x / 2500)
-            sy = math.floor(node.position.y / 2500)
+            sx = math.floor(node.position.x / sector_size)
+            sy = math.floor(node.position.y / sector_size)
             sectors[(sx, sy)].append(node.id)
 
+        return sectors
+
+    def create_neighbours_list(self, node, sectors, sector_size):
+        sx = math.floor(node.position.x / sector_size)
+        sy = math.floor(node.position.y / sector_size)
+
+        half = sector_size / 2
+
+        top = True if node.position.y < sy * sector_size + half else False
+        left = True if node.position.x < sx * sector_size + half else False
+
+        if top and left:
+            neighbors = [(-1, -1), (0, -1), (-1, 0), (0, 0)]
+        if top and not left:
+            neighbors = [(0, -1), (1, -1), (1, 0), (0, 0)]
+        if not top and left:
+            neighbors = [(-1, 0), (-1, 1), (0, 1), (0, 0)]
+        if not top and not left:
+            neighbors = [(1, 0), (1, 1), (0, 1), (0, 0)]
+
+        neighbor_entities = sum([sectors[(sx + n[0], sy + n[1])]
+                                 for n in neighbors], [])
+        return sx, sy, neighbor_entities
+
+    def process(self):
+        nodes = self.get_nodes()
+
+        sectors = self.create_sector_dict(nodes, 2500)
+        fine_sectors = self.create_sector_dict(nodes, 100)
+
         for node in nodes:
-            sx = math.floor(node.position.x / 2500)
-            sy = math.floor(node.position.y / 2500)
+            sx, sy, neighbour_entities = self.create_neighbours_list(
+                node, sectors, 2500)
+            fx, fy, fine_neighbour_entities = self.create_neighbours_list(
+                node, fine_sectors, 100)
 
-            top = True if node.position.y < sy * 2500 + 1250 else False
-            left = True if node.position.x < sx * 2500 + 1250 else False
-
-            if top and left:
-                neighbors = [(-1, -1), (0, -1), (-1, 0), (0, 0)]
-            if top and not left:
-                neighbors = [(0, -1), (1, -1), (1, 0), (0, 0)]
-            if not top and left:
-                neighbors = [(-1, 0), (-1, 1), (0, 1), (0, 0)]
-            if not top and not left:
-                neighbors = [(1, 0), (1, 1), (0, 1), (0, 0)]
-
-            neighbor_entities = sum([sectors[(sx + n[0], sy + n[1])]
-                                     for n in neighbors], [])
             node.add_or_update_component(
-                "sector", {"sx": sx, "sy": sy, "neighbours": neighbor_entities})
+                "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
+                           "fx": fx, "fy": fy, "fine_neighbours": fine_neighbour_entities})
 
 
 '''

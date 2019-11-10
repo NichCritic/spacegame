@@ -98,13 +98,13 @@ def create_spacestations(node_factory, session):
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
-    
+
     for i in range(200):
 
-        x_pos = 10000 +int(floor(numpy.random.normal(scale = 1000.0)))
-        y_pos = int(floor(numpy.random.normal(scale = 2000.0)))
+        x_pos = 10000 + int(floor(numpy.random.normal(scale=1000.0)))
+        y_pos = int(floor(numpy.random.normal(scale=2000.0)))
         rot = int(floor(numpy.random.rand() * 2 * math.pi))
-        size = int(floor(numpy.random.normal(scale = 50)))
+        size = int(floor(numpy.random.normal(scale=50)))
 
         node_factory.create_new_node({
             "type": {"type": "asteroid"},
@@ -127,7 +127,7 @@ def create_spacestations(node_factory, session):
         import random
         logging.info("Triggered")
         for i in range(10):
-            trigger_node.add_or_attach_component("position", {"x":0, "y":0})
+            trigger_node.add_or_attach_component("position", {"x": 0, "y": 0})
 
             x_pos = trigger_node.position.x + i * 30
             y_pos = trigger_node.position.y + i * 30
@@ -152,15 +152,16 @@ def create_spacestations(node_factory, session):
             })
 
     for i in range(100):
-        x_pos = 10000 +floor(numpy.random.normal(scale = 1000.0))
-        y_pos = floor(numpy.random.normal(scale = 2000.0))
-        initial_cooldown = 0#36000 * numpy.random.rand()
+        x_pos = 10000 + floor(numpy.random.normal(scale=1000.0))
+        y_pos = floor(numpy.random.normal(scale=2000.0))
+        initial_cooldown = 0  # 36000 * numpy.random.rand()
 
         node_factory.create_new_node({
-            "area": {"radius": 1000},
+            "area": {"radius": 100},
             "position": {"x": x_pos, "y": y_pos},
+            "type": {"type": "bolfenn"},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-            "event": {"script": test_script, "cooldown": 36000, "initial_cooldown": initial_cooldown},
+            "event": {"script": test_script, "cooldown": 3600000, "initial_cooldown": initial_cooldown},
             "event_proximity_trigger": {}
         })
 
@@ -229,7 +230,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(movetrack)
     system_set.register(spatial)
     system_set.register(proximity)
-    #system_set.register(collision)
+    # system_set.register(collision)
     system_set.register(collision_dam)
     system_set.register(pickup)
     system_set.register(coll_mov)
