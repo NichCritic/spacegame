@@ -29,8 +29,8 @@ var MapState = (function(mapData) {
             //Center is 600, 300
             let x = map_data.player.x;
             let y = map_data.player.y;
-            p.x = 600+ (x / 50000)*250;
-            p.y = 300+ (y / 50000)*250;
+            p.x = 600+ (x / 7500)*250;
+            p.y = 300+ (y / 7500)*250;
             map.addChild(p);
             
             for(var i in map_data.positions) {
@@ -42,8 +42,8 @@ var MapState = (function(mapData) {
                 item.endFill();
 
                 //Center is 600, 300
-                item.x = 600+ (x / 50000)*250;
-                item.y = 300+ (y / 50000)*250;
+                item.x = 600+ (x / 7500)*250;
+                item.y = 300+ (y / 7500)*250;
                 map.addChild(item);
             }
 

@@ -38,7 +38,9 @@ from Systems.transaction_system import TransactionSystem
 from Systems.expirySystem import ExpirySystem
 from Systems.pickupSystem import PickupSystem
 from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
+from Systems.ImpulseSystem import ImpulseSystem
 from Systems.proximityTargetSystem import ProximityTargetSystem
+from Systems.playerProximityTargetSystem import PlayerProximityTargetSystem
 from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
 from Systems.EventActiveSystem import EventActiveSystem
 from Systems.movementTrackingSystem import MovementTrackingSystem
@@ -126,6 +128,7 @@ def create_spacestations(node_factory, session):
     def test_script(trigger_node):
         import random
         logging.info("Triggered")
+        ships = []
         for i in range(10):
             trigger_node.add_or_attach_component("position", {"x": 0, "y": 0})
 
@@ -134,7 +137,7 @@ def create_spacestations(node_factory, session):
 
             logging.info(f"{x_pos}, {y_pos}")
 
-            node_factory.create_new_node({
+            ship = node_factory.create_new_node({
                 "type": {"type": "ship"},
                 "area": {"radius": 10},
                 "position": {"x": x_pos, "y": y_pos},
@@ -146,20 +149,25 @@ def create_spacestations(node_factory, session):
                 'physics_update': {},
                 'state_history': {},
                 'orient_towards_target': {},
-                'proximity_target_behaviour': {},
+                'player_proximity_target_behaviour': {},
                 'health': {'health': 100, 'max_health': 100},
                 'collidable': {}
             })
+            ships.append(ship)
+
+        for s in ships:
+            s.add_or_attach_component("allies", "allies":[s2.id for s2 in ships if s.id != s2.id])
+
 
     for i in range(100):
         x_pos = 10000 + floor(numpy.random.normal(scale=1000.0))
         y_pos = floor(numpy.random.normal(scale=2000.0))
-        initial_cooldown = 0  # 36000 * numpy.random.rand()
+        initial_cooldown = 3600000 * numpy.random.rand()
 
         node_factory.create_new_node({
             "area": {"radius": 100},
             "position": {"x": x_pos, "y": y_pos},
-            "type": {"type": "bolfenn"},
+            # "type": {"type": "bolfenn"},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
             "event": {"script": test_script, "cooldown": 3600000, "initial_cooldown": initial_cooldown},
             "event_proximity_trigger": {}
@@ -212,7 +220,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     transaction = TransactionSystem(node_factory)
     processor = ProcessorSystem(node_factory)
     proxy_target = ProximityTargetSystem(node_factory)
+    player_proxy_target = PlayerProximityTargetSystem(node_factory)
     ai_orient_tow_tar = AIOrientTowardsTargetSystem(node_factory)
+    impulse = ImpulseSystem(node_factory)
     event_proxy = EventProximityTriggerSystem(node_factory)
     event_active = EventActiveSystem(node_factory)
     coll_sink = CollisionSink(node_factory)
@@ -230,15 +240,17 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(movetrack)
     system_set.register(spatial)
     system_set.register(proximity)
-    # system_set.register(collision)
+    system_set.register(collision)
     system_set.register(collision_dam)
     system_set.register(pickup)
-    system_set.register(coll_mov)
+    # system_set.register(coll_mov)
     system_set.register(mining)
     system_set.register(transaction)
     system_set.register(processor)
     system_set.register(proxy_target)
+    system_set.register(player_proxy_target)
     system_set.register(ai_orient_tow_tar)
+    system_set.register(impulse)
     system_set.register(event_proxy)
     system_set.register(event_active)
     system_set.register(coll_sink)

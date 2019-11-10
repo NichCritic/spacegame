@@ -47,16 +47,8 @@ class AIOrientTowardsTargetSystem(System):
             # else:
             # direction = "right"  # ???
 
-        node.add_or_attach_component("player_input", {})
+        node.add_or_attach_component("impulses", {})
 
-        node.player_input.data.extend([{
-            "left": True if direction == "left" else False,
-            "right": True if direction == "right" else False,
-            "dt": 50,
-            "time": time.time() * 1000,
-            "shoot": False,
-            "thrust": True,
-            "mining": False,
-            "brake": False,
-            "was_processed": False
-        }])
+        node.impulses.left += 100 if direction == "left" else 0
+        node.impulses.right += 100 if direction == "right" else 0
+        node.impulses.thrust += 100

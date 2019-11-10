@@ -46,7 +46,7 @@ class ShootingSystem(System):
                 'creation_time': start_time
             },
             "collidable": {},
-            "collision_damage": {"damage": 10},
+            "collision_damage": {"damage": 100},
             # "client_sync": {"sync_key": count}
             "no_sync": {}
         })

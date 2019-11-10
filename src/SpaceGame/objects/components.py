@@ -334,6 +334,12 @@ class ProximityTargetBehaviour():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class PlayerProximityTargetBehaviour():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
 
 class Health():
 
@@ -377,6 +383,7 @@ class EventActive():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
+        self.triggerer = None
 
 
 class EventProximityTrigger():
@@ -396,9 +403,27 @@ class Moved():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class Impulses():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.left = 0
+        self.right = 0
+        self.shoot = 0
+        self.thrust = 0
+        self.mine = 0
+        self.brake = 0
+
+class Allies():
+    def __init__(self, entity_id, allies):
+        self.entity_id = entity_id
+        self.allies = allies
+
+
 
 components = {
     "acceleration": Acceleration,
+    "allies": Allies,
     "animated": Animated,
     "area": Area,
     "camera": Camera,
@@ -410,6 +435,7 @@ components = {
     "expires": Expires,
     "force": Force,
     "game_state_request": GameStateRequest,
+    "impulses": Impulses,
     "inventory": Inventory,
     "inventory_mass": InventoryMass,
     "mass": Mass,
@@ -441,6 +467,7 @@ components = {
     "velocity": Velocity,
     "target": Target,
     "orient_towards_target": OrientTowardsTarget,
+    "player_proximity_target_behaviour": PlayerProximityTargetBehaviour,
     "proximity_target_behaviour": ProximityTargetBehaviour,
     "health": Health,
     "collision_damage": CollisionDamage,

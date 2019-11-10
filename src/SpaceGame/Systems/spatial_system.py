@@ -47,13 +47,13 @@ class SpatialSystem(System):
         nodes = self.get_nodes()
 
         sectors = self.create_sector_dict(nodes, 2500)
-        fine_sectors = self.create_sector_dict(nodes, 100)
+        fine_sectors = self.create_sector_dict(nodes, 750)
 
         for node in nodes:
             sx, sy, neighbour_entities = self.create_neighbours_list(
                 node, sectors, 2500)
             fx, fy, fine_neighbour_entities = self.create_neighbours_list(
-                node, fine_sectors, 100)
+                node, fine_sectors, 750)
 
             node.add_or_update_component(
                 "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
