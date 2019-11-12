@@ -20,6 +20,7 @@ from Systems.collisionMovementSystem import CollisionMovementSystem
 from Systems.collisionSink import CollisionSink
 from Systems.collisionSystem import CollisionSystem
 from Systems.collisionDamageSystem import CollisionDamageSystem
+from Systems.collisionVelocityDamageSystem import CollisionVelocityDamageSystem
 from Systems.game_state_request import GameStateRequestSystem
 from Systems.historySystem import HistorySystem
 from Systems.input_system import InputSystem
@@ -38,6 +39,7 @@ from Systems.transaction_system import TransactionSystem
 from Systems.expirySystem import ExpirySystem
 from Systems.pickupSystem import PickupSystem
 from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
+from Systems.aiReturnHomeSystem import AIReturnHomeSystem
 from Systems.aiShootAtTargetSystem import AIShootAtTargetSystem
 from Systems.ImpulseSystem import ImpulseSystem
 from Systems.proximityTargetSystem import ProximityTargetSystem
@@ -45,6 +47,7 @@ from Systems.playerProximityTargetSystem import PlayerProximityTargetSystem
 from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
 from Systems.EventActiveSystem import EventActiveSystem
 from Systems.movementTrackingSystem import MovementTrackingSystem
+from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
 
 import objects.item
 
@@ -118,7 +121,7 @@ def create_spacestations(node_factory, session):
             "collidable": {},
             'force': {},
             'acceleration': {},
-            'mass': {},
+            # 'mass': {},
             'server_updated': {},
             'physics_update': {},
             'state_history': {},
@@ -128,6 +131,7 @@ def create_spacestations(node_factory, session):
 
     def test_script(trigger_node):
         import random
+        import math
         logging.info("Triggered")
         ships = []
         for i in range(10):
@@ -136,12 +140,15 @@ def create_spacestations(node_factory, session):
             x_pos = trigger_node.position.x + i * 30
             y_pos = trigger_node.position.y + i * 30
 
+            spawn_pos_x = x_pos + math.sin(random.random() * 4 * math.pi) * 1000
+            spawn_pos_y = y_pos + math.cos(random.random() * 4 * math.pi) * 1000
+
             logging.info(f"{x_pos}, {y_pos}")
 
             ship = node_factory.create_new_node({
                 "type": {"type": "ship"},
                 "area": {"radius": 10},
-                "position": {"x": x_pos, "y": y_pos},
+                "position": {"x": spawn_pos_x, "y": spawn_pos_y},
                 "rotation": {"rotation": 0},
                 "velocity": {"x": 0, "y": 0},
                 'force': {},
@@ -149,14 +156,18 @@ def create_spacestations(node_factory, session):
                 'mass': {},
                 'physics_update': {},
                 'shoot_at_target': {},
+                'avoid_shooting_allies': {},
                 'player_proximity_target_behaviour': {},
+                'orient_towards_target': {},
+                'home': {"x": x_pos, "y":y_pos},
+                'ai_return_home':{},
                 'health': {'health': 100, 'max_health': 100},
-                'collidable': {}
+                'collidable': {},
+                'allies': {'team':'alpha'}
             })
             ships.append(ship)
 
-        for s in ships:
-            s.add_or_attach_component("allies", {"allies":[s2.id for s2 in ships if s.id != s2.id]})
+        
 
 
     for i in range(100):
@@ -173,6 +184,51 @@ def create_spacestations(node_factory, session):
             "event_proximity_trigger": {}
         })
 
+def collision_test(node_factory, session):
+
+    def create_asteroids(node):
+        logging.info("CREATED ASTEROIDS")
+        node_factory.create_new_node({
+                "type": {"type": "asteroid"},
+                "area": {"radius": 50},
+                "position": {"x": 200, "y": 100},
+                "rotation": {"rotation": 0},
+                "velocity": {"x": -0.25, "y": 0.00},
+                "collidable": {},
+                'force': {},
+                'acceleration': {},
+                # 'mass': {"mass":100},
+                'server_updated': {},
+                'physics_update': {},
+                'state_history': {},
+
+            })
+
+        node_factory.create_new_node({
+                "type": {"type": "asteroid"},
+                "area": {"radius": 50},
+                "position": {"x": -200, "y": 90},
+                "rotation": {"rotation": 0},
+                "velocity": {"x": 0.25, "y": 0.00},
+                "collidable": {},
+                'force': {},
+                'acceleration': {},
+                # 'mass': {"mass":100},
+                'server_updated': {},
+                'physics_update': {},
+                'state_history': {},
+
+            })
+
+    node_factory.create_new_node({
+        "area": {"radius": 200},
+        "position": {"x": 0, "y": 400},
+        # "type": {"type": "bolfenn"},
+        "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
+        "event": {"script": create_asteroids, "cooldown": 30000, "initial_cooldown": 0},
+        "event_proximity_trigger": {}
+    })
+    
 
 def setup_db(db):
     db_engine = base.engine(db)
@@ -213,6 +269,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     spatial = SpatialSystem(node_factory)
     proximity = ProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
+    collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
     pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
@@ -221,8 +278,10 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     processor = ProcessorSystem(node_factory)
     proxy_target = ProximityTargetSystem(node_factory)
     player_proxy_target = PlayerProximityTargetSystem(node_factory)
+    ai_return_home = AIReturnHomeSystem(node_factory)
     ai_orient_tow_tar = AIOrientTowardsTargetSystem(node_factory)
     ai_shootat_tar = AIShootAtTargetSystem(node_factory)
+    ai_avoid_shooting_allies = AIAvoidShootingAlliesSystem(node_factory)
     impulse = ImpulseSystem(node_factory)
     event_proxy = EventProximityTriggerSystem(node_factory)
     event_active = EventActiveSystem(node_factory)
@@ -243,15 +302,18 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(proximity)
     system_set.register(collision)
     system_set.register(collision_dam)
+    system_set.register(collision_vel_dam)
     system_set.register(pickup)
-    # system_set.register(coll_mov)
+    system_set.register(coll_mov)
     system_set.register(mining)
     system_set.register(transaction)
     system_set.register(processor)
     system_set.register(proxy_target)
     system_set.register(player_proxy_target)
     system_set.register(ai_orient_tow_tar)
+    system_set.register(ai_return_home)
     system_set.register(ai_shootat_tar)
+    system_set.register(ai_avoid_shooting_allies)
     system_set.register(impulse)
     system_set.register(event_proxy)
     system_set.register(event_active)

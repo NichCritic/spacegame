@@ -360,6 +360,14 @@ class CollisionDamage():
         self.entity_id = entity_id
         self.damage = damage
 
+class CollisionVelocityDamage():
+
+    def __init__(self, entity_id, damage, min_velocity=0, max_velocity=100):
+        self.entity_id = entity_id
+        self.damage = damage
+        self.min_velocity = min_velocity
+        self.max_velocity = max_velocity
+
 
 class ClientSync():
 
@@ -420,15 +428,33 @@ class Impulses():
         self.brake = 0
 
 class Allies():
-    def __init__(self, entity_id, allies):
+    def __init__(self, entity_id, team):
         self.entity_id = entity_id
-        self.allies = allies
+        self.team = team
+
+class Home():
+    def __init__(self, entity_id, x, y):
+        self.entity_id = entity_id
+        self.x = x
+        self.y = y
+
+class AIReturnHome():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+class AvoidShootingAllies():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
 
 
 
 components = {
     "acceleration": Acceleration,
+    "ai_return_home": AIReturnHome,
     "allies": Allies,
+    "avoid_shooting_allies": AvoidShootingAllies,
     "animated": Animated,
     "area": Area,
     "camera": Camera,
@@ -440,6 +466,7 @@ components = {
     "expires": Expires,
     "force": Force,
     "game_state_request": GameStateRequest,
+    "home": Home,
     "impulses": Impulses,
     "inventory": Inventory,
     "inventory_mass": InventoryMass,
@@ -477,6 +504,7 @@ components = {
     "proximity_target_behaviour": ProximityTargetBehaviour,
     "health": Health,
     "collision_damage": CollisionDamage,
+    "collision_velocity_damage": CollisionVelocityDamage,
     "client_sync": ClientSync
 }
 

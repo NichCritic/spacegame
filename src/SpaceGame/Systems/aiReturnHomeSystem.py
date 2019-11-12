@@ -4,9 +4,9 @@ import time
 import logging
 
 
-class AIOrientTowardsTargetSystem(System):
+class AIReturnHomeSystem(System):
 
-    manditory = ["orient_towards_target", "target", "rotation", "position"]
+    manditory = ["ai_return_home", "home", "rotation", "position"]
     optional = []
     handles = []
 
@@ -15,16 +15,10 @@ class AIOrientTowardsTargetSystem(System):
         self.sim_time = 0
 
     def handle(self, node):
-        t_node = self.node_factory.create_node(
-            node.target.id, [], ["position"])
-
-        # Target was removed before this system was run
-        if not t_node.has("position"):
-            return
-
-        y2 = t_node.position.y
+        
+        y2 = node.home.y
         y = node.position.y
-        x2 = t_node.position.x
+        x2 = node.home.x
         x = node.position.x
 
         angle = math.atan2((y2 - y), (x2 - x)) + math.pi / 2
@@ -49,6 +43,6 @@ class AIOrientTowardsTargetSystem(System):
 
         node.add_or_attach_component("impulses", {})
 
-        node.impulses.left += 110 if direction == "left" else 0
-        node.impulses.right += 110 if direction == "right" else 0
-        node.impulses.thrust += 110
+        node.impulses.left += 100 if direction == "left" else 0
+        node.impulses.right += 100 if direction == "right" else 0
+        node.impulses.thrust += 100
