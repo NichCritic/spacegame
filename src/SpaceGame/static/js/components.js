@@ -147,6 +147,15 @@ var components = (function(){
 		this.entity_id = entity_id
 	}
 
+	var Colliding = function(entity_id, data) {
+		this.entity_id = entity_id
+		this.collisions = []
+	}
+
+	var Collidable = function(entity_id, data) {
+		this.entity_id = entity_id
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -173,7 +182,9 @@ var components = (function(){
 		"expires": Expires,
 		"server_sync": ServerSync,
 		"client_sync": ClientSync,
-		"player_created": PlayerCreated
+		"player_created": PlayerCreated,
+		"collidable": Collidable,
+		"colliding": Colliding
 	};
 
 	return components

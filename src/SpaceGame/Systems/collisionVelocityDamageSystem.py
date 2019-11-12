@@ -35,7 +35,9 @@ class CollisionVelocityDamageSystem(System):
             velocity = math.sqrt(c_node.velocity.x**2 + c_node.velocity.y**2)
 
             scaled_damage = damage * ((velocity - v_min) / (v_max - v_min))
-         
+
+            scaled_damage = max(0, scaled_damage)
+
             logging.info(f"----------------Velocity: {velocity}")
             c_node.health.health -= scaled_damage
 

@@ -2,13 +2,15 @@ from Systems.system import System
 from Systems.input_system import PhysicsPacket
 import time
 
+
 class CollisionMovementSystem(System):
     """
     Handles the colliding state by ignoring it, in case other systems haven't handled it, 
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["colliding", "position", "force", "rotation", "mass", "velocity"]
+    manditory = ["colliding", "position",
+                 "force", "rotation", "mass", "velocity"]
     optional = ["inventory_mass"]
     handles = ["colliding"]
 
@@ -52,8 +54,8 @@ class CollisionMovementSystem(System):
                 node.add_or_attach_component("physics_update", {})
                 p = PhysicsPacket()
                 p.rotation = node.rotation.rotation
-                p.force.x = node.force.x + ( (mom1_x + mom2_x) / 2)
-                p.force.y = node.force.y + ( (mom1_x + mom2_y) / 2)
+                p.force.x = node.force.x + ((mom1_x + mom2_x) / 2) * x
+                p.force.y = node.force.y + ((mom1_x + mom2_y) / 2) * y
                 p.dt = 1
                 p.time = time.time() * 1000
                 p.brake = True
@@ -64,26 +66,23 @@ class CollisionMovementSystem(System):
                 c_node.add_or_attach_component("physics_update", {})
                 p2 = PhysicsPacket()
                 p2.rotation = c_node.rotation.rotation
-                p2.force.x = c_node.force.x - ( (mom1_x + mom2_x) / 2)
-                p2.force.y = c_node.force.y - ( (mom1_x + mom2_y) / 2)
+                p2.force.x = c_node.force.x - ((mom1_x + mom2_x) / 2) * x
+                p2.force.y = c_node.force.y - ((mom1_x + mom2_y) / 2) * y
                 p2.dt = 1
                 p2.time = time.time() * 1000
                 p2.brake = True
 
                 c_node.physics_update.packets.append(p2)
 
-                
             else:
                 node.add_or_attach_component("physics_update", {})
                 p = PhysicsPacket()
                 p.rotation = node.rotation.rotation
-                p.force.x = node.force.x - mom1_x
-                p.force.y = node.force.y - mom1_y
+                p.force.x = node.force.x - mom1_x * x / 2
+                p.force.y = node.force.y - mom1_y * y / 2
                 p.dt = 5
                 p.time = time.time() * 1000
                 p.brake = True
                 node.physics_update.packets.append(p)
 
             c_node.remove_component("colliding")
-
-

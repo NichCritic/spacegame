@@ -151,8 +151,10 @@ var GameLoop = (function() {
         expiry_system = new ExpirySystem(node_factory);
 
         server_sync_system = new ServerSyncSystem(node_factory);
+        collision_system = new CollisionSystem(node_factory);
+        collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, camera_track_system, animation_system, health_render_system, render_system];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -252,6 +254,10 @@ var GameLoop = (function() {
 
                 if(entity.health) {
                     n.add_or_update('health', entity.health);
+                }
+
+                if(entity.collidable) {
+                    n.add_or_update('collidable', {});
                 }
 
                 if(entity.client_sync) {

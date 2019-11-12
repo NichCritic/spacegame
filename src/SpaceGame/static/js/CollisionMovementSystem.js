@@ -26,9 +26,10 @@ var CollisionMovementSystem = (function() {
 	}
 
 	CollisionMovementSystem.prototype.handle = function(node) {
-		for(let i = 0; i < node.colliding.collisions; i++){
+		for(let i = 0; i < node.colliding.collisions.length; i++){
 			let collision = node.colliding.collisions[i];
-			let c_node = this.node_factory.create_node(collision["collider"], ["force", "rotation"], ["position"]);
+			let c_node = collision.collider;
+
 
 			if(!c_node.has("position")){
 				continue
@@ -48,31 +49,10 @@ var CollisionMovementSystem = (function() {
 			node.velocity.x = 0
 			node.velocity.y = 0
 
-			if(c_node.entity_has("mass") and c_node.entity_has("velocity")) {
-				c_node.add_or_attach("mass", {});
-				c_node.add_or_attach("inventory_mass", {});
-				c_node.add_or_attach("velocity", {});
+			
+			node.force.x += mom1_x * x /2;
+			node.force.y += mom1_y * y /2;
 
-				let inv_mass = c_node.inventory_mass.inventory_mass;
-
-				mom2_x = c_node.velocity.x**2 * (node.mass.mass + inv_mass);
-				mom2_y = c_node.velocity.y**2 * (node.mass.mass + inv_mass);
-
-				c_node.velocity.x = 0
-				c_node.velocity.y = 0
-
-				node.force.x += (mom1_x + mom_2.x) / 2
-				node.force.y += (mom1_y + mom_2.y) / 2
-
-				c_node.force.x -= (mom1_x + mom_2.x) / 2
-				c_node.force.y -= (mom1_y + mom_2.y) / 2
-
-			} else {
-
-				node.force.x -= mom1_x;
-				node.force.y -= mom1_y;
-
-			}
 
 			c_node.delete_component("colliding")
 

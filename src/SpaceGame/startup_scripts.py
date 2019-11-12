@@ -109,8 +109,8 @@ def create_spacestations(node_factory, session):
 
         x_pos = 10000 + int(floor(numpy.random.normal(scale=1000.0)))
         y_pos = int(floor(numpy.random.normal(scale=2000.0)))
-        rot = int(floor(numpy.random.rand() * 2 * math.pi))
-        size = int(floor(numpy.random.normal(scale=50)))
+        # rot = int(floor(numpy.random.rand() * 2 * math.pi))
+        size = max(50, 50 + int(floor(numpy.random.normal(scale=50))))
 
         node_factory.create_new_node({
             "type": {"type": "asteroid"},
@@ -140,8 +140,10 @@ def create_spacestations(node_factory, session):
             x_pos = trigger_node.position.x + i * 30
             y_pos = trigger_node.position.y + i * 30
 
-            spawn_pos_x = x_pos + math.sin(random.random() * 4 * math.pi) * 1000
-            spawn_pos_y = y_pos + math.cos(random.random() * 4 * math.pi) * 1000
+            spawn_pos_x = x_pos + \
+                math.sin(random.random() * 4 * math.pi) * 1000
+            spawn_pos_y = y_pos + \
+                math.cos(random.random() * 4 * math.pi) * 1000
 
             logging.info(f"{x_pos}, {y_pos}")
 
@@ -159,21 +161,18 @@ def create_spacestations(node_factory, session):
                 'avoid_shooting_allies': {},
                 'player_proximity_target_behaviour': {},
                 'orient_towards_target': {},
-                'home': {"x": x_pos, "y":y_pos},
-                'ai_return_home':{},
+                'home': {"x": x_pos, "y": y_pos},
+                'ai_return_home': {},
                 'health': {'health': 100, 'max_health': 100},
                 'collidable': {},
-                'allies': {'team':'alpha'}
+                'allies': {'team': 'alpha'}
             })
             ships.append(ship)
-
-        
-
 
     for i in range(100):
         x_pos = 10000 + floor(numpy.random.normal(scale=1000.0))
         y_pos = floor(numpy.random.normal(scale=2000.0))
-        initial_cooldown = 0#3600000 * numpy.random.rand()
+        initial_cooldown = 0  # 3600000 * numpy.random.rand()
 
         node_factory.create_new_node({
             "area": {"radius": 100},
@@ -184,41 +183,42 @@ def create_spacestations(node_factory, session):
             "event_proximity_trigger": {}
         })
 
+
 def collision_test(node_factory, session):
 
     def create_asteroids(node):
         logging.info("CREATED ASTEROIDS")
         node_factory.create_new_node({
-                "type": {"type": "asteroid"},
-                "area": {"radius": 50},
-                "position": {"x": 200, "y": 100},
-                "rotation": {"rotation": 0},
-                "velocity": {"x": -0.25, "y": 0.00},
-                "collidable": {},
-                'force': {},
-                'acceleration': {},
-                # 'mass': {"mass":100},
-                'server_updated': {},
-                'physics_update': {},
-                'state_history': {},
+            "type": {"type": "asteroid"},
+            "area": {"radius": 50},
+            "position": {"x": 200, "y": 100},
+            "rotation": {"rotation": 0},
+            "velocity": {"x": -0.25, "y": 0.00},
+            "collidable": {},
+            'force': {},
+            'acceleration': {},
+            # 'mass': {"mass":100},
+            'server_updated': {},
+            'physics_update': {},
+            'state_history': {},
 
-            })
+        })
 
         node_factory.create_new_node({
-                "type": {"type": "asteroid"},
-                "area": {"radius": 50},
-                "position": {"x": -200, "y": 90},
-                "rotation": {"rotation": 0},
-                "velocity": {"x": 0.25, "y": 0.00},
-                "collidable": {},
-                'force': {},
-                'acceleration': {},
-                # 'mass': {"mass":100},
-                'server_updated': {},
-                'physics_update': {},
-                'state_history': {},
+            "type": {"type": "asteroid"},
+            "area": {"radius": 50},
+            "position": {"x": -200, "y": 90},
+            "rotation": {"rotation": 0},
+            "velocity": {"x": 0.25, "y": 0.00},
+            "collidable": {},
+            'force': {},
+            'acceleration': {},
+            # 'mass': {"mass":100},
+            'server_updated': {},
+            'physics_update': {},
+            'state_history': {},
 
-            })
+        })
 
     node_factory.create_new_node({
         "area": {"radius": 200},
@@ -228,7 +228,7 @@ def collision_test(node_factory, session):
         "event": {"script": create_asteroids, "cooldown": 30000, "initial_cooldown": 0},
         "event_proximity_trigger": {}
     })
-    
+
 
 def setup_db(db):
     db_engine = base.engine(db)
