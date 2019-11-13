@@ -4,8 +4,9 @@ var MiningSystem = (function() {
 	var optional = [];
 	var handles = [];
 
-	function MiningSystem(node_factory) {
+	function MiningSystem(node_factory, textures) {
 		this.node_factory = node_factory;
+		this.textures = textures;
 	}
 
 	MiningSystem.prototype.process = function() {

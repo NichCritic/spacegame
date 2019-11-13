@@ -73,7 +73,7 @@ var MiningLaserRenderSystem = (function() {
 		}
 	}
 
-	MiningSystem.prototype.get_closest_minable = function(node) {
+	MiningLaserRenderSystem.prototype.get_closest_minable = function(node) {
 		let nodes = this.node_factory.create_node_list(['minable', 'position', 'area']);
 		let smallest = 251; //Max laser range + 1
 		let current = nodes[0];
@@ -117,7 +117,7 @@ var MiningLaserRenderSystem = (function() {
 		}
 
 		let x_pos = node.position.x - camera.position.x - node.renderable.width/2;
-		let y_pos = node.position.y - camera.position.y - node.renderable.height/2 - 10;
+		let y_pos = node.position.y - camera.position.y - node.renderable.height/2;
 
 		if(entering) {
 			this.displayObjects[node.id] = new PIXI.Graphics(node.renderable.image);
@@ -134,8 +134,8 @@ var MiningLaserRenderSystem = (function() {
 		let start_x = closest.position.x + n_x * closest.area.radius
     	let start_y = closest.position.y + n_y * closest.area.radius
 
-    	let line_end_x = start_x - camera.position.x - node.remnderable.width/2;
-    	let line_end_y = start_y - camera.position.y - node.renderable.width/2 - 10;
+    	let line_end_x = start_x - camera.position.x - node.renderable.width/2;
+    	let line_end_y = start_y - camera.position.y - node.renderable.width/2;
 
     	this.displayObjects[node.id].clear();
         this.displayObjects[node.id].lineStyle(3, 0xFF0000);
