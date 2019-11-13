@@ -9,7 +9,7 @@ class CollisionMovementSystem(System):
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["colliding", "position",
+    manditory = ["collision_movement", "colliding", "position",
                  "force", "rotation", "mass", "velocity"]
     optional = ["inventory_mass"]
     handles = ["colliding"]
@@ -20,7 +20,7 @@ class CollisionMovementSystem(System):
     def handle(self, node):
         for collision in node.colliding.collisions:
             c_node = self.node_factory.create_node(
-                collision["collider"], ["force", "rotation"], ["position"])
+                collision["collider"], [], ["position", "force", "rotation"])
 
             # Another system could have removed the node before we got to it
             if not c_node.has("position"):
@@ -42,7 +42,7 @@ class CollisionMovementSystem(System):
             node.velocity.x = 0
             node.velocity.y = 0
 
-            if c_node.entity_has('mass') and c_node.entity_has('velocity'):
+            if c_node.entity_has('mass') and c_node.entity_has('velocity') and c_node.has('force') and c_node.has("rotation"):
                 c_node.add_or_attach_component("mass", {})
                 c_node.add_or_attach_component("inventory_mass", {})
                 c_node.add_or_attach_component("velocity", {})

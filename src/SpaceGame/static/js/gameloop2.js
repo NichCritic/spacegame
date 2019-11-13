@@ -5,6 +5,7 @@ var GameLoop = (function() {
     var lasers; lasers = new PIXI.Container();
     var entities; entities = new PIXI.Container();
     var health_bars; health_bars = new PIXI.Container();
+    var mining_lasers; mining_lasers = new PIXI.Container();
 
     var textures, sprites;
 
@@ -125,6 +126,7 @@ var GameLoop = (function() {
         stage.addChild(lasers);
         stage.addChild(entities);
         stage.addChild(health_bars);
+        stage.addChild(mining_lasers);
 
         entity_manager = new EntityManager();
         entity_manager.init();
@@ -140,12 +142,14 @@ var GameLoop = (function() {
         PCE_update_system = new PCEUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
         shooting_system = new ShootingSystem(node_factory, textures);
+        mining_system = new MiningSystem(node_factory, textures);
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
         
         animation_system = new AnimationSystem(node_factory);
 
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
+        mining_laser_render = new MiningLaserRenderSystem(node_factory, mining_lasers);
         render_system = new RenderSystem(node_factory, entities);
 
         expiry_system = new ExpirySystem(node_factory);
@@ -154,7 +158,7 @@ var GameLoop = (function() {
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, health_render_system, render_system];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, mining_laser_render, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -258,6 +262,15 @@ var GameLoop = (function() {
 
                 if(entity.collidable) {
                     n.add_or_update('collidable', {});
+                }
+                if(entity.minable) {
+                    n.add_or_update('minable', {});
+                }
+                if(entity.mining) {
+                    n.add_or_update('mining', {});
+                }
+                else{
+                    n.delete_component('mining')
                 }
 
                 if(entity.client_sync) {

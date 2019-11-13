@@ -49,25 +49,6 @@ class MiningSystem(System):
         vel_x = n_x * vel_mag + t_x * t_vel_mag
         vel_y = n_y * vel_mag + t_y * t_vel_mag
 
-        logging.info("Creating spawn")
-        self.node_factory.create_new_node({
-            'force': {},
-            'acceleration': {},
-            'velocity': {'x': vel_x, 'y': vel_y},
-            'position': {'x': start_x, 'y': start_y},
-            'rotation': {'rotation': 0},
-            'mass': {},
-            'server_updated': {},
-            'type': {'type': 'asteroid'},
-            'area': {'radius': 4},
-            'physics_update': {},
-            'state_history': {},
-            'expires': {
-                'expiry_time_ms': 3000,
-                'creation_time': now
-            }
-        })
-
         if now - node.mining.time > 5000:
             product = random.choice(closest.minable.products)
             self.node_factory.create_new_node({

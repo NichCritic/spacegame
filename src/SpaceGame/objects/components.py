@@ -368,6 +368,10 @@ class CollisionVelocityDamage():
         self.min_velocity = min_velocity
         self.max_velocity = max_velocity
 
+class CollisionMovement():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 class ClientSync():
 
@@ -454,18 +458,23 @@ components = {
     "acceleration": Acceleration,
     "ai_return_home": AIReturnHome,
     "allies": Allies,
-    "avoid_shooting_allies": AvoidShootingAllies,
     "animated": Animated,
     "area": Area,
+    "avoid_shooting_allies": AvoidShootingAllies,
     "camera": Camera,
+    "client_sync": ClientSync,
     "collidable": Collidable,
     "colliding": Colliding,
+    "collision_damage": CollisionDamage,
+    "collision_movement": CollisionMovement,
+    "collision_velocity_damage": CollisionVelocityDamage,
     "event": Event,
     "event_active": EventActive,
     "event_proximity_trigger": EventProximityTrigger,
     "expires": Expires,
     "force": Force,
     "game_state_request": GameStateRequest,
+    "health": Health,
     "home": Home,
     "impulses": Impulses,
     "inventory": Inventory,
@@ -477,14 +486,17 @@ components = {
     "moved": Moved,
     "network_messages": NetworkMessages,
     "no_sync": NoSync,
+    "orient_towards_target": OrientTowardsTarget,
     "persisted": Persisted,
     "physics_update": PhysicsUpdate,
     "pickup": Pickup,
     "player_controlled": PlayerControlled,
     "player_input": PlayerInput,
+    "player_proximity_target_behaviour": PlayerProximityTargetBehaviour,
     "position": Position,
     "processor": Processor,
     "proximity": Proximity,
+    "proximity_target_behaviour": ProximityTargetBehaviour,
     "renderable": Renderable,
     "rotation": Rotation,
     "sector": Sector,
@@ -495,17 +507,10 @@ components = {
     "shop": Shop,
     "shop_spec": ShopSpec,
     "state_history": StateHistory,
+    "target": Target,
     "transaction": Transaction,
     "type": Type,
-    "velocity": Velocity,
-    "target": Target,
-    "orient_towards_target": OrientTowardsTarget,
-    "player_proximity_target_behaviour": PlayerProximityTargetBehaviour,
-    "proximity_target_behaviour": ProximityTargetBehaviour,
-    "health": Health,
-    "collision_damage": CollisionDamage,
-    "collision_velocity_damage": CollisionVelocityDamage,
-    "client_sync": ClientSync
+    "velocity": Velocity, 
 }
 
 db_components = {

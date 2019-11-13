@@ -49,6 +49,7 @@ class CommandHandler():
         av.add_or_attach_component('state_history', {})
         av.add_or_attach_component('animated', {'update_rate': 200})
         av.add_or_attach_component('collision_velocity_damage', {"damage": 200, "min_velocity":0.2, "max_velocity":1})
+        av.add_or_attach_component('collision_movement', {})
 
         with self.session_manager.get_session() as session:
             self.db_comps.set_session(session)

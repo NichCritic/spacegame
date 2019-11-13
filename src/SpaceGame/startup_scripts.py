@@ -48,6 +48,7 @@ from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
 from Systems.EventActiveSystem import EventActiveSystem
 from Systems.movementTrackingSystem import MovementTrackingSystem
 from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
+from Systems.boundarySystem import BoundarySystem
 
 import objects.item
 
@@ -165,6 +166,7 @@ def create_spacestations(node_factory, session):
                 'ai_return_home': {},
                 'health': {'health': 100, 'max_health': 100},
                 'collidable': {},
+                'collision_movement': {},
                 'allies': {'team': 'alpha'}
             })
             ships.append(ship)
@@ -273,6 +275,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     collision_dam = CollisionDamageSystem(node_factory)
     pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
+    boundary = BoundarySystem(node_factory)
     mining = MiningSystem(node_factory)
     transaction = TransactionSystem(node_factory)
     processor = ProcessorSystem(node_factory)
@@ -305,6 +308,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(collision_vel_dam)
     system_set.register(pickup)
     system_set.register(coll_mov)
+    system_set.register(boundary)
     system_set.register(mining)
     system_set.register(transaction)
     system_set.register(processor)

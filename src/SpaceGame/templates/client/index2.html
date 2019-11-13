@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello pixi!</title>
+        <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>m
         <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
         <script src="static/js/keyboard.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -28,6 +29,8 @@
         <script src="static/js/PCEUpdateSystem.js"></script>
         <script src="static/js/CollisionSystem.js"></script>
         <script src="static/js/CollisionMovementSystem.js"></script>
+        <script src="static/js/MiningSystem.js"></script>
+        <script src="static/js/MiningLaserRenderSystem.js"></script>
         <script src="static/js/gameloop2.js"></script>
         <script src="static/js/shopMenu.js"></script>
         <script src="static/js/invMenu.js"></script>
@@ -36,6 +39,17 @@
 
     </head>
     <body>
+      <div id="control_list">
+      <h2>Controls</h2>
+      <p>Up Arrow key: Thrust</p>
+      <p>Right/Left Arrow key</p>
+      <p>F key: Shoot</p>
+      <p>D key: Brake</p>
+      <p>C key: Enter shop</p>
+      <p>SPACE key: Mine from asteroids</p>
+      <p>I key: View inventory</p>
+      <p>M key: View minimap</p>
+    </div>
 
     <script type="text/javascript">
 

@@ -156,6 +156,14 @@ var components = (function(){
 		this.entity_id = entity_id
 	}
 
+	var Mining = function(entity_id, data) {
+		this.entity_id = entity_id;
+	}
+
+	var Minable = function(entity_id, data) {
+		this.entity_id = entity_id;
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -184,7 +192,9 @@ var components = (function(){
 		"client_sync": ClientSync,
 		"player_created": PlayerCreated,
 		"collidable": Collidable,
-		"colliding": Colliding
+		"colliding": Colliding,
+		"minable": Minable,
+		"mining": Mining
 	};
 
 	return components
