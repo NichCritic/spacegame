@@ -141,7 +141,7 @@ var GameLoop = (function() {
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
         PCE_update_system = new PCEUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
-        shooting_system = new ShootingSystem(node_factory, textures);
+        shooting_system = new ShootingSystem(node_factory, textures, weapons);
         mining_system = new MiningSystem(node_factory, textures);
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
@@ -280,6 +280,10 @@ var GameLoop = (function() {
                 if(entities[i] === serverState.player_id){
                     n.add_or_update('player');
                     n.add_or_update('inputs', {inputs:inputs});
+
+                    if(entity.weapon) {
+                        n.add_or_update('weapon', entity.weapon)
+                    }
                     //TODO: We know that the player can be animated but this should really be based on server data
                     
                     n.add_or_update("server_update", {data: {

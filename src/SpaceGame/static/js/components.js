@@ -164,6 +164,11 @@ var components = (function(){
 		this.entity_id = entity_id;
 	}
 
+	var Weapon = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.type = data.type;
+	}
+
 	var components = {
 		"position":Position,
 		"velocity":Velocity,
@@ -194,7 +199,8 @@ var components = (function(){
 		"collidable": Collidable,
 		"colliding": Colliding,
 		"minable": Minable,
-		"mining": Mining
+		"mining": Mining,
+		"weapon": Weapon
 	};
 
 	return components
