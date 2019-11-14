@@ -51,6 +51,8 @@ from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
 from Systems.boundarySystem import BoundarySystem
 
 import objects.item
+from gamedata.weapons import weapons
+
 
 
 from command.command_handler import CommandHandler
@@ -167,7 +169,8 @@ def create_spacestations(node_factory, session):
                 'health': {'health': 100, 'max_health': 100},
                 'collidable': {},
                 'collision_movement': {},
-                'allies': {'team': 'alpha'}
+                'allies': {'team': 'alpha'},
+                'weapon': {'type':'triple_shot'}
             })
             ships.append(ship)
 
@@ -266,7 +269,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     sersys = ServerUpdateSystem(node_factory)
     hissys = HistorySystem(node_factory)
     physys = PhysicsSystem(node_factory)
-    shoot = ShootingSystem(node_factory)
+    shoot = ShootingSystem(node_factory, weapons)
     movetrack = MovementTrackingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
     proximity = ProximitySystem(node_factory)

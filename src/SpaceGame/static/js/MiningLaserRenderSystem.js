@@ -100,16 +100,6 @@ var MiningLaserRenderSystem = (function() {
 		let leaving = this.leaving.indexOf(node.id) !== -1 || !node.has('mining');
 		let onScreen = this.onScreen.indexOf(node.id) !== -1 && node.has('mining');
 
-		let o = this.get_closest_minable(node);
-
-		let dist = o.dist;
-		let closest = o.closest;
-
-		if(dist === 251) {
-			//Nothing to mine in range
-			return
-		}
-
 		if(leaving) {
 			this.canvas.removeChild(this.displayObjects[node.id]);
 			delete this.displayObjects[node.id];
@@ -123,24 +113,37 @@ var MiningLaserRenderSystem = (function() {
 			this.displayObjects[node.id] = new PIXI.Graphics(node.renderable.image);
             this.canvas.addChild(this.displayObjects[node.id]);
             this.onScreen.push(node.id);
+            onScreen = true;
 		}
 
-		let v_x = node.position.x - closest.position.x;
-		let v_y = node.position.y - closest.position.y;
+		if(onScreen) {
+			let o = this.get_closest_minable(node);
 
-		let n_x = v_x / dist;
-		let n_y = v_y / dist;
+			let dist = o.dist;
+			let closest = o.closest;
 
-		let start_x = closest.position.x + n_x * closest.area.radius
-    	let start_y = closest.position.y + n_y * closest.area.radius
+			if(dist === 251) {
+				//Nothing to mine in range
+				return
+			}
 
-    	let line_end_x = start_x - camera.position.x - node.renderable.width/2;
-    	let line_end_y = start_y - camera.position.y - node.renderable.width/2;
+			let v_x = node.position.x - closest.position.x;
+			let v_y = node.position.y - closest.position.y;
 
-    	this.displayObjects[node.id].clear();
-        this.displayObjects[node.id].lineStyle(3, 0xFF0000);
-        this.displayObjects[node.id].moveTo(x_pos, y_pos);
-        this.displayObjects[node.id].lineTo(line_end_x, line_end_y);
+			let n_x = v_x / dist;
+			let n_y = v_y / dist;
+
+			let start_x = closest.position.x + n_x * closest.area.radius
+	    	let start_y = closest.position.y + n_y * closest.area.radius
+
+	    	let line_end_x = start_x - camera.position.x - node.renderable.width/2;
+	    	let line_end_y = start_y - camera.position.y - node.renderable.width/2;
+
+	    	this.displayObjects[node.id].clear();
+	        this.displayObjects[node.id].lineStyle(3, 0xFF0000);
+	        this.displayObjects[node.id].moveTo(x_pos, y_pos);
+	        this.displayObjects[node.id].lineTo(line_end_x, line_end_y);
+    	}
 
 	}
 

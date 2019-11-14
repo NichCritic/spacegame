@@ -348,10 +348,11 @@ class PlayerProximityTargetBehaviour():
 
 class Health():
 
-    def __init__(self, entity_id, health, max_health):
+    def __init__(self, entity_id, health, max_health, base_health=None):
         self.entity_id = entity_id
         self.health = health
         self.max_health = max_health
+        self.base_health = max_health if base_health is None else base_health
 
 
 class CollisionDamage():
@@ -453,6 +454,20 @@ class AvoidShootingAllies():
         self.entity_id = entity_id
 
 
+class AppliedUpgrades():
+    #Upgrades are stored as key:data, where the key looks up the function and the function is called with node, data
+
+    def __init__(self, entity_id, upgrades):
+        self.entity_id = entity_id
+        self.upgrades = {} if upgrades is None else upgrades
+
+class Weapon():
+
+    def __init__(self, entity_id, type):
+        self.entity_id = entity_id
+        self.type = type
+
+
 
 components = {
     "acceleration": Acceleration,
@@ -510,7 +525,8 @@ components = {
     "target": Target,
     "transaction": Transaction,
     "type": Type,
-    "velocity": Velocity, 
+    "velocity": Velocity,
+    "weapon": Weapon
 }
 
 db_components = {
