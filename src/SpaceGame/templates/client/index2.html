@@ -5,6 +5,7 @@
         <title>hello pixi!</title>
         <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>m
         <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
+        <script src="static/pixi-js/EZGUI.js"></script>
         <script src="static/js/keyboard.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="static/js/utils.js"></script>
@@ -32,8 +33,6 @@
         <script src="static/js/MiningSystem.js"></script>
         <script src="static/js/MiningLaserRenderSystem.js"></script>
         <script src="static/js/gameloop2.js"></script>
-        <script src="static/js/shopMenu.js"></script>
-        <script src="static/js/invMenu.js"></script>
         <script src="static/js/menu.js"></script>
         <script src="static/js/map.js"></script>
         <script src="static/js/weapons.js"></script>
@@ -53,6 +52,15 @@
     </div>
 
     <script type="text/javascript">
+
+    var guiObj = {
+        id:'myWindow',
+        component:'Window',
+        padding:4,
+        position:{x:10, y:10},
+        width:500, 
+        height:500
+    }
 
     window.onload = function() {
 
@@ -75,11 +83,17 @@
 
         //Create the renderer
         var renderer = PIXI.autoDetectRenderer(1200, 600);
+        var stage; stage = new PIXI.Container();
 
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
 
-        PIXI.loader.add('static/assets/parallax-space-background2.png')
+        var guiContainer;
+
+        EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
+            guiContainer = EZGUI.create(guiObj, 'kenney');
+            //stage.addChild(guiContainer);
+            PIXI.loader.add('static/assets/parallax-space-background2.png')
                    .add('static/assets/parallax-space-stars2.png')
                    .add('static/assets/ship.png')
                    .add('static/assets/ship_idle.png')
@@ -97,6 +111,9 @@
                    .add('static/assets/gold_ore_pickup.png')
 
                    .load(setup)
+        });
+
+        
 
        
 
@@ -119,11 +136,11 @@
             keys.space = keyboard(32);
             
 
-            menu_mode = MenuState(shopMenu);
-            menu_mode.init();
+            // menu_mode = MenuState(shopMenu);
+            // menu_mode.init();
 
-            inv_mode = MenuState(invMenu);
-            inv_mode.init();
+            // inv_mode = MenuState(invMenu);
+            // inv_mode.init();
 
             game_mode = GameLoop();
             game_mode.init();
@@ -133,41 +150,47 @@
 
             mode = game_mode
 
+            game_stage = mode.stage;
+            stage.addChild(game_stage);
 
+
+            var menu_open = false;
             keys.c = keyboard(67);
             keys.c.press = function() {
-                if(mode == menu_mode) {
-                    mode = game_mode;
-                }
-                else
-                {
-                    mode = menu_mode;
+                var f00 = true;
+                if(menu_open === false) {
+                    stage.addChild(guiContainer);
+                    menu_open = true;
+                } else {
+                    stage.removeChild(guiContainer);
+                    menu_open = false;
                 }
             }
 
             keys.i = keyboard(73);
             keys.i.press = function() {
-                if(mode == inv_mode){
-                    mode = game_mode;
-                }else{
-                    mode = inv_mode;
-                }
-
+                
             }
 
             keys.m = keyboard(77);
             keys.m.press = function() {
                 if(mode == map_mode){
+                    stage.removeChild(map_stage);
+                    stage.addChild(game_stage);
                     mode = game_mode;
                 }else{
                     map_mode.poll();
+                    stage.removeChild(map_stage);
+                    stage.addChild(game_stage);
                     mode = map_mode;
                 }
-
             }
 
             keys.esc = keyboard(27);
             keys.esc.press = function() {
+                stage.removeChild(map_stage);
+                stage.removeChild(game_stage);
+                stage.addChild(game_stage);
                 mode = game_mode
             }
 
@@ -213,7 +236,7 @@
             state = mode.update(state, sim_time, unprocessed_input);
 
             // Render Scene
-            mode.render(renderer, state, mode.stage);
+            mode.render(renderer, state, stage);
             // Sample clock to find end time
             last_time = time;
             
