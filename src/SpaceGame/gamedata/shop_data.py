@@ -88,9 +88,9 @@ def get_shop_data(session):
         "sale_items": [
         ],
         "buy_items": [
-            {"id": iron_ore.id, "pos": 0, "min_price": 11, "max_price": 11},
-            {"id": silver_ore.id, "pos": 1, "min_price": 110, "max_price": 110},
-            {"id": gold_ore.id, "pos": 2, "min_price": 1100, "max_price": 1100}
+            {"name":iron_ore.name, "id": iron_ore.id, "pos": 0, "min_price": 11, "max_price": 11},
+            {"name":silver_ore.name, "id": silver_ore.id, "pos": 1, "min_price": 110, "max_price": 110},
+            {"name":gold_ore.name, "id": gold_ore.id, "pos": 2, "min_price": 1100, "max_price": 1100}
         ]
     }}
 

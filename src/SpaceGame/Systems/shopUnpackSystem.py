@@ -49,6 +49,7 @@ class ShopUnpackSystem(System):
         shop_data["buy_items"] = []
         for item in node.shop_spec.shop_data["buy_items"]:
             shop_data["buy_items"].append({
+                "name": item["name"],
                 "id": str(item["id"]),
                 "pos": item["pos"],
                 "cost": random.randint(item["min_price"], item["max_price"])

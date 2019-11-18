@@ -17,7 +17,7 @@ var ShopMenu = (function() {
 			position: {x:0, y:0},
 			width: 590,
 			height: 450,
-			layout: [1, 6]
+			layout: [1, 8]
 		}]
 
     }
@@ -25,7 +25,7 @@ var ShopMenu = (function() {
     var listItem = {
     	component: 'Window',
     	position: 'center',
-    	width: 120,
+    	width: 420,
     	height: 50
     }
 
