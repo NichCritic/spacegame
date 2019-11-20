@@ -121,11 +121,8 @@ class ShopHandler(BaseHandler):
         player = self.player_factory.players[self.current_user['id']]
         return player
 
-    def get_closest_shop(self):
-        player = self.get_player()
-        av = self.node_factory.create_node(
-            player.avatar_id, ["position", "sector"])
-
+    def get_closest_shop(self, av):
+        
         shops = self.node_factory.create_node_list(
             ["position", "shop"], [], av.sector.neighbours)
 
@@ -146,10 +143,15 @@ class ShopHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        closest = self.get_closest_shop()
+        player = self.get_player()
+        av = self.node_factory.create_node(
+            player.avatar_id, ["position", "sector", "inventory"])
+
+        closest = self.get_closest_shop(av)
         closest.add_or_attach_component('inventory', {'inventory': {}})
         data = closest.shop.shop_data
         data['inventory'] = closest.inventory.inv
+        data['player_inventory'] = av.inventory.inv
         logging.info("Finish called closest_shop get")
         self.finish(data)
 
