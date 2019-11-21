@@ -21,7 +21,6 @@ def create_shop(node_factory, position, session):
 
     shops = gamedata.shop_data.get_shop_data(session)
 
-
     component_data = {
         "position": "db_position",
         "shop_spec": shops[0],
@@ -50,10 +49,13 @@ with session_manager.get_session() as session:
         all_db_components, all_components, session)
     object_db.set_session(session)
 
-    session.add(Item("iron ore"))
-    session.add(Item("silver ore"))
-    session.add(Item("gold ore"))
-    
+    session.add(Item("iron ore", 'ore'))
+    session.add(Item("silver ore", 'ore'))
+    session.add(Item("gold ore", 'ore'))
 
-    create_spacestation(node_factory_db, position={"x":0, "y":-200}, radius=200)
-    create_shop(node_factory_db, {"x":0, "y":-200}, session)
+    session.add(Item("trishot", 'upgrade'))
+    session.add(Item("health", 'upgrade'))
+
+    create_spacestation(node_factory_db, position={
+                        "x": 0, "y": -200}, radius=200)
+    create_shop(node_factory_db, {"x": 0, "y": -200}, session)

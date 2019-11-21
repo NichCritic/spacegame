@@ -1,10 +1,14 @@
 import objects.item
+from gamedata.upgrades import upgrades
 
 
 def get_shop_data(session):
     gold_ore = objects.item.get_item_by_name(session, 'gold ore')
     silver_ore = objects.item.get_item_by_name(session, 'silver ore')
     iron_ore = objects.item.get_item_by_name(session, 'iron ore')
+    trishot = objects.item.get_item_by_name(session, 'trishot')
+    health = objects.item.get_item_by_name(session, 'health')
+
     # gasoline = objects.item.get_item_by_name(session, 'gasoline')
     # gold = objects.item.get_item_by_name(session, 'gold')
     # silver = objects.item.get_item_by_name(session, 'silver')
@@ -86,11 +90,21 @@ def get_shop_data(session):
     ore_shop = {"shop_data": {
         "name": "Shop",
         "sale_items": [
+            {
+                "name": upgrades[trishot.name]['name'], "id": trishot.id,
+                "pos": 0, "cost": 2599
+            }, {
+                "name": upgrades[health.name]['name'], "id": health.id,
+                "pos": 1, "cost": 1599
+            }
         ],
         "buy_items": [
-            {"name":iron_ore.name, "id": iron_ore.id, "pos": 0, "min_price": 11, "max_price": 11},
-            {"name":silver_ore.name, "id": silver_ore.id, "pos": 1, "min_price": 110, "max_price": 110},
-            {"name":gold_ore.name, "id": gold_ore.id, "pos": 2, "min_price": 1100, "max_price": 1100}
+            {"name": iron_ore.name, "id": iron_ore.id,
+                "pos": 0, "min_price": 11, "max_price": 11},
+            {"name": silver_ore.name, "id": silver_ore.id,
+                "pos": 1, "min_price": 110, "max_price": 110},
+            {"name": gold_ore.name, "id": gold_ore.id,
+                "pos": 2, "min_price": 1100, "max_price": 1100}
         ]
     }}
 
