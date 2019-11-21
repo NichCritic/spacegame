@@ -1,4 +1,5 @@
-from objects.item import Item
+
+from objects.item import Item, get_item_by_name
 from objects.spacestation import create_spacestation
 from startup_scripts import setup_objects
 from objects.components import components, db_components
@@ -21,6 +22,9 @@ def create_shop(node_factory, position, session):
 
     shops = gamedata.shop_data.get_shop_data(session)
 
+    trishot = get_item_by_name(session, 'trishot')
+    health = get_item_by_name(session, 'health')
+
     component_data = {
         "position": "db_position",
         "shop_spec": shops[0],
@@ -30,7 +34,10 @@ def create_shop(node_factory, position, session):
         },
         "inventory":
         {
-            "inventory": {}
+            "inventory": {
+                trishot.id:{"qty":10000000},
+                health.id:{"qty":10000000}
+            }
         }
     }
 

@@ -160,7 +160,10 @@ class ShopHandler(BaseHandler):
         post_data = self.get_argument("body")
         json_data = json.loads(post_data)
 
-        closest_shop = self.get_closest_shop()
+        player = self.get_player()
+        av = self.node_factory.create_node(
+            player.avatar_id, ["position", "sector", "inventory"])
+        closest_shop = self.get_closest_shop(av)
 
         shop_data = closest_shop.shop.shop_data
 

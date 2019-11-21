@@ -144,10 +144,19 @@ var ShopMenu = (function() {
 				li.children = [
 					{id:'it_sname_'+i, component:"Window", text:item.name, width:'33%', height:'100%', position:'left'},
 					{id:'it_sqty_'+i, component:"Window", text:item.qty, width:'33%', height:'100%', position:'right'},
-					{id:'btn_buy_'+i, component:"Button", text:"buy for "+item.cost, width:'33%', height:'100%', position:'right'}
+					{id:'btn_buy_'+i, component:"Button", text:"buy for "+item.cost, width:'33%', height:'100%', position:'right', userData:{'id':item.id}}
 				];
 				let child = EZGUI.create(li, 'kenney'); 
 				EZGUI.components.buyItemList.addChild(child);
+				EZGUI.components["btn_buy_"+i].on('click', function(event, me){
+					$.postJSON("/shop", {msg: "purchase", "item_id":me.userData.id}, 
+                	function(){
+                    
+                	},
+                	function(err){
+                    	console.warn(err);
+                	})
+				})
 			}
 
         }, function failure(err){
