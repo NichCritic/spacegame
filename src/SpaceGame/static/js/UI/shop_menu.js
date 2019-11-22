@@ -65,11 +65,7 @@ var ShopMenu = (function() {
 	}
 
 	ShopMenu.prototype.load = function(cb) {
-		EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
-            guiContainer = EZGUI.create(guiObj, 'kenney');
-            //stage.addChild(guiContainer);
-            cb();
-        });
+        guiContainer = EZGUI.create(guiObj, 'kenney');
 	}
 
 	ShopMenu.prototype.show = function(stage) {

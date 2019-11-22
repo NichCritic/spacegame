@@ -37,6 +37,7 @@
         <script src="static/js/map.js"></script>
         <script src="static/js/weapons.js"></script>
         <script src="static/js/UI/shop_menu.js"></script>
+        <script src="static/js/UI/upgrade_menu.js"></script>
 
     </head>
     <body>
@@ -84,6 +85,7 @@
 
          
         var shop_menu = ShopMenu();
+        var upgrade_menu = UpgradeMenu();
         
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
@@ -102,15 +104,20 @@
                    .add('static/assets/iron_ore_pickup.png')
                    .add('static/assets/silver_ore_pickup.png')
                    .add('static/assets/gold_ore_pickup.png')
-
-                   .load(shop_menu.load.bind(shop_menu, setup));
+                   .load(initMenus.bind(null, setup));
 
         
 
        
 
 
-        
+        function initMenus(cb) {
+            EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
+                shop_menu.load();
+                upgrade_menu.load();
+                cb();
+            });
+        }
         
 
         function initSprite(id, type){
@@ -154,6 +161,11 @@
             keys.i = keyboard(73);
             keys.i.press = function() {
                 
+            }
+
+            keys.u = keyboard(85);
+            keys.u.press = function() {
+                upgrade_menu.toggle(stage);
             }
 
             keys.m = keyboard(77);

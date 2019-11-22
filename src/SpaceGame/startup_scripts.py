@@ -49,9 +49,11 @@ from Systems.EventActiveSystem import EventActiveSystem
 from Systems.movementTrackingSystem import MovementTrackingSystem
 from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
 from Systems.boundarySystem import BoundarySystem
+from Systems.applyUpgradeSystem import ApplyUpgradeSystem
 
 import objects.item
 from gamedata.weapons import weapons
+from gamedata.upgrades import upgrades
 
 
 
@@ -291,6 +293,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     impulse = ImpulseSystem(node_factory)
     event_proxy = EventProximityTriggerSystem(node_factory)
     event_active = EventActiveSystem(node_factory)
+    apply_upgrades = ApplyUpgradeSystem(node_factory, upgrades)
     coll_sink = CollisionSink(node_factory)
 
     game_state_req = GameStateRequestSystem(node_factory)
@@ -325,6 +328,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(event_proxy)
     system_set.register(event_active)
     system_set.register(coll_sink)
+    system_set.register(apply_upgrades)
     system_set.register(game_state_req)
 
     return system_set

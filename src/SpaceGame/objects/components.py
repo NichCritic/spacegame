@@ -461,6 +461,13 @@ class AppliedUpgrades():
         self.entity_id = entity_id
         self.upgrades = {} if upgrades is None else upgrades
 
+class ApplyUpgrade():
+
+    def __init__(self, entity_id, upgrade_name, upgrade_id):
+        self.entity_id = entity_id
+        self.upgrade_id = upgrade_id
+        self.upgrade_name = upgrade_name
+
 class Weapon():
 
     def __init__(self, entity_id, type):
@@ -474,6 +481,8 @@ components = {
     "ai_return_home": AIReturnHome,
     "allies": Allies,
     "animated": Animated,
+    "applied_upgrades": AppliedUpgrades,
+    "apply_upgrade": ApplyUpgrade,
     "area": Area,
     "avoid_shooting_allies": AvoidShootingAllies,
     "camera": Camera,

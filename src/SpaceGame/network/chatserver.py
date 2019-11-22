@@ -275,6 +275,30 @@ class UpgradeHandler(BaseHandler):
         logging.info("Finish called items get")
         self.finish(data)
 
+    @tornado.web.authenticated
+    def post(self):
+        post_data = self.get_argument("body")
+        json_data = json.loads(post_data)
+        item_id = json_data["item_id"]
+
+        player = self.get_player()
+        av = self.node_factory.create_node(
+            player.avatar_id, ["position", "sector", "inventory"])
+
+        items = av.inventory.inv
+
+        selected_item = None
+        for i in items:
+            logging.info(str(items))
+            if i["id"] == item_id:
+                selected_item = i
+
+        if i['qty'] > 0:
+            av.add_or_attach_component('apply_upgrade', {"upgrade_name": i["name"], "upgrade_id":i["id"]})
+            i['qty'] -= 1
+ 
+        self.finish()
+
 
 class MoneyHandler(BaseHandler):
 

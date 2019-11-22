@@ -2,9 +2,9 @@
 # relevant data to apply the upgrade
 
 
-def health_upgrade(node, amount):
+def health_upgrade(node):
     node.add_or_attach_component('health', {})
-    node.health.max_health += amount
+    node.health.max_health += 500
 
 
 def trishot_weapon_upgrade(node):
