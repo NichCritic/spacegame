@@ -290,12 +290,16 @@ class UpgradeHandler(BaseHandler):
         selected_item = None
         for i in items:
             logging.info(str(items))
-            if i["id"] == item_id:
+            if i == item_id:
                 selected_item = i
 
-        if i['qty'] > 0:
-            av.add_or_attach_component('apply_upgrade', {"upgrade_name": i["name"], "upgrade_id":i["id"]})
-            i['qty'] -= 1
+        with self.session_manager.get_session() as session:
+            upgrade = items[selected_item]
+
+
+            if i['qty'] > 0:
+                av.add_or_attach_component('apply_upgrade', {"upgrade_name": i["name"], "upgrade_id":i["id"]})
+                i['qty'] -= 1
  
         self.finish()
 
