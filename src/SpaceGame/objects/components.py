@@ -328,6 +328,7 @@ class OrientTowardsTarget():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class ShootAtTarget():
 
     def __init__(self, entity_id):
@@ -339,11 +340,11 @@ class ProximityTargetBehaviour():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class PlayerProximityTargetBehaviour():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
-
 
 
 class Health():
@@ -361,6 +362,7 @@ class CollisionDamage():
         self.entity_id = entity_id
         self.damage = damage
 
+
 class CollisionVelocityDamage():
 
     def __init__(self, entity_id, damage, min_velocity=0, max_velocity=100):
@@ -369,7 +371,9 @@ class CollisionVelocityDamage():
         self.min_velocity = min_velocity
         self.max_velocity = max_velocity
 
+
 class CollisionMovement():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
@@ -421,6 +425,7 @@ class Moved():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class Impulses():
 
     def __init__(self, entity_id):
@@ -432,21 +437,27 @@ class Impulses():
         self.mine = 0
         self.brake = 0
 
+
 class Allies():
+
     def __init__(self, entity_id, team):
         self.entity_id = entity_id
         self.team = team
 
+
 class Home():
+
     def __init__(self, entity_id, x, y):
         self.entity_id = entity_id
         self.x = x
         self.y = y
 
+
 class AIReturnHome():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
+
 
 class AvoidShootingAllies():
 
@@ -455,11 +466,13 @@ class AvoidShootingAllies():
 
 
 class AppliedUpgrades():
-    #Upgrades are stored as key:data, where the key looks up the function and the function is called with node, data
+    # Upgrades are stored as key:data, where the key looks up the function and
+    # the function is called with node, data
 
-    def __init__(self, entity_id, upgrades):
+    def __init__(self, entity_id, upgrades=None):
         self.entity_id = entity_id
         self.upgrades = {} if upgrades is None else upgrades
+
 
 class ApplyUpgrade():
 
@@ -468,12 +481,12 @@ class ApplyUpgrade():
         self.upgrade_id = upgrade_id
         self.upgrade_name = upgrade_name
 
+
 class Weapon():
 
     def __init__(self, entity_id, type):
         self.entity_id = entity_id
         self.type = type
-
 
 
 components = {

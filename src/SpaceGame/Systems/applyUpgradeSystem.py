@@ -20,10 +20,7 @@ class ApplyUpgradeSystem(System):
         upgrade_name = node.apply_upgrade.upgrade_name
         upgrade = self.upgrades[upgrade_name]
 
-        #TODO: Upgrades will eventually need data
+        # TODO: Upgrades will eventually need data
         data = {}
         node.applied_upgrades.upgrades[upgrade_name] = data
-        upgrade['fn'](**data)
-
-
-
+        upgrade['fn'](node, **data)

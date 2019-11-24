@@ -38,6 +38,7 @@
         <script src="static/js/weapons.js"></script>
         <script src="static/js/UI/shop_menu.js"></script>
         <script src="static/js/UI/upgrade_menu.js"></script>
+        <script src="static/js/UI/inventory_menu.js"></script>
 
     </head>
     <body>
@@ -50,6 +51,7 @@
       <p>C key: Enter shop</p>
       <p>SPACE key: Mine from asteroids</p>
       <p>I key: View inventory</p>
+      <p>U key: View and apply upgrades</p>
       <p>M key: View minimap</p>
     </div>
 
@@ -84,8 +86,9 @@
         document.body.appendChild(renderer.view);
 
          
-        var shop_menu = ShopMenu();
-        var upgrade_menu = UpgradeMenu();
+        var shop_menu = new ShopMenu();
+        var upgrade_menu = new UpgradeMenu();
+        var inv_menu = new InventoryMenu();
         
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
@@ -115,6 +118,7 @@
             EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
                 shop_menu.load();
                 upgrade_menu.load();
+                inv_menu.load()
                 cb();
             });
         }
@@ -160,7 +164,7 @@
 
             keys.i = keyboard(73);
             keys.i.press = function() {
-                
+                inv_menu.toggle(stage);
             }
 
             keys.u = keyboard(85);

@@ -122,7 +122,7 @@ class ShopHandler(BaseHandler):
         return player
 
     def get_closest_shop(self, av):
-        
+
         shops = self.node_factory.create_node_list(
             ["position", "shop"], [], av.sector.neighbours)
 
@@ -241,6 +241,7 @@ class InventoryHandler(BaseHandler):
         logging.info("Finish called items get")
         self.finish(data)
 
+
 class UpgradeHandler(BaseHandler):
 
     def initialize(self, account_utils, player_factory, session_manager, node_factory):
@@ -277,6 +278,7 @@ class UpgradeHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self):
+        import objects.item
         post_data = self.get_argument("body")
         json_data = json.loads(post_data)
         item_id = json_data["item_id"]
@@ -295,13 +297,16 @@ class UpgradeHandler(BaseHandler):
 
         with self.session_manager.get_session() as session:
             upgrade = items[selected_item]
+            logging.info(upgrade)
+            upgrade_name = objects.item.get_item_by_id(
+                session, selected_item).name
 
+            if upgrade['qty'] > 0:
+                av.add_or_attach_component(
+                    'apply_upgrade', {"upgrade_name": upgrade_name, "upgrade_id": selected_item})
+                upgrade['qty'] -= 1
 
-            if i['qty'] > 0:
-                av.add_or_attach_component('apply_upgrade', {"upgrade_name": i["name"], "upgrade_id":i["id"]})
-                i['qty'] -= 1
- 
-        self.finish()
+        self.finish({"success": True})
 
 
 class MoneyHandler(BaseHandler):

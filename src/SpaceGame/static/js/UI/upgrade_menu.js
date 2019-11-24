@@ -10,20 +10,20 @@ var UpgradeMenu = (function() {
         width:500, 
         height:500,
         layout:[1, 1],
-        children: [{
-        		
-							id: 'invList',
-							component: 'List',
-							dragX:false,
-							padding: 3,
-							position: {x:0, y:0},
-							width: 500,
-							height: 450,
-							layout: [1, 8]
-
-        	}
+        children: [
 		]
 
+    }
+
+    var invList = {
+		id: 'invList',
+		component: 'List',
+		dragX:false,
+		padding: 3,
+		position: {x:0, y:0},
+		width: 500,
+		height: 450,
+		layout: [1, 8]
     }
 
     var listItem = {
@@ -39,7 +39,7 @@ var UpgradeMenu = (function() {
 
 	function UpgradeMenu() {
 		this.visible = false;
-
+		this.upgrade_list = false;
 	}
 
 	UpgradeMenu.prototype.load = function() {
@@ -72,24 +72,39 @@ var UpgradeMenu = (function() {
 	}
 
 	UpgradeMenu.prototype.loadData = function() {
+		let self = this;
 		$.getJSON("/upgrade", function success(data){
             var menu_state = {};
             menu_state.upgrades = data.upgrades;
 
+            if(this.upgrade_list) {
+            	EZGUI.components.upgradeWindow.removeChild(this.upgrade_list);
+            }
+            let uls = JSON.parse(JSON.stringify(invList));
+            this.upgrade_list = EZGUI.create(uls, "kenney");
+            EZGUI.components.upgradeWindow.addChild(this.upgrade_list)
+
             for(var i = 0; i < menu_state.upgrades.length; i++) {
             	let item = menu_state.upgrades[i];
+            	if(EZGUI.components['it_uqty_'+i]) {
+						EZGUI.components['it_uqty_'+i].erase();
+				}
 				let li = JSON.parse(JSON.stringify(listItem));
 				li.children = [
 					{id:'it_uname_'+i, component:"Window", text:item.name, width:'33%', height:'100%', position:'left'},
 					{id:'it_uqty_'+i, component:"Window", text:item.qty, width:'33%', height:'100%', position:'right'},
 					{id:'btn_upgrade_'+i, component:"Button", text:"apply", width:'33%', height:'100%', position:'right', userData:{'id':item.id}}
 				];
-				let child = EZGUI.create(li, 'kenney'); 
+				let child = EZGUI.create(li, 'kenney');
+				// EZGUI.components['it_uqty_'+i].rebuild(); 
+				// child.rebuild();
+				
+
 				EZGUI.components.invList.addChild(child);
 				EZGUI.components["btn_upgrade_"+i].on('click', function(event, me){
 					$.postJSON("/upgrade", {msg: "upgrade", "item_id":me.userData.id}, 
                 	function(){
-                    
+                    	self.loadData();
                 	},
                 	function(err){
                     	console.warn(err);
@@ -110,5 +125,5 @@ var UpgradeMenu = (function() {
 
 
 
-	return new UpgradeMenu;
-});
+	return UpgradeMenu;
+})();

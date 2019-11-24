@@ -19,34 +19,36 @@ var ShopMenu = (function() {
         		width:500,
         		height:450,
         		children: [
-        			{ id: 'buy_tab', text: 'buy', title: 'buy', userData: 'buy_tab', component: 'Button', position: 'center', width: "100%", height: "100%", skin: 'levelBtn', active:true, children:[
-        				{
-							id: 'buyItemList',
-							component: 'List',
-							dragX:false,
-							padding: 3,
-							position: {x:0, y:0},
-							width: 500,
-							height: 450,
-							layout: [1, 8]
-						}]},
-        			{ id: 'sell_tab', text: 'sell', title: 'sell', userData: 'sell_tab', component: 'Button', position: 'center', width: "100%", height: "100%", skin: 'levelBtn', children:[
-        				{
-							id: 'sellItemList',
-							component: 'List',
-							dragX:false,
-							padding: 3,
-							position: {x:0, y:0},
-							width: 500,
-							height: 450,
-							layout: [1, 8]
-						}]}
+        			{ id: 'buy_tab', text: 'buy', title: 'buy', userData: 'buy_tab', component: 'Button', position: 'center', width: "100%", height: "100%", skin: 'levelBtn', active:true, children:[]},
+        			{ id: 'sell_tab', text: 'sell', title: 'sell', userData: 'sell_tab', component: 'Button', position: 'center', width: "100%", height: "100%", skin: 'levelBtn', children:[]}
 
         		]
         	}
 		]
 
     }
+
+    var buyItemList = {
+		id: 'buyItemList',
+		component: 'List',
+		dragX:false,
+		padding: 3,
+		position: {x:0, y:0},
+		width: 500,
+		height: 450,
+		layout: [1, 8]
+	};
+
+	var sellItemList = {
+		id: 'sellItemList',
+		component: 'List',
+		dragX:false,
+		padding: 3,
+		position: {x:0, y:0},
+		width: 500,
+		height: 450,
+		layout: [1, 8]
+	}
 
     var listItem = {
     	component: 'Window',
@@ -61,6 +63,8 @@ var ShopMenu = (function() {
 
 	function ShopMenu() {
 		this.visible = false;
+		this.buy_item_list = null;
+		this.sell_item_list = null;
 
 	}
 
@@ -94,6 +98,7 @@ var ShopMenu = (function() {
 	}
 
 	ShopMenu.prototype.loadData = function() {
+		let self = this;
 		$.getJSON("/shop", function success(data){
             var menu_state = {};
             menu_state.shop_name = data.name;
@@ -102,15 +107,19 @@ var ShopMenu = (function() {
             menu_state.shop_inv = data.inventory;
             menu_state.player_inv = data.player_inventory;
  
-            // for(var i = 1; i < EZGUI.components.sellItemList.children.length; i++){
-            // 	let child = EZGUI.components.sellItemList.children[i];
-            // 	EZGUI.components.sellItemList.removeChild(child);
-            // }
-            // for(var i = 1; i < EZGUI.components.buyItemList.children.length; i++){
-            // 	let child = EZGUI.components.buyItemList.children[i];
-            // 	EZGUI.components.buyItemList.removeChild(child);
-            // }
+           	if(this.buy_item_list) {
+           		EZGUI.components.buy_tab.removeChild(this.buy_item_list);
+           	}
+           	if(this.sell_item_list) {
+           		EZGUI.components.sell_tab.removeChild(this.sell_item_list);
+           	}
+           	let buy_items_spec = JSON.parse(JSON.stringify(buyItemList)); 
+           	this.buy_item_list = EZGUI.create(buy_items_spec, 'kenney');
+           	EZGUI.components.buy_tab.addChild(this.buy_item_list)
 
+           	let sell_items_spec = JSON.parse(JSON.stringify(sellItemList)); 
+           	this.sell_item_list = EZGUI.create(sell_items_spec, 'kenney');
+           	EZGUI.components.sell_tab.addChild(this.sell_item_list)
 
             for(var i = 0; i < menu_state.buy_items.length; i++) {
             	let item = menu_state.buy_items[i];
@@ -126,7 +135,7 @@ var ShopMenu = (function() {
 				EZGUI.components["btn_sell_"+i].on('click', function(event, me){
 					$.postJSON("/shop", {msg: "sell", "item_id":me.userData.id}, 
                 	function(){
-                    
+                    	self.loadData();
                 	},
                 	function(err){
                     	console.warn(err);
@@ -147,7 +156,7 @@ var ShopMenu = (function() {
 				EZGUI.components["btn_buy_"+i].on('click', function(event, me){
 					$.postJSON("/shop", {msg: "purchase", "item_id":me.userData.id}, 
                 	function(){
-                    
+                    	self.loadData();
                 	},
                 	function(err){
                     	console.warn(err);
@@ -166,5 +175,5 @@ var ShopMenu = (function() {
 
 
 
-	return new ShopMenu;
-});
+	return ShopMenu;
+})();
