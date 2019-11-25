@@ -3,11 +3,13 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello pixi!</title>
-        <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>m
+        <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>
+        <link rel="stylesheet" href="static/jquery-ui.min.css" type="text/css"/>
         <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
         <script src="static/pixi-js/EZGUI.js"></script>
         <script src="static/js/keyboard.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="static/jquery-ui.min.js"></script>
         <script src="static/js/utils.js"></script>
         <script src="static/js/io.js"></script>
         <script src="static/js/gamestate.js"></script>
@@ -55,9 +57,67 @@
       <p>M key: View minimap</p>
     </div>
 
+    <div id='inv_menu' title="Inventory"><ul id='inv_list'></ul></div>
+    <div id='upgrade_menu' title="Inventory"><ul id='upgr_list'></ul></div>
+    <div id='shop_menu' title="Shop">
+        <div id="shop_tabs">
+            <ul id='tabs'>
+                <li><a href="#shop_buy">Buy</a></li>
+                <li><a href="#shop_sell">Sell</a></li>
+            </ul>
+            <div id="shop_buy"><ul id="shop_buy_list"></ul></div>
+            <div id="shop_sell"><ul id="shop_sell_list"></ul></div>
+        </div>
+    </div>
+
     <script type="text/javascript">
 
-   
+    function loadInvData(event, ui) {
+        $.getJSON("/inv", function success(data){
+            var menu = $("#inv_list");
+            menu.empty();
+            var menu_state = {};
+            menu_state.inv = data.inventory;
+            for(var i = 0; i < menu_state.inv.length; i++) {
+                let item = menu_state.inv[i];
+                $("<li><div>"+item.name +":"+item.qty+"</div></li>").appendTo(menu);
+            }
+        });
+    }
+
+    function loadShopData(event, ui) {
+        $.getJSON("/shop", function success(data){
+            var menu_state = {};
+            var buy_menu = $("#shop_buy_list");
+            var sell_menu = $("#shop_sell_list")
+            buy_menu.empty();
+            sell_menu.empty();
+            menu_state.shop_name = data.name;
+            menu_state.items = data.sale_items;
+            menu_state.buy_items = data.buy_items;
+            menu_state.shop_inv = data.inventory;
+            menu_state.player_inv = data.player_inventory;
+ 
+            for(var i = 0; i < menu_state.buy_items.length; i++) {
+                let item = menu_state.buy_items[i];
+                let qty = item.id in menu_state.player_inv ? menu_state.player_inv[item.id].qty : 0;
+                $("<li><div>"+item.name +":"+qty+"</div></li>").appendTo(buy_menu);   
+
+            }
+
+            for(var i = 0; i < menu_state.items.length; i++) {
+                let item = menu_state.items[i];
+                let qty = item.id in menu_state.player_inv ? menu_state.player_inv[item.id].qty : 0;
+                $("<li><div>"+item.name +":"+qty+"</div></li>").appendTo(sell_menu);
+            }
+
+            buy_menu.menu();
+            sell_menu.menu();
+
+        }, function failure(err){
+
+        });
+    }
 
     window.onload = function() {
 
@@ -86,9 +146,14 @@
         document.body.appendChild(renderer.view);
 
          
-        var shop_menu = new ShopMenu();
+        // var shop_menu = new ShopMenu();
         var upgrade_menu = new UpgradeMenu();
-        var inv_menu = new InventoryMenu();
+        // var inv_menu = new InventoryMenu();
+        var inv_menu = $("#inv_menu").dialog({autoOpen:false, open:loadInvData});
+        var inv_list = $("#inv_list").menu();
+
+        var shop_menu = $("#shop_menu").dialog({autoOpen:false, open:loadShopData});
+        var shop_tabs = $("#shop_tabs").tabs();
         
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
@@ -116,9 +181,9 @@
 
         function initMenus(cb) {
             EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
-                shop_menu.load();
+                // shop_menu.load();
                 upgrade_menu.load();
-                inv_menu.load()
+                // inv_menu.load()
                 cb();
             });
         }
@@ -159,12 +224,12 @@
 
             keys.c = keyboard(67);
             keys.c.press = function() {
-                shop_menu.toggle(stage); 
+                $("#shop_menu").dialog("open"); 
             }
 
             keys.i = keyboard(73);
             keys.i.press = function() {
-                inv_menu.toggle(stage);
+                $("#inv_menu").dialog("open");
             }
 
             keys.u = keyboard(85);
