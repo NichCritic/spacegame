@@ -21,23 +21,29 @@ class TransactionSystem(System):
             qty = t['quantity']
             cost = t['price']
 
+            logging.info(f"Executing transaction from {s_id} to {b_id}: transfer {qty}:{i_id} for {cost}")
+
             buyer = self.node_factory.create_node(b_id, ["inventory", "money"])
             seller = self.node_factory.create_node(
                 s_id, ["inventory", "money"])
 
             if buyer.money.money < cost:
                 # skip the transaction
+                logging.info("Buyer did not have enough money")
                 continue
 
             seller_inv = seller.inventory.inv
             if i_id not in seller_inv:
+                logging.info("Seller did not have the item")
                 continue
 
             if "qty" not in seller_inv[i_id]:
                 # If the item in the inventory has no qty
+                logging.info("Seller did not have any qty")
                 continue
             if not seller_inv[i_id]["qty"] >= qty:
                 # If the qty is too low to sell
+                logging.info("Seller had less than the required qty")
                 continue
 
             buyer.money.money -= cost

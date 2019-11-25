@@ -186,7 +186,7 @@ class ShopHandler(BaseHandler):
 
         logging.info("adding transaction")
 
-        if json_data['msg'] == 'purchase':
+        if json_data['msg'] == 'buy':
             av.transaction.transactions.append({
                 "buyer_id": av.id,
                 "seller_id": closest_shop.id,
@@ -204,7 +204,7 @@ class ShopHandler(BaseHandler):
                 "price": selected_item["cost"]
             })
         logging.info("Finish called shop post")
-        self.finish()
+        self.finish({"success": True})
 
 
 class InventoryHandler(BaseHandler):
