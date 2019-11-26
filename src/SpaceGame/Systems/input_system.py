@@ -48,7 +48,6 @@ class InputSystem(System):
         inputs = self.get_unhandled_input(node.player_input.data)
         rot = node.rotation.rotation
 
-
         for inp in inputs:
             dt = inp['dt']
 
@@ -61,10 +60,10 @@ class InputSystem(System):
             rot = p.rotation
 
             p.force.x = math.sin(p.rotation) * \
-                dt * 0.05 if inp["thrust"] else 0
+                dt * 0.015 if inp["thrust"] else 0
             p.force.y = - \
                 math.cos(p.rotation) * dt * \
-                0.05 if inp["thrust"] else 0
+                0.015 if inp["thrust"] else 0
 
             p.time = inp['time']
             p.dt = inp['dt']
@@ -72,13 +71,13 @@ class InputSystem(System):
 
             packets.append(p)
 
-            #TODO: Firing rate should come from weapon stats
+            # TODO: Firing rate should come from weapon stats
             if inp['shoot'] or node.has("shooting"):
 
-                node.add_or_attach_component('shooting', {'firing_rate':200})
-                node.shooting.inputs.append({'shooting':inp['shoot'], 'dt':inp['dt']})
-            
-            
+                node.add_or_attach_component('shooting', {'firing_rate': 200})
+                node.shooting.inputs.append(
+                    {'shooting': inp['shoot'], 'dt': inp['dt']})
+
             if inp['mining']:
                 node.add_or_attach_component('mining', {'time': p.time})
             else:
@@ -86,7 +85,5 @@ class InputSystem(System):
                     node.remove_component("mining")
 
             inp["was_processed"] = True
-
-
 
         node.physics_update.packets.extend(packets)

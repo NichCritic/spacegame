@@ -293,7 +293,7 @@ var GameLoop = (function() {
                     'position': entity.position,
                     'rotation': {rotation: entity.rotation},
                     'velocity': entity.velocity,
-                    'thrust': {thrust:0.05},
+                    'thrust': {thrust:0.015},
                     'time': serverState.time
                 }}); 
                     
