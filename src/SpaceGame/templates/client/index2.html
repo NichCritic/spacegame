@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>
         <link rel="stylesheet" href="static/jquery-ui.min.css" type="text/css"/>
         <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
-        <script src="static/pixi-js/EZGUI.js"></script>
         <script src="static/js/keyboard.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="static/jquery-ui.min.js"></script>
@@ -58,7 +57,7 @@
     </div>
 
     <div id='inv_menu' title="Inventory"><ul id='inv_list'></ul></div>
-    <div id='upgrade_menu' title="Inventory"><ul id='upgr_list'></ul></div>
+    <div id='upgrade_menu' title="Upgrades"><ul id='upgr_list'></ul></div>
     <div id='shop_menu' title="Shop">
         <div id="shop_tabs">
             <ul id='tabs'>
@@ -83,7 +82,32 @@
                 let item = menu_state.inv[i];
                 $("<li><div>"+item.name +":"+item.qty+"</div></li>").appendTo(menu);
             }
+            menu.menu("refresh");
         });
+    }
+
+    function loadUpgradeData(event, ui) {
+        $.getJSON("/upgrade", function success(data){
+            var menu = $("#upgr_list");
+            menu.empty();
+            var menu_state = {};
+            menu_state.upgr = data.upgrades;
+            for(var i = 0; i < menu_state.upgr.length; i++) {
+                let item = menu_state.upgr[i];
+                $("<li><div>"+item.name +":"+item.qty+"-------Click to apply</div></li>").appendTo(menu).data("item_id", item.id);
+            }
+            menu.menu("refresh");
+        });
+    }
+
+    function applyUpgrade(event, ui) {
+        $.postJSON("/upgrade", {"item_id":ui.item.data('item_id')}, 
+            function(){
+                setTimeout(loadUpgradeData, 100);
+            },
+            function(err){
+                console.warn(err);
+            });
     }
 
     function buy_item(event, ui) {
@@ -174,11 +198,12 @@
         document.body.appendChild(renderer.view);
 
          
-        // var shop_menu = new ShopMenu();
-        var upgrade_menu = new UpgradeMenu();
         // var inv_menu = new InventoryMenu();
         var inv_menu = $("#inv_menu").dialog({autoOpen:false, open:loadInvData});
         var inv_list = $("#inv_list").menu();
+
+        var upgr_menu = $("#upgrade_menu").dialog({autoOpen:false, open:loadUpgradeData});
+        var upgr_list = $("#upgr_list").menu({select:applyUpgrade});
 
         var shop_menu = $("#shop_menu").dialog({autoOpen:false, open:loadShopData});
         var shop_tabs = $("#shop_tabs").tabs();
@@ -206,21 +231,14 @@
                    .add('static/assets/iron_ore_pickup.png')
                    .add('static/assets/silver_ore_pickup.png')
                    .add('static/assets/gold_ore_pickup.png')
-                   .load(initMenus.bind(null, setup));
+                   .load(setup);
 
         
 
        
 
 
-        function initMenus(cb) {
-            EZGUI.Theme.load(["static/assets/kenney-theme/kenney-theme.json"], function(){
-                // shop_menu.load();
-                upgrade_menu.load();
-                // inv_menu.load()
-                cb();
-            });
-        }
+        
         
 
         function initSprite(id, type){
@@ -268,7 +286,7 @@
 
             keys.u = keyboard(85);
             keys.u.press = function() {
-                upgrade_menu.toggle(stage);
+                $("#upgrade_menu").dialog("open");
             }
 
             keys.m = keyboard(77);
