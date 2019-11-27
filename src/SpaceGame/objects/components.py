@@ -489,6 +489,12 @@ class Weapon():
         self.type = type
 
 
+class Dead():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
 components = {
     "acceleration": Acceleration,
     "ai_return_home": AIReturnHome,
@@ -505,6 +511,7 @@ components = {
     "collision_damage": CollisionDamage,
     "collision_movement": CollisionMovement,
     "collision_velocity_damage": CollisionVelocityDamage,
+    "dead": Dead,
     "event": Event,
     "event_active": EventActive,
     "event_proximity_trigger": EventProximityTrigger,

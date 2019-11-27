@@ -16,19 +16,35 @@ from player.avatar import AvatarFactory
 from player.player import PlayerFactory
 from objects.component_manager import ComponentManager, DBComponentSource, ArrayComponentSource
 
+from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
+from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
+from Systems.aiReturnHomeSystem import AIReturnHomeSystem
+from Systems.aiShootAtTargetSystem import AIShootAtTargetSystem
+from Systems.applyUpgradeSystem import ApplyUpgradeSystem
+from Systems.boundarySystem import BoundarySystem
+from Systems.collisionDamageSystem import CollisionDamageSystem
 from Systems.collisionMovementSystem import CollisionMovementSystem
 from Systems.collisionSink import CollisionSink
 from Systems.collisionSystem import CollisionSystem
-from Systems.collisionDamageSystem import CollisionDamageSystem
 from Systems.collisionVelocityDamageSystem import CollisionVelocityDamageSystem
+from Systems.deathSystem import DeathSystem
+from Systems.EventActiveSystem import EventActiveSystem
+from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
+from Systems.expirySystem import ExpirySystem
 from Systems.game_state_request import GameStateRequestSystem
 from Systems.historySystem import HistorySystem
+from Systems.ImpulseSystem import ImpulseSystem
 from Systems.input_system import InputSystem
 from Systems.inventoryMassSystem import InventoryMassSystem
 from Systems.miningSystem import MiningSystem
+from Systems.movementTrackingSystem import MovementTrackingSystem
 from Systems.NetworkMessageSystem import NetworkMessageSystem
+from Systems.pickupSystem import PickupSystem
+from Systems.playerDeathSystem import PlayerDeathSystem
+from Systems.playerProximityTargetSystem import PlayerProximityTargetSystem
 from Systems.processorSystem import ProcessorSystem
 from Systems.proximitySystem import ProximitySystem
+from Systems.proximityTargetSystem import ProximityTargetSystem
 from Systems.purePhysicsSystem import PhysicsSystem
 from Systems.server_update_system import ServerUpdateSystem
 from Systems.shooting_system import ShootingSystem
@@ -36,25 +52,10 @@ from Systems.shopUnpackSystem import ShopUnpackSystem
 from Systems.spatial_system import SpatialSystem
 from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
-from Systems.expirySystem import ExpirySystem
-from Systems.pickupSystem import PickupSystem
-from Systems.aiOrientTowardsTargetSystem import AIOrientTowardsTargetSystem
-from Systems.aiReturnHomeSystem import AIReturnHomeSystem
-from Systems.aiShootAtTargetSystem import AIShootAtTargetSystem
-from Systems.ImpulseSystem import ImpulseSystem
-from Systems.proximityTargetSystem import ProximityTargetSystem
-from Systems.playerProximityTargetSystem import PlayerProximityTargetSystem
-from Systems.EventProximityTriggerSystem import EventProximityTriggerSystem
-from Systems.EventActiveSystem import EventActiveSystem
-from Systems.movementTrackingSystem import MovementTrackingSystem
-from Systems.aiAvoidShootingAlliesSystem import AIAvoidShootingAlliesSystem
-from Systems.boundarySystem import BoundarySystem
-from Systems.applyUpgradeSystem import ApplyUpgradeSystem
 
 import objects.item
 from gamedata.weapons import weapons
 from gamedata.upgrades import upgrades
-
 
 
 from command.command_handler import CommandHandler
@@ -172,7 +173,7 @@ def create_spacestations(node_factory, session):
                 'collidable': {},
                 'collision_movement': {},
                 'allies': {'team': 'alpha'},
-                'weapon': {'type':'triple_shot'}
+                'weapon': {'type': 'triple_shot'}
             })
             ships.append(ship)
 
@@ -278,6 +279,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     collision = CollisionSystem(node_factory)
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
+    player_death = PlayerDeathSystem(node_factory)
+    death = DeathSystem(node_factory)
     pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
     boundary = BoundarySystem(node_factory)
@@ -312,6 +315,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(collision)
     system_set.register(collision_dam)
     system_set.register(collision_vel_dam)
+    system_set.register(player_death)
+    system_set.register(death)
     system_set.register(pickup)
     system_set.register(coll_mov)
     system_set.register(boundary)
