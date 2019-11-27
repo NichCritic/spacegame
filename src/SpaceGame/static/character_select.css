@@ -72,3 +72,7 @@ td {
   clear:left;
   color:white;
 }
+
+#dialog_menu_content {
+  height:100px;
+}

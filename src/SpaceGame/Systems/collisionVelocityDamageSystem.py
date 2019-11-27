@@ -42,4 +42,4 @@ class CollisionVelocityDamageSystem(System):
             c_node.health.health -= scaled_damage
 
             if c_node.health.health <= 0:
-                c_node.add_or_attach("dead", {})
+                c_node.add_or_attach_component("dead", {})

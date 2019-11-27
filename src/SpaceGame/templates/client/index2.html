@@ -40,6 +40,7 @@
         <script src="static/js/UI/shop_menu.js"></script>
         <script src="static/js/UI/upgrade_menu.js"></script>
         <script src="static/js/UI/inventory_menu.js"></script>
+        <script src="static/js/UI/dialog_menu.js"></script>
 
     </head>
     <body>
@@ -68,6 +69,12 @@
             <div id="shop_sell"><ul id="shop_sell_list"></ul></div>
         </div>
         <div id="money"></div>
+    </div>
+
+    <div id='dialog_menu'>
+        <div id='dialog_menu_content'></div>
+        <div><button id='dialog_prev_button'>prev</button><button id='dialog_next_button' text="next"/>next</button> </div>
+
     </div>
 
     <script type="text/javascript">
@@ -106,7 +113,9 @@
         var inv_menu = new InventoryMenu();
         var upgr_menu = new UpgradeMenu();
         var shop_menu = new ShopMenu();
+        var dialog_menu = new DialogMenu();
 
+        dialog_menu.open(["1", "2", "3", "<b>Check out my horns!</b>"])
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
                    .add('static/assets/parallax-space-stars2.png')
