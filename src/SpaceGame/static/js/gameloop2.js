@@ -165,6 +165,21 @@ var GameLoop = (function() {
             camera: {}
         });
 
+        var ws = new WebSocket("ws://naelick.com:8888/a/message/updates")
+        ws.onmessage = function(evt){
+            update_from_server(
+                {
+                gamestate_buffer:gamestate_buffer,
+                inputs:inputs
+            }, JSON.parse(evt.data));
+        }
+
+        ws.onclose = function(evt){    
+            window.location.replace("/auth/login");
+        }
+        ws.onerror = function(evt){    
+            window.location.replace("/auth/login");
+        }
 
     }
 
@@ -204,132 +219,136 @@ var GameLoop = (function() {
         return gamestate_buffer.top();
     }
 
-    var throttledGetServerData =  locked(getServerData);
+    // var throttledGetServerData =  locked(getServerData);
     var throttledSendServerData = locked(sendServerData);
+
+    function update_from_server(args, result) {
+        let serverState = result.messages[result.messages.length-1];
+
+        inputs.update(serverState.time);
+        let entities = Object.keys(serverState.entities);
+        for(let i = 0; i < entities.length; i++) {
+            let entity = serverState.entities[entities[i]];
+
+            // if(entity.type && entity.type=== 'bolt') {
+            //     //Temporarily don't sync bullets
+            //     continue    
+            // } 
+
+            let n = node_factory.create_node([], entity.id);
+
+            n.add_or_update("server_update", {data: {
+                'acceleration': {x:0, y:0},
+                'force': {x:0, y:0},
+                'mass': {mass:entity.mass},
+                'position': entity.position,
+                'rotation': {rotation: entity.rotation},
+                'velocity': {x:0, y:0},
+                'thrust': {thrust:0.00},
+                'time': serverState.time
+            }});
+
+
+
+
+            n.add_or_update("area", {"radius":entity.radius});
+            n.add_or_update("renderable", {spritesheet: textures[entity.type],
+                                           image:textures[entity.type].idle[0],
+                                           width: n.area.radius*2,
+                                           height: n.area.radius*2});
+
+
+
+            n.add_or_update("type", {"type":entity.type})
+
+            if(entity.animated) {
+                //TODO This could cause a bug where the animation rate isn't updated between
+                //two entity states
+                n.add_or_attach('animated', {update_rate: entity.animated.update_rate});
+            }
+
+
+            if(entity.health) {
+                n.add_or_update('health', entity.health);
+            }
+
+            if(entity.collidable) {
+                n.add_or_update('collidable', {});
+            }
+            if(entity.minable) {
+                n.add_or_update('minable', {});
+            }
+            if(entity.mining) {
+                n.add_or_update('mining', {});
+            }
+            else{
+                n.delete_component('mining')
+            }
+
+            if(entity.client_sync) {
+                n.add_or_update('client_sync', entity.client_sync)
+            }
+
+            if(entities[i] === serverState.player_id){
+                n.add_or_update('player');
+                n.add_or_update('inputs', {inputs:inputs});
+
+                if(entity.weapon) {
+                    n.add_or_update('weapon', entity.weapon)
+                }
+                //TODO: We know that the player can be animated but this should really be based on server data
+                
+                n.add_or_update("server_update", {data: {
+                'acceleration': entity.acceleration,
+                'force': entity.force,
+                'mass': {mass:entity.mass},
+                'position': entity.position,
+                'rotation': {rotation: entity.rotation},
+                'velocity': entity.velocity,
+                'thrust': {thrust:0.015},
+                'time': serverState.time
+            }}); 
+                
+
+            } else {
+                n.add_or_update('server_controlled');
+            }
+            // acceleration: {x: 0, y: 0}
+            // control: [null]
+            // force: {x: 0, y: 0}
+            // id: "48294adf-4768-46a5-b546-cbd1d59e344f"
+            // last_update: 1552269914160.3145
+            // mass: 200
+            // minable: true
+            // mining: false
+            // position: {x: 1500, y: 0}
+            // radius: 100
+            // rotation: 10
+            // state_history: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+            // type: "asteroid"
+            // velocity: {x: 0, y: 0}
+
+
+        }
+
+        for(let i = 0; i < last_seen_entities.length; i++) {
+            if(entities.indexOf(last_seen_entities[i]) === -1) {
+                let n = node_factory.create_node([], last_seen_entities[i]);
+                n.add_or_update("to_be_removed");
+            }
+        } 
+
+        last_seen_entities = entities;
+
+        //Hack, accessing global
+        replay_state.time = serverState.time
+    }
 
     function getServerData(unlock_fn, args){
         let inputs = args.inputs;
         let gamestate_buffer = args.gamestate_buffer;
         $.postJSON('./a/message/updates', {}, function success(result){
-            let serverState = result.messages[result.messages.length-1];
-
-            inputs.update(serverState.time);
-            let entities = Object.keys(serverState.entities);
-            for(let i = 0; i < entities.length; i++) {
-                let entity = serverState.entities[entities[i]];
-
-                // if(entity.type && entity.type=== 'bolt') {
-                //     //Temporarily don't sync bullets
-                //     continue    
-                // } 
-
-                let n = node_factory.create_node([], entity.id);
-
-                n.add_or_update("server_update", {data: {
-                    'acceleration': {x:0, y:0},
-                    'force': {x:0, y:0},
-                    'mass': {mass:entity.mass},
-                    'position': entity.position,
-                    'rotation': {rotation: entity.rotation},
-                    'velocity': {x:0, y:0},
-                    'thrust': {thrust:0.00},
-                    'time': serverState.time
-                }});
-
-
-
-
-                n.add_or_update("area", {"radius":entity.radius});
-                n.add_or_update("renderable", {spritesheet: textures[entity.type],
-                                               image:textures[entity.type].idle[0],
-                                               width: n.area.radius*2,
-                                               height: n.area.radius*2});
-
-
-
-                n.add_or_update("type", {"type":entity.type})
-
-                if(entity.animated) {
-                    //TODO This could cause a bug where the animation rate isn't updated between
-                    //two entity states
-                    n.add_or_attach('animated', {update_rate: entity.animated.update_rate});
-                }
-
-
-                if(entity.health) {
-                    n.add_or_update('health', entity.health);
-                }
-
-                if(entity.collidable) {
-                    n.add_or_update('collidable', {});
-                }
-                if(entity.minable) {
-                    n.add_or_update('minable', {});
-                }
-                if(entity.mining) {
-                    n.add_or_update('mining', {});
-                }
-                else{
-                    n.delete_component('mining')
-                }
-
-                if(entity.client_sync) {
-                    n.add_or_update('client_sync', entity.client_sync)
-                }
-
-                if(entities[i] === serverState.player_id){
-                    n.add_or_update('player');
-                    n.add_or_update('inputs', {inputs:inputs});
-
-                    if(entity.weapon) {
-                        n.add_or_update('weapon', entity.weapon)
-                    }
-                    //TODO: We know that the player can be animated but this should really be based on server data
-                    
-                    n.add_or_update("server_update", {data: {
-                    'acceleration': entity.acceleration,
-                    'force': entity.force,
-                    'mass': {mass:entity.mass},
-                    'position': entity.position,
-                    'rotation': {rotation: entity.rotation},
-                    'velocity': entity.velocity,
-                    'thrust': {thrust:0.015},
-                    'time': serverState.time
-                }}); 
-                    
-
-                } else {
-                    n.add_or_update('server_controlled');
-                }
-                // acceleration: {x: 0, y: 0}
-                // control: [null]
-                // force: {x: 0, y: 0}
-                // id: "48294adf-4768-46a5-b546-cbd1d59e344f"
-                // last_update: 1552269914160.3145
-                // mass: 200
-                // minable: true
-                // mining: false
-                // position: {x: 1500, y: 0}
-                // radius: 100
-                // rotation: 10
-                // state_history: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-                // type: "asteroid"
-                // velocity: {x: 0, y: 0}
-
-
-            }
-
-            for(let i = 0; i < last_seen_entities.length; i++) {
-                if(entities.indexOf(last_seen_entities[i]) === -1) {
-                    let n = node_factory.create_node([], last_seen_entities[i]);
-                    n.add_or_update("to_be_removed");
-                }
-            } 
-
-            last_seen_entities = entities;
-
-            //Hack, accessing global
-            replay_state.time = serverState.time 
+             
             unlock_fn();
         }, function error(result){
             unlock_fn();
@@ -357,12 +376,12 @@ var GameLoop = (function() {
     }
 
     function update_server() {
-        throttledGetServerData(
-            {
-                gamestate_buffer:gamestate_buffer,
-                inputs:inputs
-            }
-        );
+        // throttledGetServerData(
+        //     {
+        //         gamestate_buffer:gamestate_buffer,
+        //         inputs:inputs
+        //     }
+        // );
         throttledSendServerData({
             inputs:inputs
         });

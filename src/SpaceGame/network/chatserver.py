@@ -19,6 +19,7 @@ import tornado.auth
 import tornado.escape
 import tornado.locks
 import tornado.web
+import tornado.websocket
 
 import uuid
 
@@ -26,6 +27,7 @@ from tornado import gen
 from tornado.options import define
 
 import json
+import asyncio
 
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -46,6 +48,7 @@ class MessageBuffer(object):
                 break
             results.append(msg)
         results.reverse()
+        self.cache = []
         return results
 
     def new_messages(self, messages):
@@ -529,7 +532,7 @@ class CommandMessageHandler(BaseHandler):
         self.finish()
 
 
-class MessageUpdatesHandler(BaseHandler):
+class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
 
     def initialize(self, player_factory, account_utils, session_manager, node_factory):
         # TODO: This seems strange
@@ -538,44 +541,59 @@ class MessageUpdatesHandler(BaseHandler):
         self.session_manager = session_manager
         self.node_factory = node_factory
 
-    @tornado.web.authenticated
-    async def post(self):
-        # print(self.current_user["id"])
-        try:
-            cursor = self.get_argument("cursor", None)
-            if not self.current_user['id'] in self.player_factory.players:
-                self.create_player()
-            msg_buffer = self.player_factory.players[
-                self.current_user["id"]].message_buffer
-            messages = msg_buffer.get_messages_since(cursor=cursor)
-            while not messages:
-                self.wait_future = msg_buffer.cond.wait()
-                try:
-                    await self.wait_future
-                except asyncio.CancelledError:
-                    return
-                messages = msg_buffer.get_messages_since(cursor)
-            if self.request.connection.stream.closed():
-                return
-            self.write(dict(messages=[m.msg for m in messages]))
+    def get_current_user(self):
+        user_json = self.get_secure_cookie("chatdemo_user")
+        if not user_json:
+            return None
+        # return {"name": "Nicholas", "email": "n.aelick@gmail.com", "id":
+        # "11111", "given_name": 'Nicholas', "acct_id": 1, "player_id":
+        # "11111"}
+        return tornado.escape.json_decode(user_json)
 
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            logging.error(e)
-            self.clear()
-            self.set_status(500)
-            logging.info("Finish called post")
-            self.finish("No currently signed in user")
+    def get(self, *args, **kwargs):
+        if (not self.current_user):
+            self.set_status(401)
+            self.finish("Unauthorized")
+            logging.info("CLOSED CONNECTION")
             return
+        logging.info("OPENING THE CONNECTION")
+        super(MessageUpdatesHandler, self).get(*args, **kwargs)
 
-    def on_new_messages(self, messages):
-        # Closed client connection
+    async def open(self):
+        # user_slug = self.get_secure_cookie("chatdemo_user")
+        # if user_slug:
+        #     logging.info("USER CONNECTED")
+        await self.poll()
+        # else:
+        #     self.close()
 
-        logging.info("Finish called on_new_messages")
+    async def poll(self):
+        # print(self.current_user["id"])
+        while True:
+            try:
 
-    def on_connection_close(self):
-        self.wait_future.cancel()
+                if not self.current_user['id'] in self.player_factory.players:
+                    self.create_player()
+                msg_buffer = self.player_factory.players[
+                    self.current_user["id"]].message_buffer
+                messages = msg_buffer.get_messages_since(cursor=None)
+                while not messages:
+                    logging.info("WAIT_ON_MESSAGES")
+                    self.wait_future = msg_buffer.cond.wait()
+                    try:
+                        await self.wait_future
+                    except asyncio.CancelledError:
+                        return
+                    messages = msg_buffer.get_messages_since(None)
+                logging.info("SENDING MESSAGES")
+                self.write_message(dict(messages=[m.msg for m in messages]))
+
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                logging.error(e)
+                self.clear()
+                return
 
 
 class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixin):

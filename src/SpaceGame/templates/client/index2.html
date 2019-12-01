@@ -115,7 +115,7 @@
         var shop_menu = new ShopMenu();
         var dialog_menu = new DialogMenu();
 
-        dialog_menu.open(["1", "2", "3", "<b>Check out my horns!</b>"])
+        // dialog_menu.open(["1", "2", "3", "<b>Check out my horns!</b>"])
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
                    .add('static/assets/parallax-space-stars2.png')
@@ -167,8 +167,8 @@
             game_mode = GameLoop();
             game_mode.init();
 
-            map_mode = MapState();
-            map_mode.init();
+            // map_mode = MapState();
+            // map_mode.init();
 
             mode = game_mode
 
@@ -191,23 +191,23 @@
                 $("#upgrade_menu").dialog("open");
             }
 
-            keys.m = keyboard(77);
-            keys.m.press = function() {
-                if(mode == map_mode){
-                    stage.removeChild(map_stage);
-                    stage.addChild(game_stage);
-                    mode = game_mode;
-                }else{
-                    map_mode.poll();
-                    stage.removeChild(map_stage);
-                    stage.addChild(game_stage);
-                    mode = map_mode;
-                }
-            }
+            // keys.m = keyboard(77);
+            // keys.m.press = function() {
+            //     if(mode == map_mode){
+            //         stage.removeChild(map_stage);
+            //         stage.addChild(game_stage);
+            //         mode = game_mode;
+            //     }else{
+            //         map_mode.poll();
+            //         stage.removeChild(map_stage);
+            //         stage.addChild(game_stage);
+            //         mode = map_mode;
+            //     }
+            // }
 
             keys.esc = keyboard(27);
             keys.esc.press = function() {
-                stage.removeChild(map_stage);
+                // stage.removeChild(map_stage);
                 stage.removeChild(game_stage);
                 stage.addChild(game_stage);
                 mode = game_mode

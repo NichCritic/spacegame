@@ -62,7 +62,7 @@ def main():
             (r"/inv", InventoryHandler, dict(account_utils=account_utils,
                                              player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/upgrade", UpgradeHandler, dict(account_utils=account_utils,
-                                             player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+                                               player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/money", MoneyHandler, dict(account_utils=account_utils,
                                            player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/minimap", MinimapHandler, dict(account_utils=account_utils,
@@ -78,7 +78,7 @@ def main():
     )
     app.listen(options.port)
     system_set_callback = tornado.ioloop.PeriodicCallback(
-        system_set.process, 100)
+        system_set.process, 50)
     system_set_callback.start()
 
     tornado.ioloop.IOLoop.instance().start()
