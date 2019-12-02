@@ -30,3 +30,4 @@ class DeathSystem(System):
         node.add_or_attach_component('area', {'radius': 25})
         node.add_or_attach_component(
             'animated', {'update_rate': 200})
+        node.add_or_attach_component('updated', {})

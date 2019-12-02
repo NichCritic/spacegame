@@ -494,6 +494,10 @@ class Dead():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class Updated():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 
 components = {
     "acceleration": Acceleration,
@@ -554,6 +558,7 @@ components = {
     "target": Target,
     "transaction": Transaction,
     "type": Type,
+    "updated": Updated,
     "velocity": Velocity,
     "weapon": Weapon
 }

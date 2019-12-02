@@ -6,6 +6,7 @@ import math
 class SpatialSystem(System):
 
     manditory = ["position"]
+    optional = ["neighbours"]
     handles = []
 
     def __init__(self, node_factory):
@@ -49,7 +50,13 @@ class SpatialSystem(System):
         sectors = self.create_sector_dict(nodes, 2500)
         fine_sectors = self.create_sector_dict(nodes, 750)
 
+
+
         for node in nodes:
+            neighbours_cache = []
+            if node.has("neighbours"):
+                neighbours_cache = node.neighbours.neighbours
+
             sx, sy, neighbour_entities = self.create_neighbours_list(
                 node, sectors, 2500)
             fx, fy, fine_neighbour_entities = self.create_neighbours_list(
@@ -58,6 +65,10 @@ class SpatialSystem(System):
             node.add_or_update_component(
                 "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
                            "fx": fx, "fy": fy, "fine_neighbours": fine_neighbour_entities})
+
+            [self.node_factory.create_node(e, {}).add_or_attach_component("updated", {}) for e in neighbour_entities if e not in neighbours_cache]
+
+
 
 
 '''

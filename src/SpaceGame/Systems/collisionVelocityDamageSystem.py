@@ -38,7 +38,7 @@ class CollisionVelocityDamageSystem(System):
 
             scaled_damage = max(0, scaled_damage)
 
-            logging.info(f"----------------Velocity: {velocity}")
+            # logging.info(f"----------------Velocity: {velocity}")
             c_node.health.health -= scaled_damage
 
             if c_node.health.health <= 0:

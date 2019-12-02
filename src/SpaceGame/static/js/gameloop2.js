@@ -175,10 +175,12 @@ var GameLoop = (function() {
         }
 
         ws.onclose = function(evt){    
-            window.location.replace("/auth/login");
+            // window.location.replace("/auth/login");
+            debugger;
         }
         ws.onerror = function(evt){    
-            window.location.replace("/auth/login");
+            // window.location.replace("/auth/login");
+            debugger;
         }
 
     }

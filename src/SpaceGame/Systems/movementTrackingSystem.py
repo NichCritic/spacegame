@@ -19,10 +19,12 @@ class MovementTrackingSystem(System):
             self.position_cache[node.id] = {
                 'x': node.position.x, 'y': node.position.y}
             node.add_or_attach_component('moved', {})
+            node.add_or_attach_component('updated', {})
             return
 
         if node.position != self.position_cache[node.id]:
             node.add_or_attach_component('moved', {})
+            node.add_or_attach_component('updated', {})
             self.position_cache[node.id] = {
                 'x': node.position.x, 'y': node.position.y}
         elif node.has("moved"):
