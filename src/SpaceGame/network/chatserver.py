@@ -550,14 +550,14 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         # "11111"}
         return tornado.escape.json_decode(user_json)
 
-    def get(self, *args, **kwargs):
+    async def get(self, *args, **kwargs):
         if (not self.current_user):
             self.set_status(401)
             self.finish("Unauthorized")
             logging.info("CLOSED CONNECTION")
             return
         logging.info("OPENING THE CONNECTION")
-        super(MessageUpdatesHandler, self).get(*args, **kwargs)
+        await super(MessageUpdatesHandler, self).get(*args, **kwargs)
 
     async def open(self):
         # user_slug = self.get_secure_cookie("chatdemo_user")
