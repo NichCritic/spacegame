@@ -120,6 +120,10 @@ var RenderSystem = (function() {
 			if(node.has("rotation")) {
 				this.displayObjects[node.id].rotation = node.rotation.rotation;
 			}
+
+			if(x_pos > 2500 || x_pos < -2500 || y_pos > 2500 || y_pos < -2500){
+				node.add_or_attach("to_be_removed")
+			}
 		}
 
 	}

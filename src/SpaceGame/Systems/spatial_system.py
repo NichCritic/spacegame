@@ -1,12 +1,12 @@
 from Systems.system import System
 from collections import defaultdict
 import math
-
+import logging
 
 class SpatialSystem(System):
 
     manditory = ["position"]
-    optional = ["neighbours"]
+    optional = ["sector"]
     handles = []
 
     def __init__(self, node_factory):
@@ -54,19 +54,22 @@ class SpatialSystem(System):
 
         for node in nodes:
             neighbours_cache = []
-            if node.has("neighbours"):
-                neighbours_cache = node.neighbours.neighbours
+            if node.has("sector"):
+                neighbours_cache = node.sector.neighbours
 
             sx, sy, neighbour_entities = self.create_neighbours_list(
                 node, sectors, 2500)
             fx, fy, fine_neighbour_entities = self.create_neighbours_list(
                 node, fine_sectors, 750)
 
+            # logging.info(neighbours_cache)
+            # logging.info(neighbour_entities)
+            [self.node_factory.create_node(e, {}).add_or_attach_component("updated", {}) for e in neighbour_entities if e not in neighbours_cache]
             node.add_or_update_component(
                 "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
                            "fx": fx, "fy": fy, "fine_neighbours": fine_neighbour_entities})
 
-            [self.node_factory.create_node(e, {}).add_or_attach_component("updated", {}) for e in neighbour_entities if e not in neighbours_cache]
+            
 
 
 

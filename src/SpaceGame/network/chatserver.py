@@ -560,9 +560,7 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         await super(MessageUpdatesHandler, self).get(*args, **kwargs)
 
     async def open(self):
-        # user_slug = self.get_secure_cookie("chatdemo_user")
-        # if user_slug:
-        #     logging.info("USER CONNECTED")
+        
         await self.poll()
         # else:
         #     self.close()

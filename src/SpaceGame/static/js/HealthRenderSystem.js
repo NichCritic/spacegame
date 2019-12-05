@@ -97,9 +97,11 @@ var HealthRenderSystem = (function() {
             this.onScreen.push(node.id);
 		}
 
-		this.displayObjects[node.id].x = x_pos;
-		this.displayObjects[node.id].y = y_pos;
-		this.displayObjects[node.id].width = node.renderable.width * node.health.health / node.health.max_health;
+		if(this.displayObjects[node.id]) {
+			this.displayObjects[node.id].x = x_pos;
+			this.displayObjects[node.id].y = y_pos;
+			this.displayObjects[node.id].width = node.renderable.width * node.health.health / node.health.max_health;
+		}
 
 	}
 

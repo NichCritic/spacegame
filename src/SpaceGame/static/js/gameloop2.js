@@ -333,14 +333,14 @@ var GameLoop = (function() {
 
         }
 
-        for(let i = 0; i < last_seen_entities.length; i++) {
-            if(entities.indexOf(last_seen_entities[i]) === -1) {
-                let n = node_factory.create_node([], last_seen_entities[i]);
-                n.add_or_update("to_be_removed");
-            }
-        } 
+        // for(let i = 0; i < last_seen_entities.length; i++) {
+        //     if(entities.indexOf(last_seen_entities[i]) === -1) {
+        //         let n = node_factory.create_node([], last_seen_entities[i]);
+        //         n.add_or_update("to_be_removed");
+        //     }
+        // } 
 
-        last_seen_entities = entities;
+        // last_seen_entities = entities;
 
         //Hack, accessing global
         replay_state.time = serverState.time
