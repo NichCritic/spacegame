@@ -52,7 +52,7 @@ def main():
             (r"/a/message/new", CommandMessageHandler, dict(account_utils=account_utils,
                                                             command_handler=command_handler, player_factory=player_factory, session_manager=session_manager)),
             (r"/a/message/updates", MessageUpdatesHandler, dict(account_utils=account_utils,
-                                                                player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+                                                                player_factory=player_factory, session_manager=session_manager, node_factory=node_factory, command_handler=command_handler)),
             (r"/character_select", CharacterSelectHandler, dict(account_utils=account_utils,
                                                                 player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/character_create", CharacterCreateHandler, dict(account_utils=account_utils,
@@ -78,7 +78,8 @@ def main():
     )
     app.listen(options.port)
     system_set_callback = tornado.ioloop.PeriodicCallback(
-        system_set.process, 50)
+        system_set.process, 25)
+
     system_set_callback.start()
 
     tornado.ioloop.IOLoop.instance().start()

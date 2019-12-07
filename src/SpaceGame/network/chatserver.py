@@ -534,12 +534,25 @@ class CommandMessageHandler(BaseHandler):
 
 class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
 
-    def initialize(self, player_factory, account_utils, session_manager, node_factory):
+    def initialize(self, player_factory, account_utils, session_manager, node_factory, command_handler):
         # TODO: This seems strange
         self.player_factory = player_factory
         self.account_utils = account_utils
         self.session_manager = session_manager
         self.node_factory = node_factory
+        self.command_handler = command_handler
+
+    def create_player(self):
+        with self.session_manager.get_session() as session:
+            player = self.player_factory.create_player(
+                MessageBuffer(), self.current_user["id"])
+            self.current_user["player_id"] = player.id
+            avatar_id = self.account_utils.get_previous_avatar_for_player(
+                player.id, session)
+            if avatar_id is None:
+                self.redirect("/charater_select")
+                return
+            self.player_factory.set_player_avatar(player, avatar_id)
 
     def get_current_user(self):
         user_json = self.get_secure_cookie("chatdemo_user")
@@ -559,11 +572,15 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         logging.info("OPENING THE CONNECTION")
         await super(MessageUpdatesHandler, self).get(*args, **kwargs)
 
-    async def open(self):
-        
-        await self.poll()
+    def open(self):
+        # pass
+        tornado.ioloop.IOLoop.current().spawn_callback(self.start_poll)
         # else:
         #     self.close()
+        #     
+
+    async def start_poll(self):
+        await self.poll()
 
     async def poll(self):
         # print(self.current_user["id"])
@@ -592,6 +609,14 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
                 logging.error(e)
                 self.clear()
                 return
+    async def on_message(self, message):
+        # logging.info(message)
+        if not self.current_user['id'] in self.player_factory.players:
+            self.create_player()
+        player = self.player_factory.get_player(self.current_user["player_id"])
+        self.command_handler.handle_command(player, message)
+        # await self.poll()
+
 
 
 class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixin):

@@ -28,6 +28,8 @@ var GameLoop = (function() {
 
     sprites = [];
 
+    var ws;
+
     var game_state = {
         init: setup,
         stage:stage,
@@ -165,7 +167,7 @@ var GameLoop = (function() {
             camera: {}
         });
 
-        var ws = new WebSocket("ws://naelick.com:8888/a/message/updates")
+        ws = new WebSocket("ws://naelick.com:8888/a/message/updates")
         ws.onmessage = function(evt){
             update_from_server(
                 {
@@ -362,7 +364,7 @@ var GameLoop = (function() {
         
     }
 
-    function sendServerData(unlock_fn, args){
+    function sendServerData(args){
         let inputs = args.inputs.list;
         let to_send = []
         for(let i = 0; i < inputs.length; i++){
@@ -372,12 +374,9 @@ var GameLoop = (function() {
                 inp.was_sent = true
             }
         }
-        $.postJSON('./a/message/new', {'inputs':to_send}, function(result){
-            unlock_fn();
-
-        }, function error(result){
-            unlock_fn();
-        });    
+        if(ws.readyState === 1) {
+            ws.send(JSON.stringify({'inputs':to_send}));
+        }
     }
 
     function update_server() {
@@ -387,7 +386,7 @@ var GameLoop = (function() {
         //         inputs:inputs
         //     }
         // );
-        throttledSendServerData({
+        sendServerData({
             inputs:inputs
         });
     }
