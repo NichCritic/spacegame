@@ -14,7 +14,7 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "no_sync"], entity_ids=pnode.sector.neighbours)
+            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
@@ -43,6 +43,8 @@ class GameStateRequestSystem(System):
                 "animated") else None
 
             weapon = node.weapon.type if node.has("weapon") else None
+            expires = {"expiry_time_ms":node.expires.expiry_time_ms,
+                       "creation_time":node.expires.creation_time} if node.has("expires") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -68,6 +70,7 @@ class GameStateRequestSystem(System):
                 "minable": minable,
                 "collidable": collidable,
                 "animated": animated,
+                "expires": expires,
                 "last_update": last_update,
                 # "state_history": state_history
             }

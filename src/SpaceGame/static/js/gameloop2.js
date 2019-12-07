@@ -283,6 +283,9 @@ var GameLoop = (function() {
             if(entity.mining) {
                 n.add_or_update('mining', {});
             }
+            if(entity.expires) {
+                n.add_or_update('expires', entity.expires);
+            }
             else{
                 n.delete_component('mining')
             }
