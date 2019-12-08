@@ -41,6 +41,7 @@
         <script src="static/js/UI/upgrade_menu.js"></script>
         <script src="static/js/UI/inventory_menu.js"></script>
         <script src="static/js/UI/dialog_menu.js"></script>
+        <script src="static/js/quests/intro/script.js"></script>
 
     </head>
     <body>
@@ -115,7 +116,7 @@
         var shop_menu = new ShopMenu();
         var dialog_menu = new DialogMenu();
 
-        // dialog_menu.open(["1", "2", "3", "<b>Check out my horns!</b>"])
+        dialog_menu.open(quests.intro.script)
 
         PIXI.loader.add('static/assets/parallax-space-background2.png')
                    .add('static/assets/parallax-space-stars2.png')

@@ -498,6 +498,20 @@ class Updated():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class Bought():
+    def __init__(self, entity_id, item_id, qty):
+        self.entity_id = entity_id
+        self.item_id = item_id
+        self.qty = qty
+
+class Sold():
+    def __init__(self, entity_id, item_id, qty):
+        self.entity_id = entity_id
+        self.item_id = item_id
+        self.qty = qty
+
+
+
 
 components = {
     "acceleration": Acceleration,
@@ -508,6 +522,7 @@ components = {
     "apply_upgrade": ApplyUpgrade,
     "area": Area,
     "avoid_shooting_allies": AvoidShootingAllies,
+    "bought":Bought,
     "camera": Camera,
     "client_sync": ClientSync,
     "collidable": Collidable,
@@ -554,6 +569,7 @@ components = {
     "shooting_vars": ShootingVars,
     "shop": Shop,
     "shop_spec": ShopSpec,
+    "sold":Sold,
     "state_history": StateHistory,
     "target": Target,
     "transaction": Transaction,

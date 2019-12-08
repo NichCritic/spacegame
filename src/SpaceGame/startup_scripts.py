@@ -52,7 +52,7 @@ from Systems.shopUnpackSystem import ShopUnpackSystem
 from Systems.spatial_system import SpatialSystem
 from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
-from Systems.boughtSoldSink import BoughtSoldSink
+from Systems.boughtSoldSink import BoughtSink, SoldSink
 
 import objects.item
 from gamedata.weapons import weapons
@@ -299,7 +299,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     event_active = EventActiveSystem(node_factory)
     apply_upgrades = ApplyUpgradeSystem(node_factory, upgrades)
     coll_sink = CollisionSink(node_factory)
-    bought_sold_sink = BoughtSoldSink(node_factory)
+    bought_sink = BoughtSink(node_factory)
+    sold_sink = SoldSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
 
     system_set.register(shopUnpackSystem)
@@ -336,7 +337,8 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(event_active)
     system_set.register(apply_upgrades)
     system_set.register(coll_sink)
-    system_set.register(bought_sold_sink)
+    system_set.register(bought_sink)
+    system_set.register(sold_sink)
     system_set.register(game_state_req)
 
     return system_set

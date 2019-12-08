@@ -1,6 +1,6 @@
-var quests = quests ? quests : {}
-var quests.intro = quests.intro ? quests.intro : {}
-var quests.intro.script = (function(){
+var quests = quests ? quests : {};
+quests.intro = quests.intro ? quests.intro : {};
+quests.intro.script = (function(){
 	var bossman_text_template = "<div class='quest_img_box'><img src='./static/assets/bossman.png'/></div><div class='quest_text'>$text$</div>"
 	var script = [
 		"Hey! You're awake!",
@@ -8,7 +8,7 @@ var quests.intro.script = (function(){
 		"You're probably wondering what's going on. Don't worry, I'll explain.",
 		"You were part of one of those freezing experiments that were popular in the 2000's.",
 		"The good news is, you were right! It's possible to revive a consciousness just from the contents of it's frozen brain.",
-		"So now you're in the future! Whee!"
+		"So now you're in the future! Whee!",
 		"The bad news is, well, it's the future. Life is cheap. 21st century life, well, that's cheaper than dirt, literally",
 		"The other bad news is, you probably set aside assets. Hoping inflation would keep them worth an equivalent amount in the future...",
 		"NOPE! WRONG! They're totally worthless now",
@@ -28,4 +28,11 @@ var quests.intro.script = (function(){
 		"You can keep blowing up again and again and you won't deplete our resources one bit. That ship you're in is every bit as cheap as you are",
 		"Have fun! Remember, <b>Come back with 10 iron ore</b>. Press Q to check your progress, if you forget"
 	]
+
+	for(var i = 0; i < script.length; i++) {
+		let line = script[i];
+		script[i] = bossman_text_template.replace('$text$', line);
+	}
+
+	return script;
 })();
