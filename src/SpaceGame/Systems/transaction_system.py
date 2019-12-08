@@ -61,4 +61,14 @@ class TransactionSystem(System):
             else:
                 buyer_inv[i_id] = {"qty": qty}
 
+            buyer.add_or_attach_component("bought", {
+                "item_id":i_id,
+                "qty": qty
+            })
+
+            seller.add_or_attach_component("sold", {
+                "item_id":i_id,
+                "qty": qty
+            })
+
         node.transaction.transactions = []
