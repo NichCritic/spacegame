@@ -7,6 +7,7 @@ Created on 2011-08-13
 import logging
 import json
 from gamedata.ships import default_ship
+from gamedata.quests import setup_quests
 
 
 class CommandHandler():
@@ -26,5 +27,6 @@ class CommandHandler():
         av.player_input.data.extend(command['inputs'])
 
         default_ship(av)
+        setup_quests(av)
 
         return ("success",)
