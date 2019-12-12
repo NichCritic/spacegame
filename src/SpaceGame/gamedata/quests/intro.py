@@ -1,17 +1,12 @@
 from functools import partial
+from gamedata.quests import QuestStage
+from Systems.system import System
 
-class Stage1():
-
-	def __init__(self, session_manager, node_factory):
-		self.session_manager = session_manager
-		self.node_factory = node_factory
-		self.next_stage = None
-
-	def register_next(self, stage):
-		self.next_stage = stage
+class Stage1(QuestStage):
 
 	def attach(self, av):
 		av.add_or_update_component("quest_status_updated", {"quest":"intro", "stage":1})
+		self.next()
 
 	def next(self, av):
 		av.add_or_attach_component("active_quests")
@@ -22,19 +17,16 @@ class Stage1():
 
 
 
-class Stage2():
+class Stage2(QuestStage):
 	def __init__(self, session_manager, node_factory):
 		self.session_manager = session_manager
-		self.node_factory = node_factory
-		self.next_stage
-
-	def attach(self, av):
-		pass
+		super().__init__(node_factory)
 
 	def next(self, av):
 		av.add_or_attach_component("active_quests")
 		av.active_quests.quests['intro'].stage = 3
 		av.add_or_update_component("quest_status_updated", {"quest":"intro", "stage":3})
+		self.next_stage.attach(av)
 
 	def check_condition(quest, iron_ore_id, av):
 		av.add_or_attach_component("active_quests", {})
@@ -63,7 +55,32 @@ class Stage2():
             "event_proximity_trigger": {}
         })
 
-class Stage3System():
+class Stage3System(System):
+	mandatory = []
+	optional = []
+	handles = []
+
+	def __init__(self, quest, node_factory):
+        self.node_factory = node_factory
+        self.quest = quest
+
+    def handle(self, node):
+        pass
+
+class Stage3(QuestStage):
+	def register_systems(self, system_set):
+		system = Stage3System(self, self.node_factory)
+		system_set.register(system)
+
+	def attach(self, av):
+		#Need to add the stage specific component
+		pass
+
+	def next(self, av):
+		av.add_or_update_component("quest_status_updated", {"quest":"intro", "stage":3})
+
+
+
 
 
 
