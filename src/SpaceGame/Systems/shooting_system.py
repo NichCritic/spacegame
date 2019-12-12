@@ -9,7 +9,7 @@ import logging
 
 class ShootingSystem(System):
 
-    manditory = ["shooting", "position",
+    mandatory = ["shooting", "position",
                  "velocity", "rotation", "weapon", "physics_update"]
     optional = ["player_controlled"]
     handles = ["shooting"]

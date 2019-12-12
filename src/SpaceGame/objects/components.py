@@ -510,11 +510,20 @@ class Sold():
         self.item_id = item_id
         self.qty = qty
 
+class ActiveQuests():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.quests = {}
 
-
+class QuestStatusUpdated():
+    def __init__(self, entity_id, quest, stage):
+        self.entity_id = entity_id
+        self.quest = quest
+        self.stage = stage
 
 components = {
     "acceleration": Acceleration,
+    "active_quests": ActiveQuests,
     "ai_return_home": AIReturnHome,
     "allies": Allies,
     "animated": Animated,
@@ -576,7 +585,7 @@ components = {
     "type": Type,
     "updated": Updated,
     "velocity": Velocity,
-    "weapon": Weapon
+    "weapon": Weapon,
 }
 
 db_components = {

@@ -4,7 +4,7 @@ import logging
 
 class ProximityTargetSystem(System):
 
-    manditory = ["proximity", "proximity_target_behaviour"]
+    mandatory = ["proximity", "proximity_target_behaviour"]
     optional = []
     handles = []
 

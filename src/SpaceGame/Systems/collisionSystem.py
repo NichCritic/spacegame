@@ -6,7 +6,7 @@ import time
 
 class CollisionSystem(System):
 
-    manditory = ["proximity", "area", "collidable"]
+    mandatory = ["proximity", "area", "collidable"]
     optional = []
     handles = []
 

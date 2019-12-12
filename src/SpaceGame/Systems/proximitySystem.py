@@ -6,7 +6,7 @@ import time
 
 class ProximitySystem(System):
 
-    manditory = ["position", "sector", "velocity", "moved"]
+    mandatory = ["position", "sector", "velocity", "moved"]
     optional = []
     handles = []
 

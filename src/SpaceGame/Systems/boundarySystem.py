@@ -7,7 +7,7 @@ class BoundarySystem(System):
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["position"]
+    mandatory = ["position"]
     optional = []
     handles = []
 

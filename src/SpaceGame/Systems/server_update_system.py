@@ -29,10 +29,10 @@ class PhysicsPacket():
 
 
 class ServerUpdateSystem(System):
-    # todo: Rotation shouldn't be manditory. This is doing two jobs ticking the entity and
+    # todo: Rotation shouldn't be mandatory. This is doing two jobs ticking the entity and
     # deciding the forces applied to it, because the input handler is also
     # doing both
-    manditory = ["server_updated", "physics_update", "rotation"]
+    mandatory = ["server_updated", "physics_update", "rotation"]
     handles = []
 
     def handle(self, node):

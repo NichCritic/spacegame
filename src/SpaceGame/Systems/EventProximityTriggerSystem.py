@@ -4,7 +4,7 @@ import logging
 
 class EventProximityTriggerSystem(System):
 
-    manditory = ["event", "proximity", "event_proximity_trigger", "area"]
+    mandatory = ["event", "proximity", "event_proximity_trigger", "area"]
     optional = []
     handles = []
 

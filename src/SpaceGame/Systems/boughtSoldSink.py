@@ -6,7 +6,7 @@ class BoughtSink(System):
     Handles the bought or sold state by ignoring it, in case other systems haven't handled it
     """
 
-    manditory = ["bought"]
+    mandatory = ["bought"]
     optional = []
     handles = ["bought"]
 
@@ -21,7 +21,7 @@ class SoldSink(System):
     Handles the bought or sold state by ignoring it, in case other systems haven't handled it
     """
 
-    manditory = ["sold"]
+    mandatory = ["sold"]
     optional = []
     handles = ["sold"]
 

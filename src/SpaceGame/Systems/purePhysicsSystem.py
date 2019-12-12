@@ -7,7 +7,7 @@ import logging
 
 class PhysicsSystem(System):
 
-    manditory = ["position", "velocity",
+    mandatory = ["position", "velocity",
                  "mass", "acceleration", "force", "rotation", "physics_update"]
     optional = ["inventory_mass"]
     handles = []

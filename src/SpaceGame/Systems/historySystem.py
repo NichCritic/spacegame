@@ -6,7 +6,7 @@ from itertools import takewhile
 
 class HistorySystem(System):
 
-    manditory = ["state_history", "position", "velocity",
+    mandatory = ["state_history", "position", "velocity",
                  "mass", "acceleration", "force", "rotation", "physics_update"]
     optional = ["inventory_mass"]
     handles = []

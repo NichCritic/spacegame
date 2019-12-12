@@ -7,7 +7,7 @@ import logging
 
 class ProcessorSystem(System):
 
-    manditory = ["processor"]
+    mandatory = ["processor"]
     handles = []
 
     def __init__(self, node_factory):

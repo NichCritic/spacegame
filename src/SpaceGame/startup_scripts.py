@@ -61,6 +61,9 @@ from gamedata.upgrades import upgrades
 
 from command.command_handler import CommandHandler
 
+from gamedata.quests import Quest
+from gamedata.quest_data.intro import Stage1, Stage2, Stage3
+
 
 def setup_objects(all_db_components, all_components, session):
     object_db = DBComponentSource(all_db_components, session)
@@ -95,6 +98,18 @@ def unpack_db_objects(node_factory):
                     node.components[data].__dict__)
             else:
                 node.add_or_attach_component(component, data)
+
+def setup_quests(node_factory, session_manager):
+    quest_systems = SystemSet()
+    intro = Quest(node_factory, "intro")
+    intro.add_stage(Stage1(intro, node_factory))
+    intro.add_stage(Stage2(intro, node_factory, session_manager))
+    intro.add_stage(Stage3(intro, node_factory, session_manager))
+    intro.finalize(quest_systems)
+
+    return quest_systems
+
+
 
 
 def create_spacestations(node_factory, session):
@@ -263,7 +278,7 @@ def setup_commands(node_factory, session_manager, db_comps):
     return command_handler
 
 
-def register_systems(session_manager, object_db, node_factory, player_factory):
+def register_systems(session_manager, object_db, node_factory, player_factory, quest_systems):
     system_set = SystemSet()
     shopUnpackSystem = ShopUnpackSystem(node_factory, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
@@ -339,6 +354,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(coll_sink)
     system_set.register(bought_sink)
     system_set.register(sold_sink)
+    system_set.register(quest_systems)
     system_set.register(game_state_req)
 
     return system_set

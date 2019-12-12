@@ -5,7 +5,7 @@ import time
 
 class EventActiveSystem(System):
 
-    manditory = ["event", "event_active"]
+    mandatory = ["event", "event_active"]
     optional = []
     handles = ["event_active"]
 

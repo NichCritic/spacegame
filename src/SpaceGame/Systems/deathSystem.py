@@ -6,7 +6,7 @@ import time
 
 class DeathSystem(System):
 
-    manditory = ["dead"]
+    mandatory = ["dead"]
     optional = []
     handles = ["dead"]
 

@@ -7,7 +7,7 @@ import random
 
 class MiningSystem(System):
 
-    manditory = ["mining", "proximity", "position"]
+    mandatory = ["mining", "proximity", "position"]
     optional = []
     handles = []
 

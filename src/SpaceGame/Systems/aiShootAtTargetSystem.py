@@ -6,7 +6,7 @@ import logging
 
 class AIShootAtTargetSystem(System):
 
-    manditory = ["shoot_at_target", "target", "rotation", "position"]
+    mandatory = ["shoot_at_target", "target", "rotation", "position"]
     optional = []
     handles = []
 

@@ -6,7 +6,7 @@ import time
 
 class MovementTrackingSystem(System):
 
-    manditory = ["position", "velocity"]
+    mandatory = ["position", "velocity"]
     optional = ["moved"]
     handles = []
 

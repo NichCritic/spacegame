@@ -32,7 +32,7 @@ class PhysicsPacket():
 
 class InputSystem(System):
 
-    manditory = ["player_input", "rotation", "physics_update"]
+    mandatory = ["player_input", "rotation", "physics_update"]
     handles = []
 
     def get_unhandled_input(self, input_data_list):

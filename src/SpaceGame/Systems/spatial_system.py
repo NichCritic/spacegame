@@ -5,7 +5,7 @@ import logging
 
 class SpatialSystem(System):
 
-    manditory = ["position"]
+    mandatory = ["position"]
     optional = ["sector"]
     handles = []
 

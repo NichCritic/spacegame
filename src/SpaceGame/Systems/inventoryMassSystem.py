@@ -5,7 +5,7 @@ import time
 
 class InventoryMassSystem(System):
 
-    manditory = ["inventory", "mass"]
+    mandatory = ["inventory", "mass"]
     handles = []
 
     def __init__(self, node_factory):

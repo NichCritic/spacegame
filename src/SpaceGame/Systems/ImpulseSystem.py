@@ -6,7 +6,7 @@ import logging
 
 class ImpulseSystem(System):
 
-    manditory = ["impulses"]
+    mandatory = ["impulses"]
     optional = []
     handles = ["impulses"]
 

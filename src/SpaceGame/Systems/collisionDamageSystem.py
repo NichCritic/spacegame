@@ -8,7 +8,7 @@ class CollisionDamageSystem(System):
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["colliding", "collision_damage"]
+    mandatory = ["colliding", "collision_damage"]
     optional = []
     handles = ["colliding"]
 

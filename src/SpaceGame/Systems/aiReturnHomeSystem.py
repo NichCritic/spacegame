@@ -6,7 +6,7 @@ import logging
 
 class AIReturnHomeSystem(System):
 
-    manditory = ["ai_return_home", "home", "rotation", "position"]
+    mandatory = ["ai_return_home", "home", "rotation", "position"]
     optional = []
     handles = []
 

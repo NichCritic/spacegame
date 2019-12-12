@@ -3,7 +3,7 @@ from Systems.system import System
 
 class PickupSystem(System):
 
-    manditory = ["colliding", "pickup"]
+    mandatory = ["colliding", "pickup"]
     optional = []
 
     def __init__(self, node_factory):

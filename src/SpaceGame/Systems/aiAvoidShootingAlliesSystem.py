@@ -6,7 +6,7 @@ import logging
 
 class AIAvoidShootingAlliesSystem(System):
 
-    manditory = ["avoid_shooting_allies", "allies", "proximity", "rotation", "position"]
+    mandatory = ["avoid_shooting_allies", "allies", "proximity", "rotation", "position"]
     optional = []
     handles = []
 

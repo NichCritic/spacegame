@@ -13,7 +13,7 @@ from network.chatserver import MainHandler, AuthLoginHandler, AuthLogoutHandler,
 from objects.components import components, db_components
 import objects.item
 
-from startup_scripts import register_systems, setup_commands, setup_db, setup_objects, collision_test, create_spacestations, unpack_db_objects
+from startup_scripts import register_systems, setup_commands, setup_db, setup_objects, collision_test, create_spacestations, unpack_db_objects, setup_quests
 
 
 all_db_components = {}
@@ -35,8 +35,9 @@ with session_manager.get_session() as session:
 
 
 command_handler = setup_commands(node_factory, session_manager, object_db)
+quest_systems = setup_quests(node_factory, session_manager)
 system_set = register_systems(
-    session_manager, object_db, node_factory, player_factory)
+    session_manager, object_db, node_factory, player_factory, quest_systems)
 
 
 def main():

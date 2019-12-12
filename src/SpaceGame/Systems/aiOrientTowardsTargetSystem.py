@@ -6,7 +6,7 @@ import logging
 
 class AIOrientTowardsTargetSystem(System):
 
-    manditory = ["orient_towards_target", "target", "rotation", "position"]
+    mandatory = ["orient_towards_target", "target", "rotation", "position"]
     optional = []
     handles = []
 

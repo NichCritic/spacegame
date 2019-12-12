@@ -9,7 +9,7 @@ class CollisionMovementSystem(System):
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["collision_movement", "colliding", "position",
+    mandatory = ["collision_movement", "colliding", "position",
                  "force", "rotation", "mass", "velocity"]
     optional = ["inventory_mass"]
     handles = ["colliding"]

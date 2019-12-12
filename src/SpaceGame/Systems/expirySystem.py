@@ -4,7 +4,7 @@ import time
 
 class ExpirySystem(System):
 
-    manditory = ["expires"]
+    mandatory = ["expires"]
     optional = []
     handles = []
 

@@ -7,7 +7,7 @@ class ApplyUpgradeSystem(System):
     so that collisions don't build up cycle by cycle
     """
 
-    manditory = ["apply_upgrade"]
+    mandatory = ["apply_upgrade"]
     optional = []
     handles = []
 

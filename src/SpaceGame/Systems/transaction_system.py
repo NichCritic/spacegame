@@ -7,7 +7,7 @@ import logging
 
 class TransactionSystem(System):
 
-    manditory = ["transaction"]
+    mandatory = ["transaction"]
     handles = ["transaction"]
 
     def __init__(self, node_factory):

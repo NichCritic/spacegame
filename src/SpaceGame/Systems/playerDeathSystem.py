@@ -7,7 +7,7 @@ from gamedata.ships import default_ship
 
 class PlayerDeathSystem(System):
 
-    manditory = ["player_controlled", "dead", "position"]
+    mandatory = ["player_controlled", "dead", "position"]
     optional = []
     handles = []
 

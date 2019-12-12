@@ -3,7 +3,7 @@ import logging
 
 
 class System(object):
-    manditory = []
+    mandatory = []
     optional = []
     handles = []
 
@@ -28,15 +28,15 @@ class System(object):
 
     def get_nodes(self):
 
-        nodes = self.node_factory.create_node_list(self.manditory,
+        nodes = self.node_factory.create_node_list(self.mandatory,
                                                    self.optional)
         # for n in nodes:
-        #     for c in self.manditory:
+        #     for c in self.mandatory:
         #         if not n.has(c):
-        #             logging.error(f"PANIC: {n.id} does not have manditory component {c} requested by {self.__class__.__name__}")
+        #             logging.error(f"PANIC: {n.id} does not have mandatory component {c} requested by {self.__class__.__name__}")
         #             import pdb
         #             pdb.set_trace()
-        #             nodes = self.node_factory.create_node_list(self.manditory,
+        #             nodes = self.node_factory.create_node_list(self.mandatory,
         #                                                        self.optional)
 
         return nodes

@@ -6,7 +6,7 @@ from itertools import takewhile
 
 class PhysicsSystem(System):
 
-    manditory = ["player_input", "position", "velocity",
+    mandatory = ["player_input", "position", "velocity",
                  "mass", "acceleration", "force", "rotation", "physics_update"]
     handles = []
 

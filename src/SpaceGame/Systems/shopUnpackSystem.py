@@ -7,7 +7,7 @@ import objects.item as Items
 
 class ShopUnpackSystem(System):
 
-    manditory = ["shop_spec"]
+    mandatory = ["shop_spec"]
     handles = ["shop_spec"]
 
     def __init__(self, node_factory, session_manager):

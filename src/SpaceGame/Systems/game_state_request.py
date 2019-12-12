@@ -3,7 +3,7 @@ from Systems.system import System
 
 class GameStateRequestSystem(System):
 
-    manditory = ["player_controlled", "player_input", "sector"]
+    mandatory = ["player_controlled", "player_input", "sector"]
     handles = []
 
     def handle(self, pnode):
