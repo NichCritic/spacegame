@@ -12,10 +12,11 @@ from gamedata.ships import default_ship
 
 class CommandHandler():
 
-    def __init__(self, node_factory, session_manager, db_comps):
+    def __init__(self, node_factory, session_manager, db_comps, quest_manager):
         self.node_factory = node_factory
         self.session_manager = session_manager
         self.db_comps = db_comps
+        self.quest_manager = quest_manager
 
     def handle_command(self, source, command_json):
         av = self.node_factory.create_node(source.avatar_id, [])
@@ -27,6 +28,6 @@ class CommandHandler():
         av.player_input.data.extend(command['inputs'])
 
         default_ship(av)
-        # setup_quests(av)
+        self.quest_manager.attach_available(av)
 
         return ("success",)

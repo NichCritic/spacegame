@@ -593,14 +593,14 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
                     self.current_user["id"]].message_buffer
                 messages = msg_buffer.get_messages_since(cursor=None)
                 while not messages:
-                    logging.info("WAIT_ON_MESSAGES")
+                    # logging.info("WAIT_ON_MESSAGES")
                     self.wait_future = msg_buffer.cond.wait()
                     try:
                         await self.wait_future
                     except asyncio.CancelledError:
                         return
                     messages = msg_buffer.get_messages_since(None)
-                logging.info("SENDING MESSAGES")
+                # logging.info("SENDING MESSAGES")
                 self.write_message(dict(messages=[m.msg for m in messages]))
 
             except Exception as e:

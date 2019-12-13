@@ -3,6 +3,7 @@ from gamedata.quests import QuestStage
 from Systems.system import System
 from objects.components import components
 import objects
+import logging
 
 class QIntroS2Active():
     def __init__(self, entity_id):
@@ -23,8 +24,7 @@ components.update(quest_components)
 class Stage1(QuestStage):
 
     def attach(self, av):
-        av.add_or_update_component("quest_status_updated", {"quest":"intro", "stage":1})
-        self.next()
+        self.quest.next(av)
 
 def check_condition(quest, iron_ore_id, av):
     if not av.entity_has("q_intro_s2_active"):
@@ -42,7 +42,8 @@ class Stage2(QuestStage):
         super().__init__(quest, node_factory)
 
     def attach(self, av):
-        av.add_or_attach_component("q_intro_s2_active")
+        logging.info("Intro Stage 1 attached")
+        av.add_or_attach_component("q_intro_s2_active", {})
 
     
 
@@ -86,7 +87,7 @@ class Stage3(QuestStage):
         system_set.register(system)
 
     def attach(self, av):
-        av.add_or_attach_component("q_intro_s3_active")
+        av.add_or_attach_component("q_intro_s3_active", {})
 
 
 

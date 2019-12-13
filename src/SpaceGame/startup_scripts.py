@@ -61,7 +61,7 @@ from gamedata.upgrades import upgrades
 
 from command.command_handler import CommandHandler
 
-from gamedata.quests import Quest
+from gamedata.quests import Quest, QuestManager
 from gamedata.quest_data.intro import Stage1, Stage2, Stage3
 
 
@@ -100,6 +100,7 @@ def unpack_db_objects(node_factory):
                 node.add_or_attach_component(component, data)
 
 def setup_quests(node_factory, session_manager):
+    quest_manager = QuestManager()
     quest_systems = SystemSet()
     intro = Quest(node_factory, "intro")
     intro.add_stage(Stage1(intro, node_factory))
@@ -107,7 +108,9 @@ def setup_quests(node_factory, session_manager):
     intro.add_stage(Stage3(intro, node_factory, session_manager))
     intro.finalize(quest_systems)
 
-    return quest_systems
+    quest_manager.add(intro)
+
+    return quest_manager, quest_systems
 
 
 
@@ -273,8 +276,8 @@ class ObjectProvider(object):
         self.node_factory = NodeFactoryDB(all_components, Session)
 
 
-def setup_commands(node_factory, session_manager, db_comps):
-    command_handler = CommandHandler(node_factory, session_manager, db_comps)
+def setup_commands(node_factory, session_manager, db_comps, quest_manager):
+    command_handler = CommandHandler(node_factory, session_manager, db_comps, quest_manager)
     return command_handler
 
 

@@ -14,7 +14,7 @@ class GameStateRequestSystem(System):
         # print("BOOOOOOOOOYYYYYYYYY")
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync"], entity_ids=pnode.sector.neighbours)
+            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
@@ -45,6 +45,8 @@ class GameStateRequestSystem(System):
             weapon = node.weapon.type if node.has("weapon") else None
             expires = {"expiry_time_ms":node.expires.expiry_time_ms,
                        "creation_time":node.expires.creation_time} if node.has("expires") else None
+
+            
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -83,6 +85,9 @@ class GameStateRequestSystem(System):
                 game_state["entities"][node.id]["client_sync"] = {
                     "sync_key": node.client_sync.sync_key
                 }
+            if node.has("quest_status_updated"):
+                game_state["entities"][node.id]["quest_status_updated"] = {"quest": node.quest_status_updated.quest, 
+                                    "stage": node.quest_status_updated.stage}
             node.remove_component("updated")
         # print("Returning game state request")
 

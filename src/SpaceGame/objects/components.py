@@ -521,6 +521,11 @@ class QuestStatusUpdated():
         self.quest = quest
         self.stage = stage
 
+class Quests():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+        self.quests = {}
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,
@@ -569,6 +574,8 @@ components = {
     "processor": Processor,
     "proximity": Proximity,
     "proximity_target_behaviour": ProximityTargetBehaviour,
+    "quests": Quests,
+    "quest_status_updated":QuestStatusUpdated,
     "renderable": Renderable,
     "rotation": Rotation,
     "sector": Sector,

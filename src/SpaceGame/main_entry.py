@@ -34,8 +34,8 @@ with session_manager.get_session() as session:
     unpack_db_objects(db_node_factory)
 
 
-command_handler = setup_commands(node_factory, session_manager, object_db)
-quest_systems = setup_quests(node_factory, session_manager)
+quest_manager, quest_systems = setup_quests(node_factory, session_manager)
+command_handler = setup_commands(node_factory, session_manager, object_db, quest_manager)
 system_set = register_systems(
     session_manager, object_db, node_factory, player_factory, quest_systems)
 

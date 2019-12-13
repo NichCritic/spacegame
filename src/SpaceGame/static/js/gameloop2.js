@@ -29,6 +29,8 @@ var GameLoop = (function() {
     sprites = [];
 
     var ws;
+    
+    var dialog_menu;
 
     var game_state = {
         init: setup,
@@ -54,7 +56,9 @@ var GameLoop = (function() {
         return textures
     }
 
-    function setup() {
+    function setup(dialog) {
+        dialog_menu = dialog
+
         bg = new PIXI.Sprite(
             PIXI.loader.resources["static/assets/parallax-space-background2.png"].texture
         );
@@ -306,16 +310,22 @@ var GameLoop = (function() {
                 //TODO: We know that the player can be animated but this should really be based on server data
                 
                 n.add_or_update("server_update", {data: {
-                'acceleration': entity.acceleration,
-                'force': entity.force,
-                'mass': {mass:entity.mass},
-                'position': entity.position,
-                'rotation': {rotation: entity.rotation},
-                'velocity': entity.velocity,
-                'thrust': {thrust:0.015},
-                'time': serverState.time
-            }}); 
+                    'acceleration': entity.acceleration,
+                    'force': entity.force,
+                    'mass': {mass:entity.mass},
+                    'position': entity.position,
+                    'rotation': {rotation: entity.rotation},
+                    'velocity': entity.velocity,
+                    'thrust': {thrust:0.015},
+                    'time': serverState.time
+                }}); 
                 
+                if(entity.quest_status_updated) {
+                    //TODO: Hook this into some event system to show actual quest info
+                    let quest = entity.quest_status_updated.quest;
+                    let stage = entity.quest_status_updated.stage;
+                    dialog_menu.open([quest, stage])
+                }
 
             } else {
                 n.add_or_update('server_controlled');
