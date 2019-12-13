@@ -24,14 +24,17 @@ components.update(quest_components)
 class Stage1(QuestStage):
 
     def attach(self, av):
+        logging.info("Intro Stage 1 attached")
         self.quest.next(av)
 
 def check_condition(quest, iron_ore_id, av):
+    logging.info(f"{av.id} in stage2 quest radius")
     if not av.entity_has("q_intro_s2_active"):
         return
 
     av.add_or_attach_component("inventory", {})
     inv = av.inventory.inv
+    logging.info(f"{av.id} has {inv[iron_ore_id]['qty']} iron ore")
     if iron_ore_id in inv and inv[iron_ore_id]['qty'] >= 10:
         av.delete_component("q_intro_s2_active")
         quest.next(av)
@@ -42,7 +45,7 @@ class Stage2(QuestStage):
         super().__init__(quest, node_factory)
 
     def attach(self, av):
-        logging.info("Intro Stage 1 attached")
+        logging.info(f"Intro Stage 2 attached to {av.id}")
         av.add_or_attach_component("q_intro_s2_active", {})
 
     

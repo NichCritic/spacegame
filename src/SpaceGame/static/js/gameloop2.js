@@ -324,7 +324,11 @@ var GameLoop = (function() {
                     //TODO: Hook this into some event system to show actual quest info
                     let quest = entity.quest_status_updated.quest;
                     let stage = entity.quest_status_updated.stage;
-                    dialog_menu.open([quest, stage])
+                    if(quest === 'intro' && stage===2) {
+                        dialog_menu.open(quests.intro.script)
+                    } else {
+                        dialog_menu.open([quest, stage])
+                    }
                 }
 
             } else {
