@@ -53,6 +53,7 @@ from Systems.spatial_system import SpatialSystem
 from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
 from Systems.boughtSoldSink import BoughtSink, SoldSink
+from Systems.questUpdateSink import QuestUpdateSink
 
 import objects.item
 from gamedata.weapons import weapons
@@ -154,7 +155,7 @@ def create_spacestations(node_factory, session):
 
         })
 
-    def test_script(trigger_node):
+    def test_script(trigger_node, triggerer_node):
         import random
         import math
         logging.info("Triggered")
@@ -320,6 +321,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory, q
     bought_sink = BoughtSink(node_factory)
     sold_sink = SoldSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
+    quest_up_sink = QuestUpdateSink(node_factory)
 
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
@@ -359,5 +361,6 @@ def register_systems(session_manager, object_db, node_factory, player_factory, q
     system_set.register(sold_sink)
     system_set.register(quest_systems)
     system_set.register(game_state_req)
+    system_set.register(quest_up_sink)
 
     return system_set

@@ -27,14 +27,15 @@ class Stage1(QuestStage):
         logging.info("Intro Stage 1 attached")
         self.quest.next(av)
 
-def check_condition(quest, iron_ore_id, av):
+def check_condition(quest, iron_ore_id, trigger_area, av):
     logging.info(f"{av.id} in stage2 quest radius")
     if not av.entity_has("q_intro_s2_active"):
         return
 
     av.add_or_attach_component("inventory", {})
     inv = av.inventory.inv
-    logging.info(f"{av.id} has {inv[iron_ore_id]['qty']} iron ore")
+    # if iron_ore_id in inv:
+    logging.info(f"{av.id} has {inv}. Iron ore id is: {iron_ore_id} type {type(iron_ore_id)}")
     if iron_ore_id in inv and inv[iron_ore_id]['qty'] >= 10:
         av.delete_component("q_intro_s2_active")
         quest.next(av)
