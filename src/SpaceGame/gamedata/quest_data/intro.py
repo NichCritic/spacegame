@@ -55,7 +55,7 @@ class Stage2(QuestStage):
         with self.session_manager.get_session() as session:
             iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
 
-        condition = partial(check_condition, self, iron_ore.id)
+        condition = partial(check_condition, self, str(iron_ore.id))
 
         self.node_factory.create_new_node({
             "area": {"radius": 200},
