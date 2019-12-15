@@ -3,15 +3,17 @@ from Systems.system import System
 
 class GameStateRequestSystem(System):
 
-    mandatory = ["player_controlled", "player_input", "sector"]
+    mandatory = ["player_controlled", "player_input", "sector", "tracked_ids"]
     handles = []
 
     def handle(self, pnode):
         game_state = {"player_id": pnode.id, "entities": {},
                       "time": pnode.player_input.data[-1]['time']}
 
-        # print(pnode.player_input.data[-1])
-        # print("BOOOOOOOOOYYYYYYYYY")
+        for n_id in pnode.sector.neighbours:
+            if n_id not in pnode.tracked_ids.ids:
+                node = self.node_factory.create_node(n_id, [], [])
+                node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
             ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated"], entity_ids=pnode.sector.neighbours)
@@ -43,10 +45,8 @@ class GameStateRequestSystem(System):
                 "animated") else None
 
             weapon = node.weapon.type if node.has("weapon") else None
-            expires = {"expiry_time_ms":node.expires.expiry_time_ms,
-                       "creation_time":node.expires.creation_time} if node.has("expires") else None
-
-            
+            expires = {"expiry_time_ms": node.expires.expiry_time_ms,
+                       "creation_time": node.expires.creation_time} if node.has("expires") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -62,7 +62,7 @@ class GameStateRequestSystem(System):
                 "force": {"x": forcex,
                           "y": forcey
                           },
-                "weapon": {"type":weapon},
+                "weapon": {"type": weapon},
                 "mass": mass,
                 "radius": radius,
                 "type": node.type.type,
@@ -86,8 +86,8 @@ class GameStateRequestSystem(System):
                     "sync_key": node.client_sync.sync_key
                 }
             if node.has("quest_status_updated"):
-                game_state["entities"][node.id]["quest_status_updated"] = {"quest": node.quest_status_updated.quest, 
-                                    "stage": node.quest_status_updated.stage}
+                game_state["entities"][node.id]["quest_status_updated"] = {"quest": node.quest_status_updated.quest,
+                                                                           "stage": node.quest_status_updated.stage}
             node.remove_component("updated")
         # print("Returning game state request")
 

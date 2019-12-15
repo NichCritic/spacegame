@@ -396,7 +396,8 @@ var GameLoop = (function() {
             }
         }
         if(ws.readyState === 1) {
-            ws.send(JSON.stringify({'inputs':to_send}));
+            ws.send(JSON.stringify({'inputs':to_send,
+                                    'tracked_ids':args.tracked_ids}));
         }
     }
 
@@ -407,8 +408,17 @@ var GameLoop = (function() {
         //         inputs:inputs
         //     }
         // );
+        let tracking_nodes = node_factory.create_node_list(["renderable", "server_controlled"])
+        let ids = []
+        for(var i = 0; i < tracking_nodes.length; i++) {
+            let n = tracking_nodes[i];
+            ids.push(n.id);
+        }
+
+
         sendServerData({
-            inputs:inputs
+            inputs:inputs,
+            tracked_ids: ids
         });
     }
 

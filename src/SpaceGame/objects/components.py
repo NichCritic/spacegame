@@ -494,37 +494,56 @@ class Dead():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class Updated():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class Bought():
+
     def __init__(self, entity_id, item_id, qty):
         self.entity_id = entity_id
         self.item_id = item_id
         self.qty = qty
+
 
 class Sold():
+
     def __init__(self, entity_id, item_id, qty):
         self.entity_id = entity_id
         self.item_id = item_id
         self.qty = qty
 
+
 class ActiveQuests():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.quests = {}
 
+
 class QuestStatusUpdated():
+
     def __init__(self, entity_id, quest, stage):
         self.entity_id = entity_id
         self.quest = quest
         self.stage = stage
 
+
 class Quests():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
         self.quests = {}
+
+
+class TrackedIds():
+
+    def __init__(self, entity_id, ids=None):
+        self.entity_id = entity_id
+        self.ids = ids if ids is not None else []
 
 components = {
     "acceleration": Acceleration,
@@ -536,7 +555,7 @@ components = {
     "apply_upgrade": ApplyUpgrade,
     "area": Area,
     "avoid_shooting_allies": AvoidShootingAllies,
-    "bought":Bought,
+    "bought": Bought,
     "camera": Camera,
     "client_sync": ClientSync,
     "collidable": Collidable,
@@ -575,7 +594,7 @@ components = {
     "proximity": Proximity,
     "proximity_target_behaviour": ProximityTargetBehaviour,
     "quests": Quests,
-    "quest_status_updated":QuestStatusUpdated,
+    "quest_status_updated": QuestStatusUpdated,
     "renderable": Renderable,
     "rotation": Rotation,
     "sector": Sector,
@@ -585,10 +604,11 @@ components = {
     "shooting_vars": ShootingVars,
     "shop": Shop,
     "shop_spec": ShopSpec,
-    "sold":Sold,
+    "sold": Sold,
     "state_history": StateHistory,
     "target": Target,
     "transaction": Transaction,
+    "tracked_ids": TrackedIds,
     "type": Type,
     "updated": Updated,
     "velocity": Velocity,

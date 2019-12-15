@@ -27,6 +27,9 @@ class CommandHandler():
 
         av.player_input.data.extend(command['inputs'])
 
+        av.add_or_update_component(
+            'tracked_ids', {'ids': command['tracked_ids']})
+
         default_ship(av)
         self.quest_manager.attach_available(av)
 
