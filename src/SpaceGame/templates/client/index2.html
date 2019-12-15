@@ -41,6 +41,7 @@
         <script src="static/js/UI/upgrade_menu.js"></script>
         <script src="static/js/UI/inventory_menu.js"></script>
         <script src="static/js/UI/dialog_menu.js"></script>
+        <script src="static/js/UI/map_menu.js"></script>
         <script src="static/js/quests/intro/script.js"></script>
 
     </head>
@@ -59,6 +60,9 @@
     </div>
 
     <div id='inv_menu' title="Inventory"><ul id='inv_list'></ul></div>
+
+    <div id='map_menu' title="Map"><canvas id="map_canvas" width=250 height=250></canvas></div>
+
     <div id='upgrade_menu' title="Upgrades"><ul id='upgr_list'></ul></div>
     <div id='shop_menu' title="Shop">
         <div id="shop_tabs">
@@ -115,6 +119,7 @@
         var upgr_menu = new UpgradeMenu();
         var shop_menu = new ShopMenu();
         var dialog_menu = new DialogMenu();
+        var map_menu = new MapMenu();
 
         // dialog_menu.open(quests.intro.script)
 
@@ -192,19 +197,10 @@
                 $("#upgrade_menu").dialog("open");
             }
 
-            // keys.m = keyboard(77);
-            // keys.m.press = function() {
-            //     if(mode == map_mode){
-            //         stage.removeChild(map_stage);
-            //         stage.addChild(game_stage);
-            //         mode = game_mode;
-            //     }else{
-            //         map_mode.poll();
-            //         stage.removeChild(map_stage);
-            //         stage.addChild(game_stage);
-            //         mode = map_mode;
-            //     }
-            // }
+            keys.m = keyboard(77);
+            keys.m.press = function() {
+                $("#map_menu").dialog("open")
+            }
 
             keys.esc = keyboard(27);
             keys.esc.press = function() {
