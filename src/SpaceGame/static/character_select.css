@@ -74,5 +74,5 @@ td {
 }
 
 #dialog_menu_content {
-  height:100px;
+  min-height:100px;
 }
