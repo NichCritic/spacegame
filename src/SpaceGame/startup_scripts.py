@@ -356,11 +356,11 @@ def register_systems(session_manager, object_db, node_factory, player_factory, q
     system_set.register(event_proxy)
     system_set.register(event_active)
     system_set.register(apply_upgrades)
+    system_set.register(quest_systems)
+    system_set.register(game_state_req)
     system_set.register(coll_sink)
     system_set.register(bought_sink)
     system_set.register(sold_sink)
-    system_set.register(quest_systems)
-    system_set.register(game_state_req)
     system_set.register(quest_up_sink)
 
     return system_set

@@ -2,7 +2,7 @@ var quests = quests ? quests : {};
 quests.intro = quests.intro ? quests.intro : {};
 quests.intro.script = (function(){
 	var bossman_text_template = "<div class='quest_img_box'><img src='./static/assets/bossman.png'/></div><div class='quest_text'>$text$</div>"
-	var script = [
+	var stage2 = [
 		"Hey! You're awake!",
 		"Good, we were starting to worry!",
 		"You're probably wondering what's going on. Don't worry, I'll explain.",
@@ -29,10 +29,38 @@ quests.intro.script = (function(){
 		"Have fun! Remember, <b>Come back with 10 iron ore</b>. Press Q to check your progress, if you forget"
 	]
 
-	for(var i = 0; i < script.length; i++) {
-		let line = script[i];
-		script[i] = bossman_text_template.replace('$text$', line);
+	var stage3 = [
+		"Ah, good, you're back. To be honest I wasn't sure you were going to make it.",
+		"Well, to be clear, I was sure you'd be back eventually, since there's nothing better to do.",
+		"So I should have said, I didn't expect you back so soon.",
+		"You brought the ore right?",
+		"Press C to sell the ore to the store.",
+		"Minecore will get 99.99% of the profits, and you'll get 0.01%. It's only fair!"
+	]
+
+	var stage4 = [
+		"You can use your proceeds to buy upgrades. It's genius. The more ore your bring back, the more upgrades you can afford. That way we don't waste valuable upgrades on useless slackers",
+		"Of course, the more upgrades you have the more ore you can bring back. Everyone wins (especially minecore)"
+	]
+
+	for(var i = 0; i < stage2.length; i++) {
+		let line = stage2[i];
+		stage2[i] = bossman_text_template.replace('$text$', line);
 	}
+	for(var i = 0; i < stage3.length; i++) {
+		let line = stage3[i];
+		stage3[i] = bossman_text_template.replace('$text$', line);
+	}
+	for(var i = 0; i < stage4.length; i++) {
+		let line = stage4[i];
+		stage4[i] = bossman_text_template.replace('$text$', line);
+	}
+
+	var script = {
+		stage2:stage2,
+		stage3:stage3,
+		stage4:stage4
+	};
 
 	return script;
 })();

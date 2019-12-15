@@ -22,7 +22,7 @@ class Quest():
 			"stage":quest_data.stage
 		})
 		logging.info(f"Quest {self.name} updated to stage {quest_data.stage} for {av.id}")
-		if quest_data.stage < len(self.stages):
+		if quest_data.stage <= len(self.stages):
 			self.stages[quest_data.stage-1].attach(av)
 
 	def start(self, av):

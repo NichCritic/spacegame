@@ -37,7 +37,7 @@ def check_condition(quest, iron_ore_id, trigger_area, av):
     # if iron_ore_id in inv:
     logging.info(f"{av.id} has {inv}. Iron ore id is: {iron_ore_id} type {type(iron_ore_id)}")
     if iron_ore_id in inv and inv[iron_ore_id]['qty'] >= 10:
-        av.delete_component("q_intro_s2_active")
+        av.remove_component("q_intro_s2_active")
         quest.next(av)
 
 class Stage2(QuestStage):
@@ -55,7 +55,7 @@ class Stage2(QuestStage):
         with self.session_manager.get_session() as session:
             iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
 
-        condition = partial(check_condition, self, str(iron_ore.id))
+        condition = partial(check_condition, self.quest, str(iron_ore.id))
 
         self.node_factory.create_new_node({
             "area": {"radius": 200},
@@ -77,7 +77,12 @@ class Stage3System(System):
         self.item_id = item_id
 
     def handle(self, node):
-        pass
+        logging.info("Selling item for quest")
+        if node.sold.item_id == self.item_id:
+            node.remove_component('q_intro_s3_active')
+            self.quest.next(node)
+            logging.info(f"{node.id} sold an iron ore")
+        
 
 class Stage3(QuestStage):
     def __init__(self, quest, node_factory, session_manager):
@@ -87,10 +92,11 @@ class Stage3(QuestStage):
     def register_systems(self, system_set):
         with self.session_manager.get_session() as session:
             iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
-        system = Stage3System(self.quest, iron_ore.id, self.node_factory)
+        system = Stage3System(self.quest, str(iron_ore.id), self.node_factory)
         system_set.register(system)
 
     def attach(self, av):
+        logging.info("Quest stage 3 attached")
         av.add_or_attach_component("q_intro_s3_active", {})
 
 
