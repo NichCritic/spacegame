@@ -9,7 +9,7 @@ class ApplyUpgradeSystem(System):
 
     mandatory = ["apply_upgrade"]
     optional = []
-    handles = []
+    handles = ["apply_upgrade"]
 
     def __init__(self, node_factory, upgrades):
         self.node_factory = node_factory

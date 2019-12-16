@@ -59,11 +59,6 @@ class MessageBuffer(object):
         self.cond.notify_all()
 
 
-# Making this a non-singleton is left as an exercise for the reader.
-#global_message_buffer = MessageBuffer()
-#user_message_buffers = data_cache.user_message_buffers
-
-
 class BaseHandler(tornado.web.RequestHandler):
 
     def create_player(self):
@@ -577,7 +572,7 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         tornado.ioloop.IOLoop.current().spawn_callback(self.start_poll)
         # else:
         #     self.close()
-        #     
+        #
 
     async def start_poll(self):
         await self.poll()
@@ -616,7 +611,6 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         player = self.player_factory.get_player(self.current_user["player_id"])
         self.command_handler.handle_command(player, message)
         # await self.poll()
-
 
 
 class AuthLoginHandler(tornado.web.RequestHandler, tornado.auth.GoogleOAuth2Mixin):

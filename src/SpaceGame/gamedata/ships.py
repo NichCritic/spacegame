@@ -29,4 +29,4 @@ def default_ship(node):
     node.add_or_attach_component('weapon', {'type': 'single_shot'})
 
     node.add_or_attach_component('inventory', {'inventory': {}})
-    node.add_or_attach_component('money', {'money': 10000})
+    node.add_or_attach_component('money', {'money': 0})
