@@ -37,7 +37,7 @@ with session_manager.get_session() as session:
 quest_manager, quest_systems = setup_quests(node_factory, session_manager)
 command_handler = setup_commands(node_factory, session_manager, object_db, quest_manager)
 system_set = register_systems(
-    session_manager, object_db, node_factory, player_factory, quest_systems)
+    session_manager, object_db, node_factory, db_node_factory, player_factory, quest_systems)
 
 
 def main():

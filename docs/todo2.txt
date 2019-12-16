@@ -1,20 +1,9 @@
 TODO:
-
+Mining laser
+Memory leak
+minimap doesn't stop loading
 Better client side handling of server entities and other players
-no shooting in the past
-Projectile timeout
-Players only get updates about entities within a given radius
-Projectile hit / health / damage
-Shops / Money
-Collision with spacestation (exclude radius)
-Maps
-set starbase positions between server resets
-AI enemies
-Hazards (asteroids?)
-Pointer to nearest base
-Planets (things to see)
+Phantom players
 Persistent positions
-Clean up client side code
 Additional ships
 Procedural background stars
-Differentiated starbases

@@ -162,6 +162,13 @@ class Node(object):
         self.add_or_attach_component('network_messages', None)
         self.network_messages.send(text)
 
+    def to_dict(self):
+        ret = {}
+        for k, v in self.components.items():
+            ret[k] = v.__dict__
+        return ret
+
+
 
 class NodeList(list):
 

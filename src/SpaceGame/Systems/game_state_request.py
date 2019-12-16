@@ -16,7 +16,7 @@ class GameStateRequestSystem(System):
                 node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated"], entity_ids=pnode.sector.neighbours)
+            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
@@ -48,6 +48,8 @@ class GameStateRequestSystem(System):
             expires = {"expiry_time_ms": node.expires.expiry_time_ms,
                        "creation_time": node.expires.creation_time} if node.has("expires") else None
 
+            pickup = True if node.has("pickup") else None
+
             game_state["entities"][node.id] = {
                 "id": node.id,
                 "position": {"x": node.position.x,
@@ -70,6 +72,7 @@ class GameStateRequestSystem(System):
                 "control": control,
                 "mining": mining,
                 "minable": minable,
+                "pickup": pickup,
                 "collidable": collidable,
                 "animated": animated,
                 "expires": expires,

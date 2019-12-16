@@ -54,6 +54,8 @@ from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
 from Systems.boughtSoldSink import BoughtSink, SoldSink
 from Systems.questUpdateSink import QuestUpdateSink
+from Systems.proximitySink import ProximitySink
+from Systems.savePlayerSystem import SavePlayerSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -282,7 +284,7 @@ def setup_commands(node_factory, session_manager, db_comps, quest_manager):
     return command_handler
 
 
-def register_systems(session_manager, object_db, node_factory, player_factory, quest_systems):
+def register_systems(session_manager, object_db, node_factory, node_factory_db, player_factory, quest_systems):
     system_set = SystemSet()
     shopUnpackSystem = ShopUnpackSystem(node_factory, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
@@ -317,7 +319,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory, q
     event_proxy = EventProximityTriggerSystem(node_factory)
     event_active = EventActiveSystem(node_factory)
     apply_upgrades = ApplyUpgradeSystem(node_factory, upgrades)
+    save_player = SavePlayerSystem(node_factory_db, session_manager)
     coll_sink = CollisionSink(node_factory)
+    proximity_sink = ProximitySink(node_factory)
     bought_sink = BoughtSink(node_factory)
     sold_sink = SoldSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
@@ -358,7 +362,9 @@ def register_systems(session_manager, object_db, node_factory, player_factory, q
     system_set.register(apply_upgrades)
     system_set.register(quest_systems)
     system_set.register(game_state_req)
+    system_set.register(save_player)
     system_set.register(coll_sink)
+    system_set.register(proximity_sink)
     system_set.register(bought_sink)
     system_set.register(sold_sink)
     system_set.register(quest_up_sink)

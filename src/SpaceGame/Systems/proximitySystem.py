@@ -18,7 +18,9 @@ class ProximitySystem(System):
         return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
 
     def handle(self, node):
-        # lgging.info(node.sector.fine_neighbours)
+        
+
+
         nnodes = self.node_factory.create_node_list(
             ["position", "area"], [], entity_ids=node.sector.fine_neighbours)
 

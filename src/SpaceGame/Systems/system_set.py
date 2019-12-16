@@ -27,15 +27,3 @@ class SystemSet(object):
             # after = time.time()
             
 
-
-class DBSystemSet(SystemSet):
-
-    def __init__(self, db_components, sessionmaker):
-        super().__init__()
-        self.db_components = db_components
-        self.sessionmaker = sessionmaker
-
-    def process(self):
-        with self.sessionmaker.get_session() as session:
-            self.db_components.set_session(session)
-            super().process()

@@ -1,6 +1,6 @@
 from Systems.system import System
 import time
-
+import logging
 
 class CollisionDamageSystem(System):
     """
@@ -26,6 +26,7 @@ class CollisionDamageSystem(System):
 
             # TODO: This is kind of crude. Should really add a damaged state to the node to give a chance
             # For other systems to respond
+            logging.info(f"{c_node.id} colliding with {node.id}")
             c_node.health.health -= node.collision_damage.damage
 
             if c_node.health.health <= 0:

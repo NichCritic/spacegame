@@ -51,6 +51,14 @@ var CollisionSystem = (function() {
 				dist: dist,
 				delta: rad + rad2 - dist
 			})
+
+			//Hack, this should be in its own system
+			if(p_node.entity_has("pickup")) {
+				p_node.add_or_attach("to_be_removed")
+			}
+			if(node.entity_has("pickup")) {
+				node.add_or_attach("to_be_removed")
+			}
 		}
 
 

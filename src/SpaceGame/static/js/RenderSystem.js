@@ -85,6 +85,8 @@ var RenderSystem = (function() {
 		let leaving = this.leaving.indexOf(node.id) !== -1;
 		let onScreen = this.onScreen.indexOf(node.id) !== -1;
 
+		let addChild = false;
+
 		if(leaving) {
 			this.canvas.removeChild(this.displayObjects[node.id]);
 			delete this.displayObjects[node.id];
@@ -103,8 +105,9 @@ var RenderSystem = (function() {
 			this.displayObjects[node.id] = new PIXI.Sprite(node.renderable.image);
 			this.displayObjects[node.id].anchor.x = 0.5;
             this.displayObjects[node.id].anchor.y = 0.5;
-            this.canvas.addChild(this.displayObjects[node.id]);
+            addChild = true;
             this.onScreen.push(node.id);
+            onScreen = true;
 		}
 
 		if(onScreen) {
@@ -124,6 +127,10 @@ var RenderSystem = (function() {
 			if(x_pos > 2500 || x_pos < -2500 || y_pos > 2500 || y_pos < -2500){
 				node.add_or_attach("to_be_removed")
 			}
+		}
+
+		if(addChild) {
+			this.canvas.addChild(this.displayObjects[node.id]);
 		}
 
 	}
