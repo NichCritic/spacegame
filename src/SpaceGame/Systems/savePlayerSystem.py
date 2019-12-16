@@ -6,10 +6,11 @@ import objects.item as Items
 import json
 import logging
 
+
 class SavePlayerSystem(System):
 
     mandatory = ["player_controlled"]
-    optional = ["position"]
+    optional = []
     handles = []
 
     def __init__(self, node_factory, session_manager):
@@ -27,10 +28,11 @@ class SavePlayerSystem(System):
             return
         self.acc_time = 0
 
-
         logging.info(node)
         with self.session_manager.get_session() as session:
-            logging.info(node.to_dict())
-            node.add_or_update_component("instance_components", {"components":json.dumps(node.to_dict())})
-        
+            s_node = self.node_factory.create_node(node.id, [], ["position"])
+            logging.info(s_node.to_dict())
+            node.add_or_update_component("instance_components", {
+                                         "components": json.dumps(s_node.to_dict())})
+
         self.last_time = t
