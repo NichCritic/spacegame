@@ -3,11 +3,21 @@
 var InventoryMenu = (function() {
 
 	function InventoryMenu() {
-		var inv_menu = $("#inv_menu").dialog({autoOpen:false, open:this.loadData});
+		var inv_menu = $("#inv_menu").dialog({
+            autoOpen:false, 
+            open:this.loadData.bind(null, this),
+            close: this.cancelTimer.bind(null, this)
+        });
         var inv_list = $("#inv_list").menu();
-	} 
+        this.timeout = null;
+	}
+
+    InventoryMenu.prototype.cancelTimer = function(menu) {
+        clearTimeout(menu.timeout);
+        menu.timeout = null
+    }; 
    
-   	InventoryMenu.prototype.loadData = function (event, ui) {
+   	InventoryMenu.prototype.loadData = function (self, event, ui) {
         $.getJSON("/inv", function success(data){
             var menu = $("#inv_list");
             menu.empty();
@@ -18,6 +28,9 @@ var InventoryMenu = (function() {
                 $("<li><div>"+item.name +":"+item.qty+"</div></li>").appendTo(menu);
             }
             menu.menu("refresh");
+            if(!self.timeout) {
+                self.timeout = setInterval(self.loadData.bind(null, self), 250);
+            }
         });
     }
 
