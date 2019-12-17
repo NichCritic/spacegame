@@ -3,9 +3,18 @@
 var MapMenu = (function() {
 
     function MapMenu() {
-        var map_menu = $("#map_menu").dialog({autoOpen:false, open:this.loadData.bind(null, this)});
-        // var inv_list = $("#inv_list").menu();
+        var map_menu = $("#map_menu").dialog({
+            autoOpen:false, 
+            open:this.loadData.bind(null, this),
+            close: this.cancelTimer.bind(null, this)
+        });
+        this.timeout = null;
     } 
+
+    MapMenu.prototype.cancelTimer = function(menu) {
+        clearTimeout(menu.timeout);
+        menu.timeout = null
+    };
    
     MapMenu.prototype.loadData = function (menu, event, ui) {
         $.getJSON("/minimap", function success(data){
@@ -34,8 +43,9 @@ var MapMenu = (function() {
                 item.y = 125+ (y-p.y) / 50;
                 ctx.fillRect(item.x-2.5, item.y-2.5, 5, 5)
             }
-
-            setTimeout(menu.loadData.bind(null, menu), 250);
+            if(!menu.timeout) {
+                menu.timeout = setInterval(menu.loadData.bind(null, menu), 250);
+            }
         });
     }
 

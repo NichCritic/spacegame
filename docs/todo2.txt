@@ -1,6 +1,4 @@
 TODO:
-Mining laser
-Memory leak
 minimap doesn't stop loading
 Weird death issue
 Better client side handling of server entities and other players
