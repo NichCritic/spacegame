@@ -56,6 +56,7 @@ from Systems.boughtSoldSink import BoughtSink, SoldSink
 from Systems.questUpdateSink import QuestUpdateSink
 from Systems.proximitySink import ProximitySink
 from Systems.savePlayerSystem import SavePlayerSystem
+from Systems.physicsSink import PhysicsSink
 
 import objects.item
 from gamedata.weapons import weapons
@@ -102,6 +103,7 @@ def unpack_db_objects(node_factory):
             else:
                 node.add_or_attach_component(component, data)
 
+
 def setup_quests(node_factory, session_manager):
     quest_manager = QuestManager()
     quest_systems = SystemSet()
@@ -114,8 +116,6 @@ def setup_quests(node_factory, session_manager):
     quest_manager.add(intro)
 
     return quest_manager, quest_systems
-
-
 
 
 def create_spacestations(node_factory, session):
@@ -280,7 +280,8 @@ class ObjectProvider(object):
 
 
 def setup_commands(node_factory, session_manager, db_comps, quest_manager):
-    command_handler = CommandHandler(node_factory, session_manager, db_comps, quest_manager)
+    command_handler = CommandHandler(
+        node_factory, session_manager, db_comps, quest_manager)
     return command_handler
 
 
@@ -326,6 +327,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     sold_sink = SoldSink(node_factory)
     game_state_req = GameStateRequestSystem(node_factory)
     quest_up_sink = QuestUpdateSink(node_factory)
+    phys_sink = PhysicsSink(node_factory)
 
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
@@ -368,5 +370,6 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(bought_sink)
     system_set.register(sold_sink)
     system_set.register(quest_up_sink)
+    system_set.register(phys_sink)
 
     return system_set

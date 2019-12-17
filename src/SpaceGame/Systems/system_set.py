@@ -1,5 +1,6 @@
 import time
 import logging
+# import tracemalloc
 '''
 Created on 2014-03-23
 
@@ -14,6 +15,7 @@ class SystemSet(object):
 
     def __init__(self):
         self.systems = []
+        # tracemalloc.start()
 
     def register(self, system):
         self.systems.append(system)
@@ -23,7 +25,13 @@ class SystemSet(object):
         for sys in self.systems:
             # before = time.time()
             # logging.info(f"{sys.__class__.__name__}")
-            sys.process()
-            # after = time.time()
-            
 
+            sys.process()
+
+        # s2 = tracemalloc.take_snapshot()
+
+        # comp = s2.statistics('lineno')
+
+        # logging.info("[ Top 5 ]")
+        # for stat in comp[:5]:
+        #     logging.info(stat)

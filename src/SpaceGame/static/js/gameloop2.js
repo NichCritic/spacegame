@@ -129,10 +129,10 @@ var GameLoop = (function() {
 
         stage.addChild(textures.bg);
         stage.addChild(textures.stars);
+        stage.addChild(mining_lasers);
         stage.addChild(lasers);
         stage.addChild(entities);
         stage.addChild(health_bars);
-        stage.addChild(mining_lasers);
 
         entity_manager = new EntityManager();
         entity_manager.init();
@@ -164,7 +164,7 @@ var GameLoop = (function() {
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, /*mining_laser_render,*/ health_render_system, render_system];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, mining_laser_render, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -286,12 +286,7 @@ var GameLoop = (function() {
             if(entity.minable) {
                 n.add_or_update('minable', {});
             }
-            if(entity.mining) {
-                n.add_or_update('mining', {});
-            }
-            else{
-                n.delete_component('mining')
-            }
+            
             
             if(entity.expires) {
                 n.add_or_update('expires', entity.expires);
@@ -344,6 +339,12 @@ var GameLoop = (function() {
 
             } else {
                 n.add_or_update('server_controlled');
+                if(entity.mining) {
+                    n.add_or_update('mining', {});
+                }
+                else{
+                    n.delete_component('mining')
+                }
             }
             // acceleration: {x: 0, y: 0}
             // control: [null]

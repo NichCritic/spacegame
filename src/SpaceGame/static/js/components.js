@@ -65,6 +65,7 @@ var components = (function(){
 		this.thrust = data.thrust;
 		this.brake = data.brake;
 		this.shoot = data.shoot;
+		this.mining = data.mining;
 		this.dt = data.dt;
 		this.time = data.time;
 	};

@@ -88,10 +88,10 @@ var MiningSystem = (function() {
             'server_controlled': {},
             'renderable': {'spritesheet': this.textures['asteroid'],
                                'image':this.textures['asteroid'].idle[0],
-                               'width': 8,
-                               'height': 8},
+                               'width': 4,
+                               'height': 4},
             'expires': {
-                'expiry_time_ms': 1000,
+                'expiry_time_ms': 100,
                 'creation_time': now
             }
         })

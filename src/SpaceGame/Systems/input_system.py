@@ -85,5 +85,5 @@ class InputSystem(System):
                     node.remove_component("mining")
 
             inp["was_processed"] = True
-
+        node.player_input.data = node.player_input.data[-50:]
         node.physics_update.packets.extend(packets)

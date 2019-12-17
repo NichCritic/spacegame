@@ -37,6 +37,11 @@ var InputSystem = (function() {
 			node.add_or_attach("shooting", {firing_rate:200});
 			node.shooting.input = {shoot: node.control.shoot, dt: node.control.dt};
 		}
+		if(node.control.mining) {
+			node.add_or_attach("mining", {}) 
+		} else {
+			node.delete_component("mining")
+		}
 
 	}
 
