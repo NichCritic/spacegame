@@ -7,6 +7,7 @@ Created on 2013-11-23
 
 from contextlib import contextmanager
 from itertools import groupby
+import logging
 
 
 class NodeFactoryDB(object):
@@ -165,7 +166,10 @@ class Node(object):
     def to_dict(self):
         ret = {}
         for k, v in self.components.items():
-            ret[k] = v.__dict__
+            logging.info((k, v))
+            if v:
+                ret[k] = v.__dict__.copy()
+                del ret[k]['entity_id']
         return ret
 
 

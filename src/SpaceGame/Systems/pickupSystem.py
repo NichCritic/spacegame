@@ -19,7 +19,7 @@ class PickupSystem(System):
             if not c_node.has("inventory"):
                 continue
 
-            inv = c_node.inventory.inv
+            inv = c_node.inventory.inventory
             i_id = str(node.pickup.item_id)
             qty = node.pickup.qty
 

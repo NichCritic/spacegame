@@ -155,7 +155,7 @@ class Inventory():
 
     def __init__(self, entity_id, inventory):
         self.entity_id = entity_id
-        self.inv = inventory
+        self.inventory = inventory
 
 
 class InventoryMass():
@@ -534,9 +534,9 @@ class QuestStatusUpdated():
 
 class Quests():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, quests = None):
         self.entity_id = entity_id
-        self.quests = {}
+        self.quests = {} if quests == None else quests
 
 
 class TrackedIds():

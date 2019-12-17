@@ -81,7 +81,9 @@ class AccountUtils():
         from objects.components import PlayerControlled
         avatar = session.query(PlayerControlled.__table__).filter(
             PlayerControlled.pid == player_id).first()
-        return avatar.entity_id
+        if avatar:
+            return avatar.entity_id
+        return None
 
     def get_avatars_for_account(self, account, session):
 

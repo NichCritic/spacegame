@@ -4,7 +4,7 @@ Created on 2013-12-01
 @author: Nich
 '''
 import uuid
-
+import logging
 
 class PlayerFactory(object):
     '''
@@ -17,7 +17,7 @@ class PlayerFactory(object):
 
     def create_player(self, message_buffer, pid=None, avatar=None):
         p = Player(message_buffer, pid, avatar)
-
+        logging.info(avatar)
         if avatar:
             self.component_manager.add_component_to_object(
                 'player_controlled', avatar.id, {'pid': p.id})

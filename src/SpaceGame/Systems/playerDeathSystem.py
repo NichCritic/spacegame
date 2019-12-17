@@ -8,7 +8,7 @@ from gamedata.ships import default_ship
 class PlayerDeathSystem(System):
 
     mandatory = ["player_controlled", "dead", "position"]
-    optional = []
+    optional = ["quests"]
     handles = []
 
     def __init__(self, node_factory):
@@ -22,7 +22,11 @@ class PlayerDeathSystem(System):
         })
 
         pid = node.player_controlled.pid
+        quests = None
+        if node.has("quests"):
+            quests = node.quests.quests
         # Delete the player then move them to spawn
         node.remove_all_components()
         node.add_or_attach_component("player_controlled", {"pid": pid})
         default_ship(node)
+        node.add_or_attach_component("quests", {"quests":quests})

@@ -148,8 +148,8 @@ class ShopHandler(BaseHandler):
         closest = self.get_closest_shop(av)
         closest.add_or_attach_component('inventory', {'inventory': {}})
         data = closest.shop.shop_data
-        data['inventory'] = closest.inventory.inv
-        data['player_inventory'] = av.inventory.inv
+        data['inventory'] = closest.inventory.inventory
+        data['player_inventory'] = av.inventory.inventory
         logging.info("Finish called closest_shop get")
         self.finish(data)
 
@@ -231,7 +231,7 @@ class InventoryHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["inventory"], [])
 
         with self.session_manager.get_session() as session:
-            inventory = av.inventory.inv
+            inventory = av.inventory.inventory
             items = [{"name": objects.item.get_item_by_id(
                 session, it).name, "id": it, "qty": inventory[it]["qty"]} for it in inventory]
 
@@ -266,7 +266,7 @@ class UpgradeHandler(BaseHandler):
         av = self.node_factory.create_node(player.avatar_id, ["inventory"], [])
 
         with self.session_manager.get_session() as session:
-            inventory = av.inventory.inv
+            inventory = av.inventory.inventory
             items = [{"name": objects.item.get_item_by_id(
                 session, it).name, "id": it, "qty": inventory[it]["qty"]} for it in inventory if objects.item.get_item_by_id(session, it).type == "upgrade"]
 
@@ -285,7 +285,7 @@ class UpgradeHandler(BaseHandler):
         av = self.node_factory.create_node(
             player.avatar_id, ["position", "sector", "inventory"])
 
-        items = av.inventory.inv
+        items = av.inventory.inventory
 
         selected_item = None
         for i in items:
@@ -545,7 +545,7 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
             avatar_id = self.account_utils.get_previous_avatar_for_player(
                 player.id, session)
             if avatar_id is None:
-                self.redirect("/charater_select")
+                # self.redirect("/charater_select")
                 return
             self.player_factory.set_player_avatar(player, avatar_id)
 
@@ -609,7 +609,8 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         if not self.current_user['id'] in self.player_factory.players:
             self.create_player()
         player = self.player_factory.get_player(self.current_user["player_id"])
-        self.command_handler.handle_command(player, message)
+        if player.avatar_id:
+            self.command_handler.handle_command(player, message)
         # await self.poll()
 
 

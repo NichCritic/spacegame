@@ -32,7 +32,7 @@ class TransactionSystem(System):
                 logging.info("Buyer did not have enough money")
                 continue
 
-            seller_inv = seller.inventory.inv
+            seller_inv = seller.inventory.inventory
             if i_id not in seller_inv:
                 logging.info("Seller did not have the item")
                 continue
@@ -49,7 +49,7 @@ class TransactionSystem(System):
             buyer.money.money -= cost
             seller.money.money += cost
 
-            buyer_inv = buyer.inventory.inv
+            buyer_inv = buyer.inventory.inventory
 
             seller_inv[i_id]["qty"] -= qty
 

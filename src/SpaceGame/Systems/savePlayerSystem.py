@@ -31,7 +31,7 @@ class SavePlayerSystem(System):
         logging.info(node)
         with self.session_manager.get_session() as session:
             s_node = self.node_factory.create_node(
-                node.id, [], ["position", "applied_upgrades", "inventory", "money", "health"])
+                node.id, [], ["position", "applied_upgrades", "inventory", "money", "health", "quests"])
             logging.info(s_node.to_dict())
             node.add_or_update_component("instance_components", {
                                          "components": json.dumps(s_node.to_dict())})

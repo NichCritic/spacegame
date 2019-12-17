@@ -31,7 +31,7 @@ def check_condition(quest, iron_ore_id, trigger_area, av):
         return
 
     av.add_or_attach_component("inventory", {})
-    inv = av.inventory.inv
+    inv = av.inventory.inventory
     # if iron_ore_id in inv:
     if iron_ore_id in inv and inv[iron_ore_id]['qty'] >= 10:
         av.remove_component("q_intro_s2_active")
