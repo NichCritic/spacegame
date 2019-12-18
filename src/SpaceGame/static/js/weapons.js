@@ -29,7 +29,10 @@ var weapons = (function(){
             	},
             	'server_sync': {
             		'sync_key': count
-            	}
+            	},
+            	// //Hacky way to make them go away when they hit something
+            	// 'collidable': {},
+            	// 'pickup': {}
 		});
 		// console.log("bullets fired: " + count)
 		return bullet;

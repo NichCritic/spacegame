@@ -16,6 +16,7 @@ class CollisionDamageSystem(System):
         self.node_factory = node_factory
 
     def handle(self, node):
+        collided = False
         for collision in node.colliding.collisions:
             c_node = self.node_factory.create_node(
                 collision["collider"], [], ["health"])
@@ -31,3 +32,7 @@ class CollisionDamageSystem(System):
 
             if c_node.health.health <= 0:
                 c_node.add_or_attach_component("dead", {})
+            collided = True
+        if collided:
+            node.remove_all_components()
+

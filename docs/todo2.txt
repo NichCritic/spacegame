@@ -1,5 +1,14 @@
 TODO:
-Weird death issue
+Weird sync issue
 Better client side handling of server entities and other players
+Heal at spacestations
+Bank at spacestations
+Mining laser spray off center
+Consider removing mining laser
+More upgrades
 Additional ships
+More enemy types
 Procedural background stars
+name when you sign up
+Menus should toggle on keypress
+Quest menu

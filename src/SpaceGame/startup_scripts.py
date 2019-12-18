@@ -153,7 +153,8 @@ def create_spacestations(node_factory, session):
             'server_updated': {},
             'physics_update': {},
             'state_history': {},
-            'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1}
+            'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1},
+            'health': {'health': 1500*size, 'max_health': 1500*size}
 
         })
 
@@ -342,11 +343,11 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(spatial)
     system_set.register(proximity)
     system_set.register(collision)
+    system_set.register(pickup)
     system_set.register(collision_dam)
     system_set.register(collision_vel_dam)
     system_set.register(player_death)
     system_set.register(death)
-    system_set.register(pickup)
     system_set.register(coll_mov)
     system_set.register(boundary)
     system_set.register(mining)

@@ -7,7 +7,7 @@ import time
 class MovementTrackingSystem(System):
 
     mandatory = ["position", "velocity"]
-    optional = ["moved"]
+    optional = ["moved", "mining"]
     handles = []
 
     def __init__(self, node_factory):
@@ -15,6 +15,13 @@ class MovementTrackingSystem(System):
         self.position_cache = {}
 
     def handle(self, node):
+        if node.has("mining"):
+            self.position_cache[node.id] = {
+                'x': node.position.x, 'y': node.position.y}
+            node.add_or_attach_component('moved', {})
+            node.add_or_attach_component('updated', {})
+            return
+
         if node.id not in self.position_cache:
             self.position_cache[node.id] = {
                 'x': node.position.x, 'y': node.position.y}
