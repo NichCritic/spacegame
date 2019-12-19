@@ -1,5 +1,4 @@
 TODO:
-Menus should toggle on keypress
 Weird sync issue
 Better client side handling of server entities and other players
 Heal at spacestations
