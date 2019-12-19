@@ -73,6 +73,7 @@ class AccountUtils():
         ac_av = AccountAvatar()
         ac_av.account_id = account.id
         ac_av.avatar = a
+        ac_av.name = data["name"]
         account.avatars.append(ac_av)
 
         session.add(ac_av)

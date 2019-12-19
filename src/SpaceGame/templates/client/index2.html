@@ -184,30 +184,43 @@
 
             keys.c = keyboard(67);
             keys.c.press = function() {
-                $("#shop_menu").dialog("open"); 
+                if(!$("#shop_menu").dialog("isOpen")) {
+                    $("#shop_menu").dialog("open"); 
+                } else {
+                    $("#shop_menu").dialog("close"); 
+                }
             }
 
             keys.i = keyboard(73);
             keys.i.press = function() {
-                $("#inv_menu").dialog("open");
+                if(!$("#inv_menu").dialog("isOpen")) {
+                    $("#inv_menu").dialog("open"); 
+                } else {
+                    $("#inv_menu").dialog("close"); 
+                }
             }
 
             keys.u = keyboard(85);
             keys.u.press = function() {
-                $("#upgrade_menu").dialog("open");
+                if(!$("#upgrade_menu").dialog("isOpen")) {
+                    $("#upgrade_menu").dialog("open"); 
+                } else {
+                    $("#upgrade_menu").dialog("close"); 
+                }
             }
 
             keys.m = keyboard(77);
             keys.m.press = function() {
-                $("#map_menu").dialog("open")
+                if(!$("#map_menu").dialog("isOpen")) {
+                    $("#map_menu").dialog("open"); 
+                } else {
+                    $("#map_menu").dialog("close"); 
+                }
             }
 
             keys.esc = keyboard(27);
             keys.esc.press = function() {
-                // stage.removeChild(map_stage);
-                stage.removeChild(game_stage);
-                stage.addChild(game_stage);
-                mode = game_mode
+                
             }
 
 

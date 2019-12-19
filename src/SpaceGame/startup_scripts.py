@@ -211,7 +211,7 @@ def create_spacestations(node_factory, session):
         node_factory.create_new_node({
             "area": {"radius": 100},
             "position": {"x": x_pos, "y": y_pos},
-            # "type": {"type": "bolfenn"},
+            "type": {"type": "target"},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
             "event": {"script": test_script, "cooldown": 3600000, "initial_cooldown": initial_cooldown},
             "event_proximity_trigger": {}
