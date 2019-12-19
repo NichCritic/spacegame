@@ -174,11 +174,20 @@ var components = (function(){
 		this.entity_id = entity_id;
 	}
 
+	var CheckCollision = function(entity_id) {
+		this.entity_id = entity_id;
+	}
+
+	var RemoveOnCollide = function(entity_id) {
+		this.entity_id = entity_id
+	}
+
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
 		"area": Area,
 		"camera": Camera,
+		"check_collision": CheckCollision,
 		"client_sync": ClientSync,
 		"collidable": Collidable,
 		"colliding": Colliding,
@@ -194,6 +203,7 @@ var components = (function(){
 		"player": PlayerControlled,
 		"player_created": PlayerCreated,
 		"position":Position,
+		"remove_on_collide":RemoveOnCollide,
 		"renderable": Renderable,
 		"rotation": Rotation,
 		"server_controlled": ServerControlled,

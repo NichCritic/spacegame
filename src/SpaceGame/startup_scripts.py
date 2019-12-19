@@ -57,6 +57,7 @@ from Systems.questUpdateSink import QuestUpdateSink
 from Systems.proximitySink import ProximitySink
 from Systems.savePlayerSystem import SavePlayerSystem
 from Systems.physicsSink import PhysicsSink
+from Systems.DropOnDeathSystem import DropOnDeathSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -139,6 +140,7 @@ def create_spacestations(node_factory, session):
         y_pos = int(floor(numpy.random.normal(scale=2000.0)))
         # rot = int(floor(numpy.random.rand() * 2 * math.pi))
         size = max(50, 50 + int(floor(numpy.random.normal(scale=50))))
+        drop_qty = floor(numpy.random.rand() * size/50 * 6)
 
         node_factory.create_new_node({
             "type": {"type": "asteroid"},
@@ -154,7 +156,8 @@ def create_spacestations(node_factory, session):
             'physics_update': {},
             'state_history': {},
             'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1},
-            'health': {'health': 1500*size, 'max_health': 1500*size}
+            'health': {'health': 100*size, 'max_health': 100*size},
+            'drop_on_death': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1, "qty": drop_qty}
 
         })
 
@@ -303,6 +306,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     collision = CollisionSystem(node_factory)
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
+    drop_on_death = DropOnDeathSystem(node_factory)
     player_death = PlayerDeathSystem(node_factory)
     death = DeathSystem(node_factory)
     pickup = PickupSystem(node_factory)
@@ -346,6 +350,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(pickup)
     system_set.register(collision_dam)
     system_set.register(collision_vel_dam)
+    system_set.register(drop_on_death)
     system_set.register(player_death)
     system_set.register(death)
     system_set.register(coll_mov)

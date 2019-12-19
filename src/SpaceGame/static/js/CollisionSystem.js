@@ -10,14 +10,17 @@ var CollisionSystem = (function() {
 
 	CollisionSystem.prototype.process = function() {
 		var nodes = this.node_factory.create_node_list(manditory, optional);
-		var p_node = this.node_factory.create_node_list(["player", "position", "area"])[0];
-		for(let i = 0; i < nodes.length; i++) {
-			let node = nodes[i];
-			if(node.id == p_node.id){
-				continue;
+		var p_nodes = this.node_factory.create_node_list(["check_collision", "position", "area"]);
+		for(let j = 0; j < p_nodes.length; j++) {
+			let p_node = p_nodes[j];
+			for(let i = 0; i < nodes.length; i++) {
+				let node = nodes[i];
+				if(node.id == p_node.id){
+					continue;
+				}
+				this.handle(p_node, node);
+				this.cleanup(node);
 			}
-			this.handle(p_node, node);
-			this.cleanup(node);
 		}
 
 	};
@@ -53,10 +56,10 @@ var CollisionSystem = (function() {
 			})
 
 			//Hack, this should be in its own system
-			if(p_node.entity_has("pickup")) {
+			if(p_node.entity_has("remove_on_collide")) {
 				p_node.add_or_attach("to_be_removed")
 			}
-			if(node.entity_has("pickup")) {
+			if(node.entity_has("remove_on_collide")) {
 				node.add_or_attach("to_be_removed")
 			}
 		}

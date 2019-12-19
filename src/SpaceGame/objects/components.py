@@ -545,6 +545,12 @@ class TrackedIds():
         self.entity_id = entity_id
         self.ids = ids if ids is not None else []
 
+class DropOnDeath():
+    def __init__(self, entity_id, products, qty):
+        self.entity_id = entity_id
+        self.products = products
+        self.qty = qty
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,
@@ -564,6 +570,7 @@ components = {
     "collision_movement": CollisionMovement,
     "collision_velocity_damage": CollisionVelocityDamage,
     "dead": Dead,
+    "drop_on_death": DropOnDeath,
     "event": Event,
     "event_active": EventActive,
     "event_proximity_trigger": EventProximityTrigger,

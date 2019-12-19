@@ -293,6 +293,7 @@ var GameLoop = (function() {
             }
             if(entity.pickup) {
                 n.add_or_update('pickup', {});
+                n.add_or_update('remove_on_collide', {})
             }
 
             if(entity.client_sync) {
@@ -302,6 +303,7 @@ var GameLoop = (function() {
             if(entities[i] === serverState.player_id){
                 n.add_or_update('player');
                 n.add_or_update('inputs', {inputs:inputs});
+                n.add_or_attach('check_collision')
 
                 if(entity.weapon) {
                     n.add_or_update('weapon', entity.weapon)
