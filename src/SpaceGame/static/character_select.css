@@ -76,3 +76,8 @@ td {
 #dialog_menu_content {
   min-height:100px;
 }
+
+
+#quest_list {
+    width: 200px;
+}

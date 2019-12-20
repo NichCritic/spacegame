@@ -239,6 +239,43 @@ class InventoryHandler(BaseHandler):
         logging.info("Finish called items get")
         self.finish(data)
 
+class QuestHandler(BaseHandler):
+
+    def initialize(self, account_utils, player_factory, session_manager, node_factory):
+        self.account_utils = account_utils
+        self.player_factory = player_factory
+        self.session_manager = session_manager
+        self.node_factory = node_factory
+
+    def get_player(self):
+        if not self.current_user['id'] in self.player_factory.players:
+            self.clear()
+            self.set_status(500)
+            logging.info("Finish called inv get_player")
+            self.finish("No currently signed in user")
+            return
+
+        player = self.player_factory.players[self.current_user['id']]
+        return player
+
+    @tornado.web.authenticated
+    def get(self):
+        import objects.item
+        player = self.get_player()
+
+        av = self.node_factory.create_node(player.avatar_id, [], ["active_quests"])
+        if not av.has("active_quests"):
+            self.finish({"quests":{}})
+            return
+
+        quests = {}
+        for n, q in av.active_quests.quests.items():
+            quests[n] = {"stage":q.stage}
+
+        data = {"quests": quests}
+        logging.info("Finish called quests get")
+        self.finish(data)
+
 
 class UpgradeHandler(BaseHandler):
 

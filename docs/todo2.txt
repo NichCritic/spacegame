@@ -1,4 +1,5 @@
 TODO:
+Quest menu
 Weird sync issue
 Better client side handling of server entities and other players
 Heal at spacestations
@@ -10,4 +11,3 @@ Additional ships
 More enemy types
 Procedural background stars
 name when you sign up
-Quest menu

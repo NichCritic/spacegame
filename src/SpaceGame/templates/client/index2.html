@@ -42,6 +42,7 @@
         <script src="static/js/UI/inventory_menu.js"></script>
         <script src="static/js/UI/dialog_menu.js"></script>
         <script src="static/js/UI/map_menu.js"></script>
+        <script src="static/js/UI/quest_menu.js"></script>
         <script src="static/js/quests/intro/script.js"></script>
 
     </head>
@@ -64,6 +65,10 @@
     <div id='map_menu' title="Map"><canvas id="map_canvas" width=250 height=250></canvas></div>
 
     <div id='upgrade_menu' title="Upgrades"><ul id='upgr_list'></ul></div>
+
+    <div id='quest_menu' title="Quests"><ul id='quest_list'></ul></div>
+
+
     <div id='shop_menu' title="Shop">
         <div id="shop_tabs">
             <ul id='tabs'>
@@ -120,6 +125,7 @@
         var shop_menu = new ShopMenu();
         var dialog_menu = new DialogMenu();
         var map_menu = new MapMenu();
+        var quest_menu = new QuestMenu();
 
         // dialog_menu.open(quests.intro.script.stage2)
 
@@ -215,6 +221,15 @@
                     $("#map_menu").dialog("open"); 
                 } else {
                     $("#map_menu").dialog("close"); 
+                }
+            }
+
+            keys.q = keyboard(81);
+            keys.q.press = function() {
+                if(!$("#quest_menu").dialog("isOpen")) {
+                    $("#quest_menu").dialog("open"); 
+                } else {
+                    $("#quest_menu").dialog("close"); 
                 }
             }
 
