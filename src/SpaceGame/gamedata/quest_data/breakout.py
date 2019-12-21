@@ -18,13 +18,10 @@ components.update(quest_components)
 class Breakout(Quest):
 
 	def available(self, av):
-		logging.info("Checking if breakout is available")
 		av.add_or_attach_component("quests", {})
 		quests = av.quests.quests
 		if "intro" in quests and quests['intro']['status'] == "complete":
-			logging.info("It is!")
 			return True
-		logging.info("It is not!")
 		return False
 
 def check_condition(quest, trigger_area, av):

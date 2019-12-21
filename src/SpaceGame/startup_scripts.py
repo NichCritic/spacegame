@@ -5,6 +5,7 @@ Created on 2014-02-25
 '''
 
 import logging
+import math
 import model.base as base
 from model.base import SessionManager
 from model.account import AccountUtils
@@ -223,6 +224,19 @@ def create_spacestations(node_factory, session):
             "event": {"script": test_script, "cooldown": 3600000, "initial_cooldown": initial_cooldown},
             "event_proximity_trigger": {}
         })
+
+    node_factory.create_new_node({
+        "area": {"radius":26},
+        "position": {"x": 20000, "y":0},
+        "rotation": {"rotation": 3/4 * 2 *  math.pi},
+        "type": {"type": "ship3"},
+        "collidable": {},
+        'force': {},
+        'acceleration': {},
+        'server_updated': {},
+        'physics_update': {},
+        'state_history': {},
+    })
 
 
 def collision_test(node_factory, session):
