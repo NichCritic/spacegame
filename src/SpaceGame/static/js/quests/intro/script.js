@@ -35,12 +35,12 @@ quests.intro.script = (function(){
 		"So I should have said, I didn't expect you back so soon.",
 		"You brought the ore right?",
 		"Press C to sell the ore to the store.",
-		"Minecore will get 99.99% of the profits, and you'll get 0.01%. It's only fair!"
+		"Minecore will get 99.99% of the profits, and you'll get 0.01%, in Minecore credits. It's only fair!"
 	]
 
 	var stage4 = [
 		"You can use your proceeds to buy upgrades. It's genius. The more ore your bring back, the more upgrades you can afford. That way we don't waste valuable upgrades on useless slackers",
-		"Of course, the more upgrades you have the more ore you can bring back. Everyone wins (especially minecore)"
+		"Of course, the more upgrades you have the more ore you can bring back. Everyone wins (especially Minecore)"
 	]
 
 	for(var i = 0; i < stage2.length; i++) {

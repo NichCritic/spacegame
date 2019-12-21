@@ -1,11 +1,14 @@
 TODO:
-Quest menu
+Breakout quest
 Weird sync issue
+Lag when there are too many enemies
+Minimap differentiates objects 
 Better client side handling of server entities and other players
 Heal at spacestations
 Bank at spacestations
 Mining laser spray off center
 Consider removing mining laser
+Consider removing inventory mass
 More upgrades
 Additional ships
 More enemy types

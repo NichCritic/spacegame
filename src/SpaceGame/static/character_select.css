@@ -81,3 +81,7 @@ td {
 #quest_list {
     width: 200px;
 }
+
+.quest_title {
+  background: #CCCCCC;
+}

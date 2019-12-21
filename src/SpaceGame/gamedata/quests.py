@@ -12,10 +12,17 @@ class Quest():
 	def add_stage(self, stage):
 		self.stages.append(stage)
 
-	def next(self, av):
+	def next(self, av, stage=None):
 		av.add_or_attach_component("active_quests", {})
 		quest_data = av.active_quests.quests[self.name]
-		quest_data.stage += 1
+		if stage:
+			quest_data.stage = stage
+		else:
+			quest_data.stage += 1
+
+		av.add_or_attach_component("quests", {})
+		quest = av.quests.quests[self.name]
+		quest['stage'] = quest_data.stage
 
 		av.add_or_update_component("quest_status_updated", {
 			"quest":self.name, 
@@ -23,12 +30,21 @@ class Quest():
 		})
 		if quest_data.stage <= len(self.stages):
 			self.stages[quest_data.stage-1].attach(av)
+		else:
+			quest['status'] = "complete"
 
-	def start(self, av):
+
+	def start(self, av, stage = None):
 		av.add_or_attach_component("active_quests", {})
 		quests = av.active_quests.quests
 		quests[self.name] = QuestData()
-		self.next(av)
+
+		av.add_or_attach_component("quests", {})
+		quest = av.quests.quests[self.name]
+
+		if quest['status'] != "complete":
+			quest['status'] = 'active'
+			self.next(av, stage)
 
 	def available(self, av):
 		return True
@@ -65,14 +81,25 @@ class QuestManager():
 
 	def attach_available(self, av):
 		av.add_or_attach_component("quests", {})
+		av.add_or_attach_component("active_quests", {})
 		av_quests = av.quests.quests
+		actv_quests = av.active_quests.quests
 
 		for quest in self.quests:
+			if quest.name in actv_quests or quest.name in av_quests and av_quests[quest.name]['status'] == "complete":
+				continue
 			if quest.name in av_quests:
 				#already have it. Need to check status and reinit?
+				q = av_quests[quest.name]
+				logging.info(q)
+				stage = q["stage"] if "stage" in q else None
+				if stage is None:
+					quest.start(av)
+				else:
+					quest.start(av, stage)
 				continue
 
 			#If the quest is available to the player add it to the list
 			if quest.available(av):
-				av_quests[quest.name] = {"available":True}
+				av_quests[quest.name] = {"status":"available"}
 				quest.start(av)

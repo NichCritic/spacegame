@@ -21,7 +21,8 @@ var DialogMenu = (function() {
     } 
    
     DialogMenu.prototype.open = function(my_data, my_page) {
-        var page = my_page ? my_page : 0;
+        var l_page = my_page ? my_page : 0;
+        page = l_page
         data = my_data;
         showPage(data, page);
         this.dialog.dialog("open");        

@@ -25,13 +25,14 @@ var QuestMenu = (function() {
             for(let qname in data.quests) {
                 let quest = data.quests[qname];
                 let li = $("<li></li>")
-                li.append($("<div>"+qname+"</div>"))
-                li.append($("<div>"+"A short description of the quest"+"</div>"))
+                li.append($("<div class='quest_title'>"+qname+" : "+quest.status+"</div>"))
+                li.append($("<div>"+quests[qname].descriptions.quest+"</div>"))
                 let stage_list = $("<ul class='stage_list'></ul>")
                 li.append(stage_list)
-                for(var i = 0; i < 4; i++) {
-                    stage_list.append($("<li><div>"+"A short description of the stage contents"+"</div></li>"))
+                for(var i = 0; i < quest.stage-1; i++) {
+                    stage_list.append($("<li><div>"+quests[qname].descriptions.stages_completed[i]+"</div></li>"))
                 }
+                stage_list.append($("<li><div>"+quests[qname].descriptions.stages[i]+"</div></li>"))
 
                 li.appendTo(menu);
             }

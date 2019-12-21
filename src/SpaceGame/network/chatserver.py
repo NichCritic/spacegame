@@ -263,14 +263,14 @@ class QuestHandler(BaseHandler):
         import objects.item
         player = self.get_player()
 
-        av = self.node_factory.create_node(player.avatar_id, [], ["active_quests"])
-        if not av.has("active_quests"):
+        av = self.node_factory.create_node(player.avatar_id, [], ["quests"])
+        if not av.has("quests"):
             self.finish({"quests":{}})
             return
 
         quests = {}
-        for n, q in av.active_quests.quests.items():
-            quests[n] = {"stage":q.stage}
+        for n, q in av.quests.quests.items():
+            quests[n] = {"stage":q["stage"], "status":q["status"]}
 
         data = {"quests": quests}
         logging.info("Finish called quests get")

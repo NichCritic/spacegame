@@ -68,6 +68,8 @@ from command.command_handler import CommandHandler
 
 from gamedata.quests import Quest, QuestManager
 from gamedata.quest_data.intro import Stage1, Stage2, Stage3
+from gamedata.quest_data.breakout import Breakout
+from gamedata.quest_data.breakout import Stage1 as BreakoutStage1
 
 
 def setup_objects(all_db_components, all_components, session):
@@ -114,7 +116,12 @@ def setup_quests(node_factory, session_manager):
     intro.add_stage(Stage3(intro, node_factory, session_manager))
     intro.finalize(quest_systems)
 
+    breakout = Breakout(node_factory, "breakout")
+    breakout.add_stage(BreakoutStage1(breakout, node_factory))
+    breakout.finalize(quest_systems)
+
     quest_manager.add(intro)
+    quest_manager.add(breakout)
 
     return quest_manager, quest_systems
 
