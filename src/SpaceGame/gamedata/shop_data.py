@@ -8,6 +8,7 @@ def get_shop_data(session):
     iron_ore = objects.item.get_item_by_name(session, 'iron ore')
     trishot = objects.item.get_item_by_name(session, 'trishot')
     health = objects.item.get_item_by_name(session, 'health')
+    heal = objects.item.get_item_by_name(session, 'heal')
 
     # gasoline = objects.item.get_item_by_name(session, 'gasoline')
     # gold = objects.item.get_item_by_name(session, 'gold')
@@ -96,6 +97,9 @@ def get_shop_data(session):
             }, {
                 "name": upgrades[health.name]['name'], "id": health.id,
                 "pos": 1, "cost": 1599
+            }, {
+                "name": upgrades[heal.name]['name'], "id": heal.id,
+                "pos": 1, "cost": 110
             }
         ],
         "buy_items": [

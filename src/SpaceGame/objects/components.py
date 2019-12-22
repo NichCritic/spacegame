@@ -551,6 +551,10 @@ class DropOnDeath():
         self.products = products
         self.qty = qty
 
+class Rooted():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,

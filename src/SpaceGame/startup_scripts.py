@@ -137,6 +137,9 @@ def create_spacestations(node_factory, session):
     silver_ore = objects.item.get_item_by_name(
         session, 'silver ore').static_copy()
     iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
+    rootkit = objects.item.get_item_by_name(session, 'rootkit').static_copy()
+
+
 
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
@@ -225,6 +228,20 @@ def create_spacestations(node_factory, session):
             "event_proximity_trigger": {}
         })
 
+    hacker_shop = {"shop_data": {
+        "name": "Hacker Shop",
+        "sale_items": [
+            {
+                "name": upgrades[rootkit.name]['name'], "id": rootkit.id,
+                "pos": 0, "cost": 5000
+            }
+        ],
+        "buy_items": [
+            
+        ]
+    }}
+
+
     node_factory.create_new_node({
         "area": {"radius":26},
         "position": {"x": 20000, "y":0},
@@ -236,6 +253,17 @@ def create_spacestations(node_factory, session):
         'server_updated': {},
         'physics_update': {},
         'state_history': {},
+        "shop_spec": hacker_shop,
+        "money":
+        {
+            "money": 250000000000
+        },
+        "inventory":
+        {
+            "inventory": {
+                rootkit.id:{"qty":10000000},
+            }
+        }
     })
 
 

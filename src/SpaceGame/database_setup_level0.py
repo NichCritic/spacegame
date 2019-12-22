@@ -62,6 +62,8 @@ with session_manager.get_session() as session:
 
     session.add(Item("trishot", 'upgrade'))
     session.add(Item("health", 'upgrade'))
+    session.add(Item("heal", 'upgrade'))
+    session.add(Item("rootkit", 'upgrade'))
 
     create_spacestation(node_factory_db, position={
                         "x": 0, "y": -200}, radius=200)
