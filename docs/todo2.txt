@@ -15,3 +15,4 @@ Procedural background stars
 name when you sign upi
 sell all button
 Closing with the close button doesn't stop refresh calls for dialogs
+screen resolution

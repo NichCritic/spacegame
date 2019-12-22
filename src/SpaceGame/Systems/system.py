@@ -18,7 +18,7 @@ class System(object):
             self.clean(node)
         # end = time.time()
         # dt = end - start
-        # logging.info(f"{self.__class__.__name__} ran")
+        # logging.info(f"{self.__class__.__name__} ran in {dt}s")
 
     def handle(self, node):
         pass

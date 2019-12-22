@@ -27,6 +27,8 @@ class ProximitySystem(System):
         node.add_or_attach_component("proximity", {})
         node.proximity.proximity_map = {}
 
+        # logging.info(f"Proximity handling {len(nnodes)} neighbours")
+
         for nnode in nnodes:
             if node.id == nnode.id:
                 continue
