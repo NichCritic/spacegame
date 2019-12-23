@@ -555,6 +555,10 @@ class Rooted():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class PingNeighbours():
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,
@@ -597,6 +601,7 @@ components = {
     "persisted": Persisted,
     "physics_update": PhysicsUpdate,
     "pickup": Pickup,
+    "ping_neighbours": PingNeighbours,
     "player_controlled": PlayerControlled,
     "player_input": PlayerInput,
     "player_proximity_target_behaviour": PlayerProximityTargetBehaviour,

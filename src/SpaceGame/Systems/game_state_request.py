@@ -4,6 +4,7 @@ from Systems.system import System
 class GameStateRequestSystem(System):
 
     mandatory = ["player_controlled", "player_input", "sector", "tracked_ids"]
+    optional = ["ping_neighbours"]
     handles = []
 
     def handle(self, pnode):
@@ -11,7 +12,7 @@ class GameStateRequestSystem(System):
                       "time": pnode.player_input.data[-1]['time']}
 
         for n_id in pnode.sector.neighbours:
-            if n_id not in pnode.tracked_ids.ids:
+            if n_id not in pnode.tracked_ids.ids or pnode.has("ping_neighbours"):
                 node = self.node_factory.create_node(n_id, [], [])
                 node.add_or_attach_component("updated", {})
 
@@ -93,5 +94,7 @@ class GameStateRequestSystem(System):
                                                                            "stage": node.quest_status_updated.stage}
             node.remove_component("updated")
         # print("Returning game state request")
-
+        if node.has("ping_neighbours"):
+            node.remove_component("ping_neighbours")
+            pass
         pnode.message(game_state)

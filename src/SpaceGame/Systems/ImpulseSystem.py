@@ -27,7 +27,7 @@ class ImpulseSystem(System):
         node.player_input.data.extend([{
             "left": left,
             "right": right,
-            "dt": 100,
+            "dt": 50,
             "time": time.time() * 1000,
             "shoot": shoot,
             "thrust": thrust,
