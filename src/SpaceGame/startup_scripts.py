@@ -199,6 +199,7 @@ def create_spacestations(node_factory, session):
                 'force': {},
                 'acceleration': {},
                 'mass': {},
+                'thrust':{"thrust":0.015},
                 'physics_update': {},
                 'shoot_at_target': {},
                 'avoid_shooting_allies': {},
@@ -273,6 +274,8 @@ def create_spacestations(node_factory, session):
         "velocity": {"x": 0, "y": 0},
         "type": {"type": "boss"},
         'force': {},
+
+        'thrust': {"thrust": 0.015},
         'acceleration': {},
         'mass': {'mass': 100},
         "collidable": {},

@@ -195,6 +195,10 @@ class Force():
         self.x = x
         self.y = y
 
+class Thrust():
+    def __init__(self, entity_id, thrust):
+        self.entity_id = entity_id
+        self.thrust = thrust
 
 class Rotation():
 
@@ -338,14 +342,17 @@ class ShootAtTarget():
 
 class ProximityTargetBehaviour():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, exclusion_list=None):
         self.entity_id = entity_id
-
+        self.exclusion_list = [] if exclusion_list is None else exclusion_list
 
 class PlayerProximityTargetBehaviour():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
+
+
+    
 
 
 class Health():
@@ -631,10 +638,10 @@ components = {
     "player_controlled": PlayerControlled,
     "player_input": PlayerInput,
     "player_proximity_target_behaviour": PlayerProximityTargetBehaviour,
+    "proximity_target_behaviour": ProximityTargetBehaviour,
     "position": Position,
     "processor": Processor,
     "proximity": Proximity,
-    "proximity_target_behaviour": ProximityTargetBehaviour,
     "quests": Quests,
     "quest_status_updated": QuestStatusUpdated,
     "renderable": Renderable,
@@ -649,6 +656,7 @@ components = {
     "sold": Sold,
     "state_history": StateHistory,
     "target": Target,
+    "thrust": Thrust,
     "transaction": Transaction,
     "tracked_ids": TrackedIds,
     "type": Type,

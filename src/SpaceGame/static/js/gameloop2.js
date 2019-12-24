@@ -90,6 +90,8 @@ var GameLoop = (function() {
         textures.bolt = {};
         textures.bolt.idle = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
 
+        textures.missile = {}
+        textures.missile.idle = [PIXI.loader.resources["static/assets/missile.png"].texture];
         
         textures.spacestation1 = {};
         textures.spacestation1.idle = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];

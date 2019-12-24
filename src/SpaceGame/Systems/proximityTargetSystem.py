@@ -15,7 +15,8 @@ class ProximityTargetSystem(System):
     def handle(self, node):
 
         if len(node.proximity.proximity_map.keys()) > 0:
-            closest = min(node.proximity.proximity_map.keys(),
+            keys = set(node.proximity.proximity_map.keys()) - set(node.proximity_target_behaviour.exclusion_list)
+            closest = min(keys,
                           key=lambda n: node.proximity.proximity_map[n])
 
             # logging.info(node.proximity.proximity_map)

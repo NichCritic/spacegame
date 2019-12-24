@@ -1,5 +1,9 @@
 var weapons = (function(){
 
+	function homing_missile(node_factory, node, count, textures) {
+		//Server run
+	}
+
 	function single_shot(node_factory, node, count, textures) {
 		var x_vel = Math.sin(node.rotation.rotation) * 0.5 + node.velocity.x;
         var y_vel = -Math.cos(node.rotation.rotation) * 0.5 + node.velocity.y;
@@ -139,7 +143,8 @@ var weapons = (function(){
 
 	return {
 		single_shot:single_shot,
-		triple_shot:triple_shot
+		triple_shot:triple_shot,
+		homing_missile:homing_missile
 	}
 
 
