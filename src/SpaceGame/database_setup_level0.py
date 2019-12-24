@@ -24,6 +24,7 @@ def create_shop(node_factory, position, session):
 
     trishot = get_item_by_name(session, 'trishot')
     health = get_item_by_name(session, 'health')
+    heal = get_item_by_name(session, 'heal')
 
     component_data = {
         "position": "db_position",
@@ -35,9 +36,9 @@ def create_shop(node_factory, position, session):
         "inventory":
         {
             "inventory": {
-                trishot.id:{"qty":10000000},
-                health.id:{"qty":10000000},
-                heal.id:{"qty":10000000}
+                trishot.id: {"qty": 10000000},
+                health.id: {"qty": 10000000},
+                heal.id: {"qty": 10000000}
             }
         }
     }

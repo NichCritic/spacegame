@@ -2,6 +2,7 @@ from Systems.system import System
 import time
 import logging
 
+
 class CollisionDamageSystem(System):
     """
     Handles the colliding state by ignoring it, in case other systems haven't handled it, 
@@ -35,4 +36,3 @@ class CollisionDamageSystem(System):
             collided = True
         if collided:
             node.remove_all_components()
-

@@ -60,6 +60,7 @@ from Systems.savePlayerSystem import SavePlayerSystem
 from Systems.physicsSink import PhysicsSink
 from Systems.DropOnDeathSystem import DropOnDeathSystem
 from Systems.attachSystem import AttachSystem
+from Systems.attachDeathSystem import AttachDeathSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -140,8 +141,6 @@ def create_spacestations(node_factory, session):
     iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
     rootkit = objects.item.get_item_by_name(session, 'rootkit').static_copy()
 
-
-
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
     #     y = math.floor(random.random() * 10000000 - 5000000)
@@ -152,7 +151,7 @@ def create_spacestations(node_factory, session):
         y_pos = int(floor(numpy.random.normal(scale=2000.0)))
         # rot = int(floor(numpy.random.rand() * 2 * math.pi))
         size = max(50, 50 + int(floor(numpy.random.normal(scale=50))))
-        drop_qty = floor(numpy.random.rand() * size/50 * 6)
+        drop_qty = floor(numpy.random.rand() * size / 50 * 6)
 
         node_factory.create_new_node({
             "type": {"type": "asteroid"},
@@ -168,7 +167,7 @@ def create_spacestations(node_factory, session):
             'physics_update': {},
             'state_history': {},
             'minable': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1},
-            'health': {'health': 100*size, 'max_health': 100*size},
+            'health': {'health': 100 * size, 'max_health': 100 * size},
             'drop_on_death': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1, "qty": drop_qty}
 
         })
@@ -238,15 +237,14 @@ def create_spacestations(node_factory, session):
             }
         ],
         "buy_items": [
-            
+
         ]
     }}
 
-
     node_factory.create_new_node({
-        "area": {"radius":26},
-        "position": {"x": 20000, "y":0},
-        "rotation": {"rotation": 3/4 * 2 *  math.pi},
+        "area": {"radius": 26},
+        "position": {"x": 20000, "y": 0},
+        "rotation": {"rotation": 3 / 4 * 2 * math.pi},
         "type": {"type": "ship3"},
         "collidable": {},
         'force': {},
@@ -262,32 +260,36 @@ def create_spacestations(node_factory, session):
         "inventory":
         {
             "inventory": {
-                rootkit.id:{"qty":10000000},
+                rootkit.id: {"qty": 10000000},
             }
         }
     })
 
-
     boss = node_factory.create_new_node({
-        "health":{"health":100000, "max_health":100000},
-        "area": {"radius":119*2},
-        "position": {"x": -2000, "y":0},
-        "rotation": {"rotation": 1/4 * 2 *  math.pi }, #
+        "health": {"health": 100000, "max_health": 100000},
+        "area": {"radius": 119 * 2},
+        "position": {"x": -2000, "y": 0},
+        "rotation": {"rotation": 1 / 4 * 2 * math.pi},
+        "velocity": {"x": 0, "y": 0},
         "type": {"type": "boss"},
+        'force': {},
+        'acceleration': {},
+        'mass': {'mass': 100},
         "collidable": {},
         'force': {},
         'acceleration': {},
-        'server_updated': {},
         'physics_update': {},
-        'state_history': {}
+        'orient_towards_target': {},
+        'player_proximity_target_behaviour': {},
+        'drop_on_death': {"products": [silver_ore] * 9 + [gold_ore] * 1, "qty": 50}
     })
 
-    gun_locations = [(-96, -30),(-85, -42),(-74, -39),(74, -39),(85, -42),(96, -30)]
+    gun_locations = [(-96, -30), (-85, -42), (-74, -39),
+                     (74, -39), (85, -42), (96, -30)]
 
     for x, y in gun_locations:
         node_factory.create_new_node({
-            'attached': {"target_id": boss.id, "x":x*2, "y":y*2},
-            "type": {"type": "ship"},
+            'attached': {"target_id": boss.id, "x": x * 2, "y": y * 2},
             "area": {"radius": 10},
             "position": {"x": 0, "y": 0},
             "rotation": {"rotation": 0},
@@ -296,11 +298,10 @@ def create_spacestations(node_factory, session):
             'acceleration': {},
             'mass': {},
             'physics_update': {},
-            'shoot_at_target': {"firing_angle":45},
+            'shoot_at_target': {"firing_angle": 65},
             'player_proximity_target_behaviour': {},
             'weapon': {'type': 'triple_shot'}
         })
-    
 
 
 def collision_test(node_factory, session):
@@ -392,6 +393,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     collision = CollisionSystem(node_factory)
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
+    attach_death = AttachDeathSystem(node_factory)
     drop_on_death = DropOnDeathSystem(node_factory)
     player_death = PlayerDeathSystem(node_factory)
     death = DeathSystem(node_factory)
@@ -437,6 +439,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(pickup)
     system_set.register(collision_dam)
     system_set.register(collision_vel_dam)
+    system_set.register(attach_death)
     system_set.register(drop_on_death)
     system_set.register(player_death)
     system_set.register(death)

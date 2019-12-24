@@ -535,7 +535,7 @@ class QuestStatusUpdated():
 
 class Quests():
 
-    def __init__(self, entity_id, quests = None):
+    def __init__(self, entity_id, quests=None):
         self.entity_id = entity_id
         self.quests = {} if quests == None else quests
 
@@ -546,27 +546,42 @@ class TrackedIds():
         self.entity_id = entity_id
         self.ids = ids if ids is not None else []
 
+
 class DropOnDeath():
+
     def __init__(self, entity_id, products, qty):
         self.entity_id = entity_id
         self.products = products
         self.qty = qty
 
+
 class Rooted():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
+
 
 class PingNeighbours():
+
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+
 class Attached():
+
     def __init__(self, entity_id, target_id, x=0, y=0, rotation=0):
         self.entity_id = entity_id
         self.target_id = target_id
         self.x = x
         self.y = y
         self.rotation = rotation
+
+
+class IgnoreCollisions():
+
+    def __init__(self, entity_id, ids=None):
+        self.entity_id = entity_id
+        self.ids = [] if ids is None else ids
 
 components = {
     "acceleration": Acceleration,
@@ -597,6 +612,7 @@ components = {
     "game_state_request": GameStateRequest,
     "health": Health,
     "home": Home,
+    "ignore_collisions": IgnoreCollisions,
     "impulses": Impulses,
     "inventory": Inventory,
     "inventory_mass": InventoryMass,
