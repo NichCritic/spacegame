@@ -59,6 +59,7 @@ from Systems.proximitySink import ProximitySink
 from Systems.savePlayerSystem import SavePlayerSystem
 from Systems.physicsSink import PhysicsSink
 from Systems.DropOnDeathSystem import DropOnDeathSystem
+from Systems.attachSystem import AttachSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -267,6 +268,41 @@ def create_spacestations(node_factory, session):
     })
 
 
+    boss = node_factory.create_new_node({
+        "health":{"health":100000, "max_health":100000},
+        "area": {"radius":119*2},
+        "position": {"x": -2000, "y":0},
+        "rotation": {"rotation": 1/4 * 2 *  math.pi }, #
+        "type": {"type": "boss"},
+        "collidable": {},
+        'force': {},
+        'acceleration': {},
+        'server_updated': {},
+        'physics_update': {},
+        'state_history': {}
+    })
+
+    gun_locations = [(-96, -30),(-85, -42),(-74, -39),(74, -39),(85, -42),(96, -30)]
+
+    for x, y in gun_locations:
+        node_factory.create_new_node({
+            'attached': {"target_id": boss.id, "x":x*2, "y":y*2},
+            "type": {"type": "ship"},
+            "area": {"radius": 10},
+            "position": {"x": 0, "y": 0},
+            "rotation": {"rotation": 0},
+            "velocity": {"x": 0, "y": 0},
+            'force': {},
+            'acceleration': {},
+            'mass': {},
+            'physics_update': {},
+            'shoot_at_target': {"firing_angle":45},
+            'player_proximity_target_behaviour': {},
+            'weapon': {'type': 'triple_shot'}
+        })
+    
+
+
 def collision_test(node_factory, session):
 
     def create_asteroids(node):
@@ -348,6 +384,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     sersys = ServerUpdateSystem(node_factory)
     hissys = HistorySystem(node_factory)
     physys = PhysicsSystem(node_factory)
+    attachSystem = AttachSystem(node_factory)
     shoot = ShootingSystem(node_factory, weapons)
     movetrack = MovementTrackingSystem(node_factory)
     spatial = SpatialSystem(node_factory)
@@ -391,6 +428,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(hissys)
     system_set.register(sersys)
     system_set.register(physys)
+    system_set.register(attachSystem)
     system_set.register(shoot)
     system_set.register(movetrack)
     system_set.register(spatial)

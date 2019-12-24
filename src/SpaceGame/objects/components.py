@@ -331,8 +331,9 @@ class OrientTowardsTarget():
 
 class ShootAtTarget():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, firing_angle=5):
         self.entity_id = entity_id
+        self.firing_angle = firing_angle
 
 
 class ProximityTargetBehaviour():
@@ -559,6 +560,14 @@ class PingNeighbours():
     def __init__(self, entity_id):
         self.entity_id = entity_id
 
+class Attached():
+    def __init__(self, entity_id, target_id, x=0, y=0, rotation=0):
+        self.entity_id = entity_id
+        self.target_id = target_id
+        self.x = x
+        self.y = y
+        self.rotation = rotation
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,
@@ -568,6 +577,7 @@ components = {
     "applied_upgrades": AppliedUpgrades,
     "apply_upgrade": ApplyUpgrade,
     "area": Area,
+    "attached": Attached,
     "avoid_shooting_allies": AvoidShootingAllies,
     "bought": Bought,
     "camera": Camera,

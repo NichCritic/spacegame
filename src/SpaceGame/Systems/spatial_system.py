@@ -78,41 +78,18 @@ class SpatialSystem(System):
                     self.fine_sectors[(fx, fy)].append(node.id)
             
             
-        dt1=0           
-        dt2=0           
-        dt3=0           
-        dt4=0
-
-        # updated_count = 0
+        
         node_ids = set([node.id for node in nodes])
         for node in nodes:
-            t1 = time.time()
             sx, sy, neighbour_entities = self.create_neighbours_list(
                 node, self.sectors, 2500)
-            t2 = time.time()
             fx, fy, fine_neighbour_entities = self.create_neighbours_list(
                 node, self.fine_sectors, 250)
-            t3 = time.time()
-            # updated_count += len(set(neighbour_entities) - neighbours_cache[node.id])
              
-            t4 = time.time()
             node.add_or_update_component(
                 "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
                            "fx": fx, "fy": fy, "fine_neighbours": fine_neighbour_entities})
-            t5 = time.time()
-            dt1 += t2-t1
-            dt2 += t3-t3
-            dt3 += t4-t3
-            dt4 += t5-t4
         
-        logging.info(f"Processing {len(nodes)} nodes")
-        # logging.info(f"Update count: {updated_count}")
-
-
-        logging.info(f"Stage 1 is {dt1}s")
-        logging.info(f"Stage 2 is {dt2}s")
-        logging.info(f"Stage 3 is {dt3}s")
-        logging.info(f"Stage 4 is {dt4}s")
 
 
 

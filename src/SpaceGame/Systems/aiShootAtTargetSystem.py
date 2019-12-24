@@ -32,9 +32,11 @@ class AIShootAtTargetSystem(System):
 
         current_angle = node.rotation.rotation
 
-        five_degrees_rad = 0.0872665
+        one_rad = 0.0174533
 
-        shoot = angle < current_angle + five_degrees_rad and angle > current_angle - five_degrees_rad
+        firing_angle = node.shoot_at_target.firing_angle * one_rad
+
+        shoot = angle < current_angle + firing_angle and angle > current_angle - firing_angle
 
         node.add_or_attach_component("impulses", {})
 

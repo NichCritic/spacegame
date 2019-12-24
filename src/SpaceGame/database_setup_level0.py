@@ -36,7 +36,8 @@ def create_shop(node_factory, position, session):
         {
             "inventory": {
                 trishot.id:{"qty":10000000},
-                health.id:{"qty":10000000}
+                health.id:{"qty":10000000},
+                heal.id:{"qty":10000000}
             }
         }
     }

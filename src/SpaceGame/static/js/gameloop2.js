@@ -84,6 +84,9 @@ var GameLoop = (function() {
         textures.ship3 = {}
         textures.ship3.idle = [PIXI.loader.resources["static/assets/ship3.png"].texture];
 
+        textures.boss = {}
+        textures.boss.idle = [PIXI.loader.resources["static/assets/boss.png"].texture];
+
         textures.bolt = {};
         textures.bolt.idle = getTexturesFromSpritesheet(bolt, 2, 1, 7, 13)
 
