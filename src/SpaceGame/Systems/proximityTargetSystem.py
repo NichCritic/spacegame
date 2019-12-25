@@ -20,7 +20,7 @@ class ProximityTargetSystem(System):
                           key=lambda n: node.proximity.proximity_map[n])
 
             # logging.info(node.proximity.proximity_map)
-            # logging.info(f"targetting {closest}")
+            logging.info(f"targetting {closest}, dist: {node.proximity.proximity_map[closest]}")
 
             node.add_or_update_component("target", {
                 "target_id": closest

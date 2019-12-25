@@ -33,7 +33,7 @@ def homing_missile(node_factory, node, creation_time, count):
         'rotation': {'rotation': node.rotation.rotation},
         'area': {'radius': 6},
         'mass': {'mass':40},
-        'thrust': {'thrust':0.005},
+        'thrust': {'thrust':0.001},
         'server_updated': {},
         'type': {'type': 'missile'},
         'physics_update': {'last_update': now},
