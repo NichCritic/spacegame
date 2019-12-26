@@ -24,6 +24,8 @@ def homing_missile(node_factory, node, creation_time, count):
         node.add_or_attach_component("attached", {"target_id": node.id})
         ignored_nodes.append(node.attached.target_id)
 
+
+
     # logging.info("Bullets fired: "+str(count))
     bullet = node_factory.create_new_node({
         'force': {},
@@ -50,6 +52,8 @@ def homing_missile(node_factory, node, creation_time, count):
         # "client_sync": {"sync_key": count}
         # "no_sync": {}
     })
+
+
 
 
 def single_shot(node_factory, node, creation_time, count):

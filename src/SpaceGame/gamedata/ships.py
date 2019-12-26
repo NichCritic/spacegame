@@ -28,7 +28,7 @@ def default_ship(node):
                                  "damage": 200, "min_velocity": 0.2, "max_velocity": 1})
     node.add_or_attach_component('collision_movement', {})
 
-    node.add_or_attach_component('weapon', {'type': 'homing_missile'})
+    node.add_or_attach_component('weapon', {'type': 'single_shot'})
 
     node.add_or_attach_component('inventory', {'inventory': {}})
     node.add_or_attach_component('money', {'money': 0})
