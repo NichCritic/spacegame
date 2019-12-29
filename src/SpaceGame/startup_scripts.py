@@ -199,7 +199,7 @@ def create_spacestations(node_factory, session):
                 'force': {},
                 'acceleration': {},
                 'mass': {},
-                'thrust':{"thrust":0.015},
+                'thrust': {"thrust": 0.015},
                 'physics_update': {},
                 'shoot_at_target': {},
                 'avoid_shooting_allies': {},
@@ -274,8 +274,8 @@ def create_spacestations(node_factory, session):
         "velocity": {"x": 0, "y": 0},
         "type": {"type": "boss"},
         'force': {},
-
-        'thrust': {"thrust": 0.015},
+        # 'allies': {"team": "bossman"},
+        'thrust': {"thrust": 0.005},
         'acceleration': {},
         'mass': {'mass': 100},
         "collidable": {},
@@ -301,9 +301,10 @@ def create_spacestations(node_factory, session):
             'acceleration': {},
             'mass': {},
             'physics_update': {},
-            'shoot_at_target': {"firing_angle": 65},
+            'shoot_at_target': {"firing_angle": 60},
             'player_proximity_target_behaviour': {},
-            'weapon': {'type': 'triple_shot'}
+            'weapon': {'type': 'homing_missile', "firing_rate": 1000},
+            # 'allies': {'team': 'bossman'}
         })
 
 

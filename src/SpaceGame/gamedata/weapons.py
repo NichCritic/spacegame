@@ -24,8 +24,6 @@ def homing_missile(node_factory, node, creation_time, count):
         node.add_or_attach_component("attached", {"target_id": node.id})
         ignored_nodes.append(node.attached.target_id)
 
-
-
     # logging.info("Bullets fired: "+str(count))
     bullet = node_factory.create_new_node({
         'force': {},
@@ -34,26 +32,30 @@ def homing_missile(node_factory, node, creation_time, count):
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation},
         'area': {'radius': 6},
-        'mass': {'mass':40},
-        'thrust': {'thrust':0.001},
+        'mass': {'mass': 40},
+        'thrust': {'thrust': 0.005},
         'server_updated': {},
         'type': {'type': 'missile'},
         'physics_update': {'last_update': now},
         'state_history': {},
         'expires': {
-            'expiry_time_ms': 4000,
+            'expiry_time_ms': 10000,
             'creation_time': start_time
         },
         "collidable": {},
         "collision_damage": {"damage": 250},
         "ignore_collisions": {"ids": ignored_nodes},
         'orient_towards_target': {},
-        'proximity_target_behaviour': {"exclusion_list":ignored_nodes}
+        'proximity_target_behaviour': {"exclusion_list": ignored_nodes},
+
+        'no_target_allies': {}
         # "client_sync": {"sync_key": count}
         # "no_sync": {}
     })
 
-
+    if node.entity_has("allies"):
+        node.add_or_attach_component("allies", {})
+        bullet.add_or_attach_component("allies", {"team": node.allies.team})
 
 
 def single_shot(node_factory, node, creation_time, count):

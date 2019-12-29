@@ -31,6 +31,7 @@ class CommandHandler():
             'tracked_ids', {'ids': command['tracked_ids']})
 
         default_ship(av)
+        av.add_or_attach_component("allies", {"team": "jacob"})
         self.quest_manager.attach_available(av)
 
         return ("success",)

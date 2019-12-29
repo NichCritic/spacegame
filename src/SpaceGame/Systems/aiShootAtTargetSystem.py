@@ -39,5 +39,5 @@ class AIShootAtTargetSystem(System):
         shoot = angle < current_angle + firing_angle and angle > current_angle - firing_angle
 
         node.add_or_attach_component("impulses", {})
-
-        node.impulses.shoot += 100 if shoot else 0 
+        # logging.info(f"node {node.id} is shooting? {shoot}")
+        node.impulses.shoot += 100 if shoot else 0

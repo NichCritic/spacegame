@@ -195,10 +195,13 @@ class Force():
         self.x = x
         self.y = y
 
+
 class Thrust():
+
     def __init__(self, entity_id, thrust):
         self.entity_id = entity_id
         self.thrust = thrust
+
 
 class Rotation():
 
@@ -238,10 +241,9 @@ class GameStateRequest():
 
 class Shooting():
 
-    def __init__(self, entity_id, firing_rate, inputs=None):
+    def __init__(self, entity_id, inputs=None):
         self.entity_id = entity_id
         self.inputs = inputs if not inputs is None else []
-        self.firing_rate = firing_rate
 
 
 class ShootingVars():
@@ -346,13 +348,11 @@ class ProximityTargetBehaviour():
         self.entity_id = entity_id
         self.exclusion_list = [] if exclusion_list is None else exclusion_list
 
+
 class PlayerProximityTargetBehaviour():
 
     def __init__(self, entity_id):
         self.entity_id = entity_id
-
-
-    
 
 
 class Health():
@@ -453,6 +453,12 @@ class Allies():
         self.team = team
 
 
+class NoTargetAllies():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
 class Home():
 
     def __init__(self, entity_id, x, y):
@@ -492,9 +498,10 @@ class ApplyUpgrade():
 
 class Weapon():
 
-    def __init__(self, entity_id, type):
+    def __init__(self, entity_id, type, firing_rate=200):
         self.entity_id = entity_id
         self.type = type
+        self.firing_rate = firing_rate
 
 
 class Dead():
@@ -630,6 +637,7 @@ components = {
     "moved": Moved,
     "network_messages": NetworkMessages,
     "no_sync": NoSync,
+    "no_target_allies": NoTargetAllies,
     "orient_towards_target": OrientTowardsTarget,
     "persisted": Persisted,
     "physics_update": PhysicsUpdate,

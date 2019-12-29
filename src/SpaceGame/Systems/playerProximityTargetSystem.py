@@ -14,7 +14,8 @@ class PlayerProximityTargetSystem(System):
 
     def get_players(self, keys):
         # logging.info(keys)
-        nodes = self.node_factory.create_node_list(["player_controlled"], [], entity_ids = keys)
+        nodes = self.node_factory.create_node_list(
+            ["player_controlled"], [], entity_ids=keys)
         return [n.id for n in nodes]
 
     def handle(self, node):

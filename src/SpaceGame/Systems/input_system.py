@@ -32,7 +32,8 @@ class PhysicsPacket():
 
 class InputSystem(System):
 
-    mandatory = ["player_input", "thrust", "rotation", "physics_update"]
+    mandatory = ["player_input", "rotation", "physics_update"]
+    optional = ["thrust"]
     handles = []
 
     def get_unhandled_input(self, input_data_list):
@@ -47,7 +48,7 @@ class InputSystem(System):
 
         inputs = self.get_unhandled_input(node.player_input.data)
         rot = node.rotation.rotation
-        thrust = node.thrust.thrust
+        thrust = node.thrust.thrust if node.has("thrust") else 0
 
         for inp in inputs:
             dt = inp['dt']
@@ -59,7 +60,6 @@ class InputSystem(System):
             p.rotation = leftrot if inp[
                 "left"] else (rightrot if inp["right"] else rot)
             rot = p.rotation
-
 
             p.force.x = math.sin(p.rotation) * \
                 dt * thrust if inp["thrust"] else 0
@@ -75,8 +75,7 @@ class InputSystem(System):
 
             # TODO: Firing rate should come from weapon stats
             if inp['shoot'] or node.has("shooting"):
-
-                node.add_or_attach_component('shooting', {'firing_rate': 200})
+                node.add_or_attach_component('shooting', {})
                 node.shooting.inputs.append(
                     {'shooting': inp['shoot'], 'dt': inp['dt']})
 
