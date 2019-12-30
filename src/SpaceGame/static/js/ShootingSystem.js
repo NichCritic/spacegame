@@ -2,7 +2,7 @@
 var ShootingSystem = (function() {
 	var manditory = ['shooting', 'velocity', 'rotation', 'position', 'weapon'];
 	var optional = [];
-	var handles = ['shooting'];
+	var handles = [];
 
 	function ShootingSystem(node_factory, textures, weapons) {
 		this.node_factory = node_factory;
@@ -62,4 +62,32 @@ var ShootingSystem = (function() {
 	}
 
 	return ShootingSystem; 
+})();
+
+var ShootingSink = (function() {
+	var manditory = ['shooting'];
+	var optional = [];
+	var handles = ['shooting'];
+
+	function ShootingSink(node_factory) {
+		this.node_factory = node_factory;
+	}
+
+	ShootingSink.prototype.process = function() {
+		var nodes = this.node_factory.create_node_list(manditory, optional);
+		for(let i = 0; i < nodes.length; i++) {
+			let node = nodes[i];
+			this.cleanup(node);
+		}
+
+	};
+
+	ShootingSink.prototype.cleanup = function(node) {
+		for(let i = 0; i < handles.length; i++) {
+			var comp = handles[i];
+			node.delete_component(comp);
+		}
+	}
+
+	return ShootingSink; 
 })();

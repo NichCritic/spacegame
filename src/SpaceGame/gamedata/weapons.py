@@ -2,7 +2,7 @@ import math
 import time
 
 
-def beam(node_factory, node, creation_time, count):
+def beam(node_factory, node, creation_time, count, shooting):
     now = time.time() * 1000
     start_time = node.physics_update.last_update + creation_time
 
@@ -14,29 +14,23 @@ def beam(node_factory, node, creation_time, count):
     x_pos = node.position.x
     y_pos = node.position.y
 
-    ignored_nodes = [node.id]
-    if node.entity_has("attached"):
-        node.add_or_attach_component("attached", {"target_id": node.id})
-        ignored_nodes.append(node.attached.target_id)
-
     # logging.info("Bullets fired: "+str(count))
-    bullet = node_factory.create_new_node({
-        'position': {'x': x_pos, 'y': y_pos},
-        'rotation': {'rotation': node.rotation.rotation},
-        'beam': {'length': 1000, 'width': 3},
-        # "collidable": {},
-        # "collision_damage": {"damage": 25},
-        "ignore_collisions": {"ids": ignored_nodes},
-        "attached": {"target_id": node.id},
-        "charging": {}  # How long? Then what?
-    })
-
-    if node.entity_has("allies"):
-        node.add_or_attach_component("allies", {})
-        bullet.add_or_attach_component("allies", {"team": node.allies.team})
+    if shooting:
+        node.add_or_attach_component(
+            'beam', {'length': 1000, 'width': 3})
+        node.add_or_attach_component("charging", {})  # How long? Then what?
+    else:
+        if node.has("beam"):
+            node.remove_component('beam')
+        if node.has("charging"):
+            node.remove_component('charging')
+        if node.has("charged"):
+            node.remove_component('charged')
 
 
-def homing_missile(node_factory, node, creation_time, count):
+def homing_missile(node_factory, node, creation_time, count, shooting):
+    if not shooting:
+        return
     x_vel = node.velocity.x
     y_vel = node.velocity.y
 
@@ -92,7 +86,9 @@ def homing_missile(node_factory, node, creation_time, count):
         bullet.add_or_attach_component("allies", {"team": node.allies.team})
 
 
-def single_shot(node_factory, node, creation_time, count):
+def single_shot(node_factory, node, creation_time, count, shooting):
+    if not shooting:
+        return
     x_vel = math.sin(node.rotation.rotation) * 0.5 + node.velocity.x
     y_vel = -math.cos(node.rotation.rotation) * 0.5 + node.velocity.y
 
@@ -142,7 +138,9 @@ def single_shot(node_factory, node, creation_time, count):
         bullet.add_or_attach_component('no_sync', {})
 
 
-def triple_shot(node_factory, node, creation_time, count):
+def triple_shot(node_factory, node, creation_time, count, shooting):
+    if not shooting:
+        return
     twentydegreesrad = 0.349066
 
     x_vel1 = math.sin(node.rotation.rotation) * 0.5 + node.velocity.x
