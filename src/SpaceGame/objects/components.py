@@ -597,6 +597,26 @@ class IgnoreCollisions():
         self.entity_id = entity_id
         self.ids = [] if ids is None else ids
 
+
+class Beam():
+
+    def __init__(self, entity_id, length, width):
+        self.entity_id = entity_id
+        self.length = length
+        self.width = width
+
+
+class Charging():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
+
+class Charged():
+
+    def __init__(self, entity_id):
+        self.entity_id = entity_id
+
 components = {
     "acceleration": Acceleration,
     "active_quests": ActiveQuests,
@@ -609,7 +629,10 @@ components = {
     "attached": Attached,
     "avoid_shooting_allies": AvoidShootingAllies,
     "bought": Bought,
+    "beam": Beam,
     "camera": Camera,
+    "charging": Charging,
+    "charged": Charged,
     "client_sync": ClientSync,
     "collidable": Collidable,
     "colliding": Colliding,

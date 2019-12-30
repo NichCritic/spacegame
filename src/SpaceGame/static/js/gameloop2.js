@@ -163,6 +163,7 @@ var GameLoop = (function() {
         animation_system = new AnimationSystem(node_factory);
 
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
+        beam_render = new BeamRenderSystem(node_factory, mining_lasers);
         mining_laser_render = new MiningLaserRenderSystem(node_factory, mining_lasers);
         render_system = new RenderSystem(node_factory, entities);
 
@@ -172,7 +173,7 @@ var GameLoop = (function() {
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, mining_laser_render, health_render_system, render_system];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -265,17 +266,17 @@ var GameLoop = (function() {
             }});
 
 
-
-
             n.add_or_update("area", {"radius":entity.radius});
-            n.add_or_update("renderable", {spritesheet: textures[entity.type],
+
+            if(entity.type) {
+                //TODO: Type == Render type
+                n.add_or_update("renderable", {spritesheet: textures[entity.type],
                                            image:textures[entity.type].idle[0],
                                            width: n.area.radius*2,
                                            height: n.area.radius*2});
 
-
-
-            n.add_or_update("type", {"type":entity.type})
+                n.add_or_update("type", {"type":entity.type})
+            }
 
             if(entity.animated) {
                 //TODO This could cause a bug where the animation rate isn't updated between
@@ -306,6 +307,18 @@ var GameLoop = (function() {
 
             if(entity.client_sync) {
                 n.add_or_update('client_sync', entity.client_sync)
+            }
+
+            if(entity.beam) {
+                n.add_or_update('beam', entity.beam)
+            }
+
+            if(entity.charging) {
+                n.add_or_update('charging', {})
+            }
+
+            if(entity.charged) {
+                n.add_or_update('charged', {})
             }
 
             if(entities[i] === serverState.player_id){

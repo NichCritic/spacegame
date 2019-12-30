@@ -2,6 +2,40 @@ import math
 import time
 
 
+def beam(node_factory, node, creation_time, count):
+    now = time.time() * 1000
+    start_time = node.physics_update.last_update + creation_time
+
+    dt = now - start_time
+
+    if dt < 0:
+        dt = 0
+
+    x_pos = node.position.x
+    y_pos = node.position.y
+
+    ignored_nodes = [node.id]
+    if node.entity_has("attached"):
+        node.add_or_attach_component("attached", {"target_id": node.id})
+        ignored_nodes.append(node.attached.target_id)
+
+    # logging.info("Bullets fired: "+str(count))
+    bullet = node_factory.create_new_node({
+        'position': {'x': x_pos, 'y': y_pos},
+        'rotation': {'rotation': node.rotation.rotation},
+        'beam': {'length': 1000, 'width': 3},
+        # "collidable": {},
+        # "collision_damage": {"damage": 25},
+        "ignore_collisions": {"ids": ignored_nodes},
+        "attached": {"target_id": node.id},
+        "charging": {}  # How long? Then what?
+    })
+
+    if node.entity_has("allies"):
+        node.add_or_attach_component("allies", {})
+        bullet.add_or_attach_component("allies", {"team": node.allies.team})
+
+
 def homing_missile(node_factory, node, creation_time, count):
     x_vel = node.velocity.x
     y_vel = node.velocity.y
@@ -219,5 +253,6 @@ def triple_shot(node_factory, node, creation_time, count):
 weapons = {
     'single_shot': single_shot,
     'triple_shot': triple_shot,
-    'homing_missile': homing_missile
+    'homing_missile': homing_missile,
+    'beam': beam
 }

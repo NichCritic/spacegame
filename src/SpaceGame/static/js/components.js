@@ -179,14 +179,31 @@ var components = (function(){
 	}
 
 	var RemoveOnCollide = function(entity_id) {
-		this.entity_id = entity_id
+		this.entity_id = entity_id;
+	}
+
+	var Beam = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.length = data.length;
+		this.width = data.width;
+	}
+
+	var Charging = function(entity_id) {
+		this.entity_id = entity_id;
+	}
+
+	var Charged = function(entity_id) {
+		this.entity_id = entity_id;
 	}
 
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
 		"area": Area,
+		"beam": Beam,
 		"camera": Camera,
+		"charging": Charging,
+		"charged": Charged,
 		"check_collision": CheckCollision,
 		"client_sync": ClientSync,
 		"collidable": Collidable,

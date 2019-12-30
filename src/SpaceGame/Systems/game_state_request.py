@@ -17,11 +17,13 @@ class GameStateRequestSystem(System):
                 node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
-            ["position", "type", "updated"], ["velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup"], entity_ids=pnode.sector.neighbours)
+            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
                 continue
+
+            ntype = node.type.type if node.has('type') else None
             velx = node.velocity.x if node.has('velocity') else 0
             vely = node.velocity.y if node.has('velocity') else 0
             mass = (node.mass.mass if node.has('mass') else 1) + \
@@ -51,6 +53,11 @@ class GameStateRequestSystem(System):
 
             pickup = True if node.has("pickup") else None
 
+            beam = {"width": node.beam.width,
+                    "length": node.beam.length} if node.has("beam") else None
+            charging = True if node.has("charging") else False
+            charged = True if node.has("charged") else False
+
             game_state["entities"][node.id] = {
                 "id": node.id,
                 "position": {"x": node.position.x,
@@ -68,7 +75,7 @@ class GameStateRequestSystem(System):
                 "weapon": {"type": weapon},
                 "mass": mass,
                 "radius": radius,
-                "type": node.type.type,
+                "type": ntype,
                 "rotation": rotation,
                 "control": control,
                 "mining": mining,
@@ -76,6 +83,9 @@ class GameStateRequestSystem(System):
                 "pickup": pickup,
                 "collidable": collidable,
                 "animated": animated,
+                "beam": beam,
+                "charging": charging,
+                "charged": charged,
                 "expires": expires,
                 "last_update": last_update,
                 # "state_history": state_history
