@@ -69,8 +69,11 @@ var BeamRenderSystem = (function() {
 			let end_x = x_pos + v_x * node.beam.length;
 			let end_y = y_pos + v_y * node.beam.length;
 
+			let beam_width = node.has('charged') ? 10 : node.beam.width
+			let beam_alpha = node.has('charged') ? 1 : 0.5
+
 	    	this.displayObjects[node.id].clear();
-	        this.displayObjects[node.id].lineStyle(node.beam.width, 0xDDDDFF);
+	        this.displayObjects[node.id].lineStyle(beam_width, 0xDDDDFF, beam_alpha);
 	        this.displayObjects[node.id].moveTo(x_pos, y_pos);
 	        this.displayObjects[node.id].lineTo(end_x, end_y);
 

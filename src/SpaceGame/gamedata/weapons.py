@@ -1,5 +1,6 @@
 import math
 import time
+import logging
 
 
 def beam(node_factory, node, creation_time, count, shooting):
@@ -16,15 +17,23 @@ def beam(node_factory, node, creation_time, count, shooting):
 
     # logging.info("Bullets fired: "+str(count))
     if shooting:
-        node.add_or_attach_component(
-            'beam', {'length': 1000, 'width': 3})
-        node.add_or_attach_component("charging", {})  # How long? Then what?
+        if not node.entity_has("charged"):
+            node.add_or_attach_component(
+                'beam', {'length': 1000, 'width': 1})
+            node.add_or_attach_component(
+                "charging", {})  # How long? Then what?
+            node.charging.charge_time += dt
+            logging.info(node.charging.charge_time)
+            if node.charging.charge_time > 3000:
+                node.charging.charge_time = 0
+                node.remove_component("charging")
+                node.add_or_attach_component("charged", {})
     else:
-        if node.has("beam"):
+        if node.entity_has("beam"):
             node.remove_component('beam')
-        if node.has("charging"):
+        if node.entity_has("charging"):
             node.remove_component('charging')
-        if node.has("charged"):
+        if node.entity_has("charged"):
             node.remove_component('charged')
 
 
