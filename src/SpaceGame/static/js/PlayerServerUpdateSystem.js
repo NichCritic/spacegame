@@ -37,6 +37,7 @@ var PlayerServerUpdateSystem = (function() {
 		node.add_or_update("force", node.server_update.data.force);
 		node.add_or_update("thrust", node.server_update.data.thrust);
 		node.add_or_update("rotation", node.server_update.data.rotation);
+		node.add_or_update("rotational_velocity", node.server_update.data.rotational_velocity)
 		node.add_or_update("mass", node.server_update.data.mass);
 
 		for(let i = 0; i < inputs.list.length-1; i++) {

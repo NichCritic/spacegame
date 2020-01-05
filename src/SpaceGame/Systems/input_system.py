@@ -32,7 +32,7 @@ class PhysicsPacket():
 
 class InputSystem(System):
 
-    mandatory = ["player_input", "rotation", "physics_update"]
+    mandatory = ["player_input", "rotation", "rotational_velocity", "physics_update"]
     optional = ["thrust"]
     handles = []
 
@@ -53,8 +53,8 @@ class InputSystem(System):
         for inp in inputs:
             dt = inp['dt']
 
-            leftrot = rot - 1 / 200 * dt
-            rightrot = rot + 1 / 200 * dt
+            leftrot = rot - node.rotational_velocity.vel / 200 * dt
+            rightrot = rot + node.rotational_velocity.vel / 200 * dt
 
             p = PhysicsPacket()
             p.rotation = leftrot if inp[

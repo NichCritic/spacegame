@@ -24,7 +24,7 @@ def beam(node_factory, node, creation_time, count, shooting):
                 "charging", {})  # How long? Then what?
             node.charging.charge_time += dt
             logging.info(node.charging.charge_time)
-            if node.charging.charge_time > 3000:
+            if node.charging.charge_time > 300:
                 node.charging.charge_time = 0
                 node.remove_component("charging")
                 node.add_or_attach_component("charged", {})
@@ -68,6 +68,7 @@ def homing_missile(node_factory, node, creation_time, count, shooting):
         'velocity': {'x': x_vel, 'y': y_vel},
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation},
+        "rotational_velocity": {"vel":2.5}, 
         'area': {'radius': 6},
         'mass': {'mass': 40},
         'thrust': {'thrust': 0.005},
@@ -126,6 +127,8 @@ def single_shot(node_factory, node, creation_time, count, shooting):
         'velocity': {'x': x_vel, 'y': y_vel},
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation},
+        'rotational_velocity': {'vel': 1},
+        'thrust': {'thrust': 0},
         'area': {'radius': 6},
         'mass': {},
         'server_updated': {},
@@ -188,8 +191,10 @@ def triple_shot(node_factory, node, creation_time, count, shooting):
         'velocity': {'x': x_vel1, 'y': y_vel1},
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation},
+        'rotational_velocity': {'vel': 1},
         'area': {'radius': 6},
         'mass': {},
+        'thrust': {'thrust': 0},
         'server_updated': {},
         'type': {'type': 'bolt'},
         'physics_update': {'last_update': now},
@@ -211,8 +216,10 @@ def triple_shot(node_factory, node, creation_time, count, shooting):
         'velocity': {'x': x_vel2, 'y': y_vel2},
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation + twentydegreesrad},
+        'rotational_velocity': {'vel': 1},
         'area': {'radius': 6},
         'mass': {},
+        'thrust': {'thrust': 0},
         'server_updated': {},
         'type': {'type': 'bolt'},
         'physics_update': {'last_update': now},
@@ -234,8 +241,10 @@ def triple_shot(node_factory, node, creation_time, count, shooting):
         'velocity': {'x': x_vel3, 'y': y_vel3},
         'position': {'x': x_pos, 'y': y_pos},
         'rotation': {'rotation': node.rotation.rotation - twentydegreesrad},
+        'rotational_velocity': {'vel': 1},
         'area': {'radius': 6},
         'mass': {},
+        'thrust': {'thrust': 0},
         'server_updated': {},
         'type': {'type': 'bolt'},
         'physics_update': {'last_update': now},

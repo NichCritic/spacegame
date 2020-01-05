@@ -15,6 +15,10 @@ def default_ship(node):
     node.add_or_attach_component(
         'rotation', {})
 
+    node.add_or_attach_component(
+        'rotational_velocity', {"vel":1}
+    )
+
     node.add_or_attach_component("thrust", {"thrust": 0.015})
 
     node.add_or_attach_component('mass', {})

@@ -33,6 +33,11 @@ var components = (function(){
 		this.rotation = data.rotation;
 	};
 
+	var RotationalVelocity = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.vel = data.vel;
+	};
+
 	var Renderable = function(entity_id, data) {
 		this.entity_id = entity_id;
 		this.spritesheet = data.spritesheet;
@@ -223,6 +228,7 @@ var components = (function(){
 		"remove_on_collide":RemoveOnCollide,
 		"renderable": Renderable,
 		"rotation": Rotation,
+		"rotational_velocity": RotationalVelocity,
 		"server_controlled": ServerControlled,
 		"server_sync": ServerSync,
 		"server_update": ServerUpdate,

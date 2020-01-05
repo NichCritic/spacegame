@@ -7,16 +7,16 @@ from itertools import takewhile
 class PhysicsSystem(System):
 
     mandatory = ["player_input", "position", "velocity",
-                 "mass", "acceleration", "force", "rotation", "physics_update"]
+                 "mass", "acceleration", "force", "rotation", "rotational_velocity", "physics_update"]
     handles = []
 
     def __init__(self, node_factory):
         self.node_factory = node_factory
         self.sim_time = 0
 
-    def physics(self, node, inp, pos, vel, mass, rot, dt):
-        leftrot = rot - 1 / mass * dt
-        rightrot = rot + 1 / mass * dt
+    def physics(self, node, inp, pos, vel, mass, rot, rot_vel, dt):
+        leftrot = rot - rot_vel / mass * dt
+        rightrot = rot + rot_vel / mass * dt
 
         node.rotation.rotation = leftrot if inp[
             "left"] else (rightrot if inp["right"] else rot)
@@ -65,8 +65,9 @@ class PhysicsSystem(System):
             vel = node.velocity
             mass = node.mass.mass
             rot = node.rotation.rotation
+            rot_vel = node.rotational_velocity.vel
 
-            self.physics(node, inp, pos, vel, mass, rot, inp["dt"])
+            self.physics(node, inp, pos, vel, mass, rot, rot_vel, inp["dt"])
 
             node.physics_update.last_update = inp["time"]
             inp["was_processed"] = True

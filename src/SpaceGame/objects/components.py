@@ -209,6 +209,11 @@ class Rotation():
         self.entity_id = entity_id
         self.rotation = rotation
 
+class RotationalVelocity():
+    def __init__(self, entity_id, vel):
+        self.entity_id = entity_id
+        self.vel = vel
+
 
 class Mass():
 
@@ -678,6 +683,7 @@ components = {
     "quest_status_updated": QuestStatusUpdated,
     "renderable": Renderable,
     "rotation": Rotation,
+    "rotational_velocity": RotationalVelocity,
     "sector": Sector,
     "server_updated": ServerUpdated,
     "shoot_at_target": ShootAtTarget,

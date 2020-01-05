@@ -181,8 +181,11 @@ var GameLoop = (function() {
             camera: {}
         });
 
+        data_sent_rcvd_estimate = 0
+
         ws = new WebSocket("ws://naelick.com:8888/a/message/updates")
         ws.onmessage = function(evt){
+            data_sent_rcvd_estimate += evt.data.length * 16
             update_from_server(
                 {
                 gamestate_buffer:gamestate_buffer,
@@ -344,6 +347,7 @@ var GameLoop = (function() {
                     'mass': {mass:entity.mass},
                     'position': entity.position,
                     'rotation': {rotation: entity.rotation},
+                    'rotational_velocity': {vel: entity.rotational_velocity},
                     'velocity': entity.velocity,
                     'thrust': {thrust:0.015},
                     'time': serverState.time
@@ -431,8 +435,10 @@ var GameLoop = (function() {
             }
         }
         if(ws.readyState === 1) {
-            ws.send(JSON.stringify({'inputs':to_send,
-                                    'tracked_ids':args.tracked_ids}));
+            let data = JSON.stringify({'inputs':to_send,
+                                    'tracked_ids':args.tracked_ids})
+            data_sent_rcvd_estimate += data.length * 16
+            ws.send(data);
         }
     }
 

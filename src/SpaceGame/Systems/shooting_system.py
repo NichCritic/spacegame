@@ -42,9 +42,9 @@ class ShootingSystem(System):
                     running_time -= firing_rate
                     bullets_fired += 1
             else:
-                if running_time + dt >= firing_rate:
-                    weapon_fn(self.node_factory, node,
-                              total_time, bullets_fired, inp["shooting"])
+                # if running_time + dt >= firing_rate:
+                weapon_fn(self.node_factory, node,
+                          total_time, bullets_fired, inp["shooting"])
             running_time += dt
             total_time += dt
 
