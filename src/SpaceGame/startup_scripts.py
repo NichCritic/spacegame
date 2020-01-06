@@ -334,6 +334,25 @@ def create_spacestations(node_factory, session):
             # 'allies': {'team': 'bossman'}
         })
 
+    bolt_locations=[(-13, 15), (13, 15)]
+    for x, y in bolt_locations:
+        node_factory.create_new_node({
+            'attached': {"target_id": boss.id, "x": x * 2, "y": y * 2, 'rotation': math.pi},
+            "area": {"radius": 10},
+            "type": {"type": "ship"},
+            "position": {"x": 0, "y": 0},
+            "rotation": {"rotation": 0},
+            "rotational_velocity": {"vel":0},
+            "velocity": {"x": 0, "y": 0},
+            'force': {},
+            'acceleration': {},
+            'mass': {},
+            'physics_update': {},
+            'shoot_at_target': {"firing_angle": 90},
+            'player_proximity_target_behaviour': {},
+            'weapon': {'type': 'triple_shot', "firing_rate": 200},
+            # 'allies': {'team': 'bossman'}
+        })
 
 def collision_test(node_factory, session):
 
