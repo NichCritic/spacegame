@@ -9,7 +9,7 @@ class ShootingSystem(System):
     mandatory = ["shooting", "position",
                  "velocity", "rotation", "weapon", "physics_update"]
     optional = ["player_controlled"]
-    handles = ["shooting"]
+    # handles = ["shooting"]
 
     def __init__(self, node_factory, weapons):
         super().__init__(node_factory)

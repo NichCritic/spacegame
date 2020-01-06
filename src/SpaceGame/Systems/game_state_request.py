@@ -17,7 +17,7 @@ class GameStateRequestSystem(System):
                 node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
-            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging"], entity_ids=pnode.sector.neighbours)
+            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
@@ -51,6 +51,7 @@ class GameStateRequestSystem(System):
             weapon = node.weapon.type if node.has("weapon") else None
             expires = {"expiry_time_ms": node.expires.expiry_time_ms,
                        "creation_time": node.expires.creation_time} if node.has("expires") else None
+            shooting_render = node.has("shooting")
 
             pickup = True if node.has("pickup") else None
 
@@ -88,6 +89,7 @@ class GameStateRequestSystem(System):
                 "beam": beam,
                 "charging": charging,
                 "charged": charged,
+                "shooting_render": shooting_render,
                 "expires": expires,
                 "last_update": last_update,
                 # "state_history": state_history

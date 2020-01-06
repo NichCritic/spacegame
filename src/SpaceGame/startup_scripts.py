@@ -57,6 +57,7 @@ from Systems.transaction_system import TransactionSystem
 from Systems.boughtSoldSink import BoughtSink, SoldSink
 from Systems.questUpdateSink import QuestUpdateSink
 from Systems.proximitySink import ProximitySink
+from Systems.shootingSink import ShootingSink
 from Systems.savePlayerSystem import SavePlayerSystem
 from Systems.physicsSink import PhysicsSink
 from Systems.DropOnDeathSystem import DropOnDeathSystem
@@ -312,6 +313,27 @@ def create_spacestations(node_factory, session):
             # 'allies': {'team': 'bossman'}
         })
 
+    laser_locations = [(-6, -27), (6, -27)]
+
+    for x, y in laser_locations:
+        node_factory.create_new_node({
+            'attached': {"target_id": boss.id, "x": x * 2, "y": y * 2},
+            "area": {"radius": 10},
+            "type": {"type": "target"},
+            "position": {"x": 0, "y": 0},
+            "rotation": {"rotation": 0},
+            "rotational_velocity": {"vel":0},
+            "velocity": {"x": 0, "y": 0},
+            'force': {},
+            'acceleration': {},
+            'mass': {},
+            'physics_update': {},
+            'shoot_at_target': {"firing_angle": 90},
+            'player_proximity_target_behaviour': {},
+            'weapon': {'type': 'beam', "firing_rate": 200},
+            # 'allies': {'team': 'bossman'}
+        })
+
 
 def collision_test(node_factory, session):
 
@@ -431,6 +453,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     game_state_req = GameStateRequestSystem(node_factory)
     quest_up_sink = QuestUpdateSink(node_factory)
     phys_sink = PhysicsSink(node_factory)
+    shoot_sink = ShootingSink(node_factory)
 
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
@@ -478,5 +501,6 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(sold_sink)
     system_set.register(quest_up_sink)
     system_set.register(phys_sink)
+    system_set.register(shoot_sink)
 
     return system_set

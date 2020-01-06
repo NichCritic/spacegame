@@ -31,6 +31,7 @@ var ShootingSystem = (function() {
 
 	ShootingSystem.prototype.handle = function(node) {
 		node.add_or_attach("shooting_vars");
+		node.add_or_attach("shooting_render");
  		let weapon_fn = this.weapons[node.weapon.type];
 		let input = node.shooting.input;
 		let firing_rate = node.shooting.firing_rate;
@@ -66,8 +67,8 @@ var ShootingSystem = (function() {
 
 var ShootingSink = (function() {
 	var manditory = ['shooting'];
-	var optional = [];
-	var handles = ['shooting'];
+	var optional = ['shooting_render'];
+	var handles = ['shooting', 'shooting_render'];
 
 	function ShootingSink(node_factory) {
 		this.node_factory = node_factory;

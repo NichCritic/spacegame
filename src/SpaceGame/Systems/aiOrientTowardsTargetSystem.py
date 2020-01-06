@@ -37,11 +37,11 @@ class AIOrientTowardsTargetSystem(System):
 
         one_rad = 0.0174533
 
-        if current_angle - angle < 20*one_rad and current_angle-angle > -20*one_rad:
+        if current_angle - angle < 10*one_rad and current_angle-angle > -10*one_rad:
             direction = "none"
-        elif current_angle - angle > 20*one_rad:
+        elif current_angle - angle > 10*one_rad:
             direction = "left"
-        elif current_angle - angle < -20*one_rad:
+        elif current_angle - angle < -10*one_rad:
             direction = "right"
         # else:
             # if current_angle - alternative_angle > 0:

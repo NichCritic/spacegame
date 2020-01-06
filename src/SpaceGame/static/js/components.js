@@ -126,6 +126,10 @@ var components = (function(){
 	
 	}
 
+	var ShootingRender = function(entity_id) {
+		this.entity_id = entity_id
+	}
+
 	var ShootingVars = function(entity_id, data) {
 		this.entity_id = entity_id;
 		this.last_update = Date.now();
@@ -236,6 +240,7 @@ var components = (function(){
 		"ship_control": ShipControl,
 		"shooting": Shooting,
 		"shooting_vars": ShootingVars,
+		"shooting_render": ShootingRender,
 		"thrust":Thrust,
 		"to_be_removed": ToBeRemoved,
 		"type": Type,

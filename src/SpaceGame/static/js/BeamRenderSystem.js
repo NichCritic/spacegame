@@ -1,6 +1,6 @@
 var BeamRenderSystem = (function() {
-	var manditory = ["beam", "position", "rotation"];
-	var optional = ["charged", "charging", "shooting"];
+	var manditory = ["position", "rotation"];
+	var optional = ["charged", "charging", "shooting_render", "beam"];
 	var handles = [];
 	function BeamRenderSystem(node_factory, canvas) {
 		this.node_factory = node_factory
@@ -37,9 +37,9 @@ var BeamRenderSystem = (function() {
 	}
 
 	BeamRenderSystem.prototype.handle = function(node, camera) { 
-		let entering = !this.displayObjects[node.id] && node.has('shooting');
-		let leaving = this.displayObjects[node.id] && !node.has('shooting');
-		let onScreen = this.displayObjects[node.id] && node.has('shooting');
+		let entering = !this.displayObjects[node.id] && node.has('shooting_render');
+		let leaving = this.displayObjects[node.id] && !node.has('shooting_render') || !node.has('beam');
+		let onScreen = this.displayObjects[node.id] && node.has('shooting_render');
 
 		let addChild = false;
 

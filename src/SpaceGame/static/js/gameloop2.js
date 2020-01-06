@@ -306,29 +306,35 @@ var GameLoop = (function() {
             }
             if(entity.pickup) {
                 n.add_or_update('pickup', {});
-                n.add_or_update('remove_on_collide', {})
+                n.add_or_update('remove_on_collide', {});
             }
 
             if(entity.client_sync) {
-                n.add_or_update('client_sync', entity.client_sync)
+                n.add_or_update('client_sync', entity.client_sync);
             }
 
             if(entity.beam) {
-                n.add_or_update('beam', entity.beam)
+                n.add_or_update('beam', entity.beam);
             } else {
-                n.delete_component('beam')
+                n.delete_component('beam');
             }
 
             if(entity.charging) {
-                n.add_or_update('charging', {})
+                n.add_or_update('charging', {});
             } else {
-                n.delete_component('charging')
+                n.delete_component('charging');
             }
 
             if(entity.charged) {
-                n.add_or_update('charged', entity.charged)
+                n.add_or_update('charged', entity.charged);
             } else {
-                n.delete_component('charged')
+                n.delete_component('charged');
+            }
+
+            if(entity.shooting_render){
+                n.add_or_attach("shooting_render");
+            } else {
+                n.delete_component('shooting_render');
             }
 
             if(entities[i] === serverState.player_id){
