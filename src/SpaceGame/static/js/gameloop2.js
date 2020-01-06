@@ -326,7 +326,7 @@ var GameLoop = (function() {
             }
 
             if(entity.charged) {
-                n.add_or_update('charged', {})
+                n.add_or_update('charged', entity.charged)
             } else {
                 n.delete_component('charged')
             }

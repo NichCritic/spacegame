@@ -620,8 +620,9 @@ class Charging():
 
 class Charged():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, charge_time=0):
         self.entity_id = entity_id
+        self.charge_time = charge_time
 
 components = {
     "acceleration": Acceleration,

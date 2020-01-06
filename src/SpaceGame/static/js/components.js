@@ -197,8 +197,9 @@ var components = (function(){
 		this.entity_id = entity_id;
 	}
 
-	var Charged = function(entity_id) {
+	var Charged = function(entity_id, data) {
 		this.entity_id = entity_id;
+		this.charge_time = data.charge_time;
 	}
 
 	var components = {

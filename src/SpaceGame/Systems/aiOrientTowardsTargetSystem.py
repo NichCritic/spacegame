@@ -35,11 +35,13 @@ class AIOrientTowardsTargetSystem(System):
 
         direction = "left"
 
-        if current_angle - angle == 0:
+        one_rad = 0.0174533
+
+        if current_angle - angle < 20*one_rad and current_angle-angle > -20*one_rad:
             direction = "none"
-        elif current_angle - angle > 0:
+        elif current_angle - angle > 20*one_rad:
             direction = "left"
-        else:
+        elif current_angle - angle < -20*one_rad:
             direction = "right"
         # else:
             # if current_angle - alternative_angle > 0:
@@ -51,4 +53,4 @@ class AIOrientTowardsTargetSystem(System):
 
         node.impulses.left += 110 if direction == "left" else 0
         node.impulses.right += 110 if direction == "right" else 0
-        node.impulses.thrust += 110
+        node.impulses.thrust += 110 #if direction == "none" else 0

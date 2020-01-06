@@ -28,6 +28,14 @@ def beam(node_factory, node, creation_time, count, shooting):
                 node.charging.charge_time = 0
                 node.remove_component("charging")
                 node.add_or_attach_component("charged", {})
+        else:
+            node.add_or_attach_component("charged", {})
+            node.charged.charge_time += dt
+            logging.info(node.charged.charge_time)
+            if node.charged.charge_time > 200:
+                node.remove_component("charged")
+                node.remove_component("beam")
+
     else:
         if node.entity_has("beam"):
             node.remove_component('beam')

@@ -57,7 +57,7 @@ class GameStateRequestSystem(System):
             beam = {"width": node.beam.width,
                     "length": node.beam.length} if node.has("beam") else None
             charging = True if node.has("charging") else False
-            charged = True if node.has("charged") else False
+            charged = {"charge_time":node.charged.charge_time} if node.has("charged") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,

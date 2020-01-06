@@ -69,7 +69,7 @@ var BeamRenderSystem = (function() {
 			let end_x = x_pos + v_x * node.beam.length;
 			let end_y = y_pos + v_y * node.beam.length;
 
-			let beam_width = node.has('charged') ? 10 : node.beam.width
+			let beam_width = node.has('charged') ? 10 * (1-node.charged.charge_time / 200) : node.beam.width
 			let beam_alpha = node.has('charged') ? 1 : 0.5
 
 	    	this.displayObjects[node.id].clear();
