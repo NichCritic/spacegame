@@ -160,7 +160,8 @@ var GameLoop = (function() {
         mining_system = new MiningSystem(node_factory, textures);
 
         camera_track_system = new CameraFollowSystem(node_factory, textures);
-        
+       
+        animation_state_system = new AnimationStateSystem(node_factory);
         animation_system = new AnimationSystem(node_factory);
 
         health_render_system = new HealthRenderSystem(node_factory, health_bars);
@@ -174,7 +175,7 @@ var GameLoop = (function() {
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -272,6 +273,7 @@ var GameLoop = (function() {
 
             n.add_or_update("area", {"radius":entity.radius});
 
+
             if(entity.type) {
                 //TODO: Type == Render type
                 n.add_or_update("renderable", {spritesheet: textures[entity.type],
@@ -286,6 +288,7 @@ var GameLoop = (function() {
                 //TODO This could cause a bug where the animation rate isn't updated between
                 //two entity states
                 n.add_or_attach('animated', {update_rate: entity.animated.update_rate});
+                n.add_or_attach("animation_state", {"state":"idle"})
             }
 
 

@@ -104,6 +104,11 @@ var components = (function(){
 		this.residual_cooldown = 0
 	}
 
+	var AnimationState = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.state = data.state;
+	}
+
 	var ToBeRemoved = function(entity_id) {
 		this.entity_id = entity_id;
 	}
@@ -209,6 +214,7 @@ var components = (function(){
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
+		"animation_state":AnimationState,
 		"area": Area,
 		"beam": Beam,
 		"camera": Camera,

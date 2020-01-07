@@ -35,6 +35,14 @@ var CollisionMovementSystem = (function() {
 				continue
 			}
 
+			//Hack, this should be in its own system
+			if(c_node.entity_has("remove_on_collide")) {
+				continue
+			}
+			if(node.entity_has("remove_on_collide")) {
+				continue
+			}
+
 			let x = (node.position.x - c_node.position.x) / collision["dist"];
 			let y = (node.position.y - c_node.position.y) / collision["dist"];
 

@@ -1,6 +1,6 @@
 
 var AnimationSystem = (function() {
-	var manditory = ["animated", "renderable"];
+	var manditory = ["animated", "animation_state", "renderable"];
 	var optional = [];
 	var handles = [];
 
@@ -28,7 +28,14 @@ var AnimationSystem = (function() {
 
 	AnimationSystem.prototype.handle = function(node) {
 		//TODO: only handles idle state
+		
+		
 		let spritesheet = node.renderable.spritesheet.idle;
+
+		if(node.renderable.spritesheet[node.animation_state.state] != null) {
+			spritesheet = node.renderable.spritesheet[node.animation_state.state];
+		}
+
 
 		let now = Date.now();
 		let dt = now - this.last_update;
