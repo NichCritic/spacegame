@@ -8,7 +8,8 @@ var QuestMenu = (function() {
             open:this.loadData.bind(null, this),
             close: this.cancelTimer.bind(null, this),
             width:600,
-            height:400
+            height:400,
+            position: { my: "right top", at: "right top", of: window }
         });
         var quest_list = $("#quest_list").menu();
     }

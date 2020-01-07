@@ -52,7 +52,7 @@
 
     </head>
     <body>
-      <div id="control_list">
+    <div id="control_list">
       <h2>Controls</h2>
       <p>Up Arrow key: Thrust</p>
       <p>Right/Left Arrow key</p>
@@ -117,13 +117,30 @@
 
         var is_menu = false;
 
+        var size = [1200, 600];
+        var ratio = size[0] / size[1];
+
         //Create the renderer
-        var renderer = PIXI.autoDetectRenderer(1200, 600);
+        var renderer = PIXI.autoDetectRenderer(size[0], size[1]);
         var stage; stage = new PIXI.Container();
 
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
-
+        function resize() {
+            if (window.innerWidth / window.innerHeight >= ratio) {
+                var w = window.innerHeight * ratio;
+                var h = window.innerHeight;
+            } else {
+                var w = window.innerWidth;
+                var h = window.innerWidth / ratio;
+            }
+            renderer.view.style.width = w + 'px';
+            renderer.view.style.height = h + 'px';
+        }
+        window.onresize = function(event) {
+            resize();
+        };
+        resize();
          
         var inv_menu = new InventoryMenu();
         var upgr_menu = new UpgradeMenu();
@@ -131,6 +148,11 @@
         var dialog_menu = new DialogMenu();
         var map_menu = new MapMenu();
         var quest_menu = new QuestMenu();
+
+        var ctrl_menu = $("#control_list").dialog({
+                position: { my: "right top", at: "right top", of: window }
+        });
+
 
         // dialog_menu.open(quests.intro.script.stage2)
 
@@ -185,7 +207,7 @@
             // inv_mode.init();
 
             game_mode = GameLoop();
-            game_mode.init(dialog_menu);
+            game_mode.init(dialog_menu, size[0], size[1]);
 
             // map_mode = MapState();
             // map_mode.init();

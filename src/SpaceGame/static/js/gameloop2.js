@@ -56,18 +56,19 @@ var GameLoop = (function() {
         return textures
     }
 
-    function setup(dialog) {
+    function setup(dialog, width, height) {
         dialog_menu = dialog
 
         bg = new PIXI.Sprite(
             PIXI.loader.resources["static/assets/parallax-space-background2.png"].texture
         );
 
-        bg.width = 1200; 
+        bg.width = width; 
+        bg.height = height;
 
         stars = new PIXI.extras.TilingSprite(
             PIXI.loader.resources["static/assets/parallax-space-stars2.png"].texture
-        , 1200, 600);
+        , width, height);
         
 
         var ship_accel  = PIXI.BaseTexture.fromImage("static/assets/ship.png");
@@ -159,7 +160,7 @@ var GameLoop = (function() {
         shooting_sink = new ShootingSink(node_factory);
         mining_system = new MiningSystem(node_factory, textures);
 
-        camera_track_system = new CameraFollowSystem(node_factory, textures);
+        camera_track_system = new CameraFollowSystem(node_factory, textures, width, height);
        
         animation_state_system = new AnimationStateSystem(node_factory);
         animation_system = new AnimationSystem(node_factory);

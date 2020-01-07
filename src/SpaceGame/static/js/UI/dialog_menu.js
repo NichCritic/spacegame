@@ -5,7 +5,10 @@ var DialogMenu = (function() {
     var data = [];
 
     function DialogMenu() {
-        this.dialog = $("#dialog_menu").dialog({autoOpen:false});
+        this.dialog = $("#dialog_menu").dialog({
+            autoOpen:false,
+            position: { my: "right top", at: "right top", of: window }
+        });
         this.next_button = $("#dialog_next_button").button();
         this.next_button.click( function( event ) {
             event.preventDefault();

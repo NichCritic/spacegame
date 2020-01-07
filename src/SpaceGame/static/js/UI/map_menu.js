@@ -6,7 +6,8 @@ var MapMenu = (function() {
         var map_menu = $("#map_menu").dialog({
             autoOpen:false, 
             open:this.loadData.bind(null, this),
-            close: this.cancelTimer.bind(null, this)
+            close: this.cancelTimer.bind(null, this),
+            position: { my: "right top", at: "right top", of: window }
         });
         this.timeout = null;
     } 

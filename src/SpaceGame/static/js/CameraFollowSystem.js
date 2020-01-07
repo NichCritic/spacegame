@@ -2,9 +2,11 @@ var CameraFollowSystem = (function() {
 	var manditory = ["player", "position"];
 	var optional = [];
 	var handles = [];
-	function CameraFollowSystem(node_factory, textures) {
+	function CameraFollowSystem(node_factory, textures, width, height) {
 		this.node_factory = node_factory;
 		this.textures = textures;
+		this.width = width;
+		this.height = height;
 	}
 
 	CameraFollowSystem.prototype.process = function() {
@@ -16,8 +18,8 @@ var CameraFollowSystem = (function() {
 	};
 
 	CameraFollowSystem.prototype.handle = function(node, camera) { 
-		camera.position.x = node.position.x - 600;
-		camera.position.y = node.position.y - 300;
+		camera.position.x = node.position.x - this.width/2;
+		camera.position.y = node.position.y - this.height/2;
 
 		this.textures.stars.tilePosition.x = -camera.position.x;
         this.textures.stars.tilePosition.y = -camera.position.y;

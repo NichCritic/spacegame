@@ -6,7 +6,8 @@ var InventoryMenu = (function() {
 		var inv_menu = $("#inv_menu").dialog({
             autoOpen:false, 
             open:this.loadData.bind(null, this),
-            close: this.cancelTimer.bind(null, this)
+            close: this.cancelTimer.bind(null, this),
+            position: { my: "right top", at: "right top", of: window }
         });
         var inv_list = $("#inv_list").menu();
         this.timeout = null;
