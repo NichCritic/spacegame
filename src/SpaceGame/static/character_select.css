@@ -85,3 +85,8 @@ td {
 .quest_title {
   background: #CCCCCC;
 }
+
+.ui-widget-content {
+  background-color:rgba(0,0,0,0);
+  color:#CCCCCC;
+}

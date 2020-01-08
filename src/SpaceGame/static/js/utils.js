@@ -12,3 +12,9 @@ function locked(fn){
     }
     return inner;
 }
+
+function cubic_bezier(x1, y1, x2, y2, t) {
+    let x = 3*t*x1*(1-t)**2 + 3*(1-t)*x2 * t**2 + t**3;
+    let y = 3*t*y1*(1-t)**2 + 3*(1-t)*y2 * t**2 + t**3;
+    return {x:x, y:y};
+}
