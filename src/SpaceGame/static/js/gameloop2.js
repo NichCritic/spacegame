@@ -196,12 +196,12 @@ var GameLoop = (function() {
         }
 
         ws.onclose = function(evt){    
-            // window.location.replace("/auth/login");
-            debugger;
+            window.location.replace("/auth/login");
+            // debugger;
         }
         ws.onerror = function(evt){    
-            // window.location.replace("/auth/login");
-            debugger;
+            window.location.replace("/auth/login");
+            // debugger;
         }
 
     }
@@ -212,7 +212,7 @@ var GameLoop = (function() {
             player.add_or_attach("control", unprocessed_input[unprocessed_input.length-1]);
         }
         for(let i = 0; i < systems.length; i++) {
-            systems[i].process();
+            systems[i].process(dt);
         }
     }
 

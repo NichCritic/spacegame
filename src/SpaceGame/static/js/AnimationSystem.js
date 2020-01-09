@@ -6,14 +6,13 @@ var AnimationSystem = (function() {
 
 	function AnimationSystem(node_factory) {
 		this.node_factory = node_factory;
-		this.last_update = Date.now();
 	}
 
-	AnimationSystem.prototype.process = function() {
+	AnimationSystem.prototype.process = function(dt) {
 		var nodes = this.node_factory.create_node_list(manditory, optional);
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
-			this.handle(node);
+			this.handle(node, dt);
 			this.cleanup(node);
 		}
 
@@ -26,7 +25,7 @@ var AnimationSystem = (function() {
 		}
 	}
 
-	AnimationSystem.prototype.handle = function(node) {
+	AnimationSystem.prototype.handle = function(node, dt) {
 		//TODO: only handles idle state
 		
 		
@@ -37,8 +36,6 @@ var AnimationSystem = (function() {
 		}
 
 
-		let now = Date.now();
-		let dt = now - this.last_update;
 
 		node.animated.residual_cooldown += dt;
 
@@ -51,7 +48,6 @@ var AnimationSystem = (function() {
 
 		node.renderable.image = spritesheet[Math.floor(node.animated.frame)];
 
-		this.last_update = now;
 
 	}
 

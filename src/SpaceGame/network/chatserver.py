@@ -648,6 +648,8 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         player = self.player_factory.get_player(self.current_user["player_id"])
         if player.avatar_id:
             self.command_handler.handle_command(player, message)
+        else:
+            self.close()
         # await self.poll()
 
 
