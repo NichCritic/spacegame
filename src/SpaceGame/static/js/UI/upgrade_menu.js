@@ -4,8 +4,8 @@ var UpgradeMenu = (function() {
 
 
 	function UpgradeMenu() {
-		var upgr_menu = $("#upgrade_menu").dialog({autoOpen:false, open:loadData,
-                position: { my: "right top", at: "right top", of: window }
+		var upgr_menu = $("#upgrade_menu").dialog({autoOpen:false, open:loadData
+                // position: { my: "right top", at: "right top", of: window }
         });
         var upgr_list = $("#upgr_list").menu({select:applyUpgrade});
 	}

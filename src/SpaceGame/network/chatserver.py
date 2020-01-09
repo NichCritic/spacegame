@@ -170,6 +170,10 @@ class ShopHandler(BaseHandler):
 
         item_id = json_data["item_id"]
 
+        sell_all = False
+        if "sell_all" in json_data:
+            sell_all = json_data["sell_all"]
+
         selected_item = None
         for i in items:
             if i["id"] == item_id:
@@ -184,6 +188,8 @@ class ShopHandler(BaseHandler):
 
         logging.info("adding transaction")
 
+
+
         if json_data['msg'] == 'buy':
             av.transaction.transactions.append({
                 "buyer_id": av.id,
@@ -194,11 +200,12 @@ class ShopHandler(BaseHandler):
             })
 
         if json_data['msg'] == 'sell':
+            qty = 'all' if sell_all else 1
             av.transaction.transactions.append({
                 "buyer_id": closest_shop.id,
                 "seller_id": av.id,
                 "item_id": item_id,
-                "quantity": 1,
+                "quantity": qty,
                 "price": selected_item["cost"]
             })
         logging.info("Finish called shop post")

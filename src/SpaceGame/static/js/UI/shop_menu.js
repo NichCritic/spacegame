@@ -25,7 +25,8 @@ var ShopMenu = (function() {
     }
 
     function sell_item(event, ui) {
-        $.postJSON("/shop", {msg: "sell", "item_id":ui.item.data('item_id')}, 
+        let sell_all = $("#sell_all_check_1").prop("checked");
+        $.postJSON("/shop", {msg: "sell", "item_id":ui.item.data('item_id'), "sell_all":sell_all}, 
             function(){
                 setTimeout(loadShopData, 100);
             },

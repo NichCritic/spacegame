@@ -90,3 +90,23 @@ td {
   background-color:rgba(0,0,0,0);
   color:#CCCCCC;
 }
+.ui-widget-header {
+  background-color: rgba(255, 0, 255, 0.15);
+  color:#CCCCCC;
+}
+
+.ui-tabs .ui-state-default {
+  background-color: rgba(255, 0, 255, 0.15);
+  color:#CCCCCC;
+}
+
+.ui-tabs .ui-state-default a {
+  background-color: rgba(255, 0, 255, 0.15);
+  color:#CCCCCC;
+}
+
+.ui-tabs .ui-state-active {
+  background-color: rgba(255, 0, 255, 0.6);
+  color:#CCCCCC;
+}
+

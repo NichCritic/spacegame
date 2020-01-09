@@ -7,7 +7,7 @@ var InventoryMenu = (function() {
             autoOpen:false, 
             open:this.loadData.bind(null, this),
             close: this.cancelTimer.bind(null, this),
-            position: { my: "right top", at: "right top", of: window }
+            position: { my: "right center", at: "right center", of: window }
         });
         var inv_list = $("#inv_list").menu();
         this.timeout = null;

@@ -7,7 +7,7 @@ var MapMenu = (function() {
             autoOpen:false, 
             open:this.loadData.bind(null, this),
             close: this.cancelTimer.bind(null, this),
-            position: { my: "right top", at: "right top", of: window }
+            position: { my: "right bottom", at: "right bottom", of: window }
         });
         this.timeout = null;
     } 
