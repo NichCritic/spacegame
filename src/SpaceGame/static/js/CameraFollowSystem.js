@@ -1,5 +1,5 @@
 var CameraFollowSystem = (function() {
-	var manditory = ["player", "position", "velocity"];
+	var manditory = ["player", "position", "velocity", "ship_control"];
 	var optional = [];
 	var handles = [];
 	function CameraFollowSystem(node_factory, textures, width, height) {
@@ -7,6 +7,8 @@ var CameraFollowSystem = (function() {
 		this.textures = textures;
 		this.width = width;
 		this.height = height;
+		this.offset_x = 0;
+		this.offset_y = 0;
 	}
 
 	CameraFollowSystem.prototype.process = function() {
@@ -18,11 +20,30 @@ var CameraFollowSystem = (function() {
 	};
 
 	CameraFollowSystem.prototype.handle = function(node, camera) { 
-		camera.position.x = node.position.x - this.width/2 + node.velocity.x * 250;
-		camera.position.y = node.position.y - this.height/2 + node.velocity.y * 125;
+		let brake = !node.ship_control.brake;
+		let camera_offset_x = brake ? 0 : node.velocity.x * 250;
+		let camera_offset_y = brake ? 0 : node.velocity.y * 500;
+
+		if(this.offset_x > 20) {
+			camera_offset_x = Math.max(camera_offset_x, this.offset_x - 20);
+		} else if (this.offset_x < -20) {
+			camera_offset_x = Math.min(camera_offset_x, this.offset_x + 20);
+		}
+
+		if(this.offset_y > 30) {
+			camera_offset_y = Math.max(camera_offset_y, this.offset_y - 30);
+		} else if (this.offset_y < -30){
+			camera_offset_y = Math.min(camera_offset_y, this.offset_y + 30);
+		}
+
+		camera.position.x = node.position.x - this.width/2 + camera_offset_x;
+		camera.position.y = node.position.y - this.height/2 + camera_offset_y;
 
 		this.textures.stars.tilePosition.x = -camera.position.x;
         this.textures.stars.tilePosition.y = -camera.position.y;
+
+        this.offset_x = camera_offset_x;
+        this.offset_y = camera_offset_y;
 	}
 
 	return CameraFollowSystem;
