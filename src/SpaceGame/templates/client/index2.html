@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>hello pixi!</title>
+        <title>Space Game</title>
         <link rel="stylesheet" href="static/jquery-ui.min.css" type="text/css"/>
         <link rel="stylesheet" href="{{ static_url("character_select.css") }}" type="text/css"/>
         <script src="https://pixijs.download/v4.6.0/pixi.min.js"></script>
@@ -52,10 +52,19 @@
 
     </head>
     <body>
-    <div id="control_list">
-      <h2>Controls</h2>
+
+    <div class="encounter-outer">
+        <div class="encounter-middle">
+            <div class="encounter-inner">
+                    <h1>LORE NAXRYMYSS</h1>
+                    <p>Guardian of the netwish wormhole</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="control_list" title="Controls">
       <p>Up Arrow key: Thrust</p>
-      <p>Right/Left Arrow key</p>
+      <p>Right/Left Arrow key: Turn</p>
       <p>F key: Shoot</p>
       <p>D key: Brake</p>
       <p>C key: Enter shop</p>
@@ -63,6 +72,7 @@
       <p>I key: View inventory</p>
       <p>U key: View and apply upgrades</p>
       <p>M key: View minimap</p>
+      <p>Q key: View Quest status</p>
     </div>
 
     <div id='inv_menu' title="Inventory"><ul id='inv_list'></ul></div>

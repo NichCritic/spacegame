@@ -24,16 +24,19 @@ var CameraFollowSystem = (function() {
 		let camera_offset_x = brake ? 0 : node.velocity.x * 250;
 		let camera_offset_y = brake ? 0 : node.velocity.y * 500;
 
-		if(this.offset_x > 10) {
-			camera_offset_x = Math.max(camera_offset_x, this.offset_x - 10);
-		} else if (this.offset_x < -10) {
-			camera_offset_x = Math.min(camera_offset_x, this.offset_x + 10);
+		x_return_speed = 3
+		y_return_speed = 6
+
+		if(this.offset_x > x_return_speed) {
+			camera_offset_x = Math.max(camera_offset_x, this.offset_x - x_return_speed);
+		} else if (this.offset_x < -x_return_speed) {
+			camera_offset_x = Math.min(camera_offset_x, this.offset_x + x_return_speed);
 		}
 
-		if(this.offset_y > 20) {
-			camera_offset_y = Math.max(camera_offset_y, this.offset_y - 20);
-		} else if (this.offset_y < -20){
-			camera_offset_y = Math.min(camera_offset_y, this.offset_y + 20);
+		if(this.offset_y > y_return_speed) {
+			camera_offset_y = Math.max(camera_offset_y, this.offset_y - y_return_speed);
+		} else if (this.offset_y < -y_return_speed){
+			camera_offset_y = Math.min(camera_offset_y, this.offset_y + y_return_speed);
 		}
 
 		camera.position.x = node.position.x - this.width/2 + camera_offset_x;

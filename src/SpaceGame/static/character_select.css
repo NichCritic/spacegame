@@ -14,7 +14,13 @@
  * under the License.
  */
 
+@font-face {
+  font-family: 'Welbut';
+  src: url('Welbut__.ttf') format('truetype');
+}
+
 body {
+  font-family: "Welbut", Fallback, sans-serif;
   background: black;
   margin: 10px;
   
@@ -22,7 +28,6 @@ body {
 
 body,
 input {
-  font-family: sans-serif;
   font-size: 10pt;
   color: white;
 }
@@ -63,10 +68,6 @@ td {
   padding-right:7px;
 }
 
-#control_list {
-  float:right;
-}
-
 #nav {
   float: right;
   clear:left;
@@ -82,11 +83,13 @@ td {
     width: 200px;
 }
 
-.quest_title {
-  background: #CCCCCC;
+
+.ui-widget {
+  font-family: "Welbut", Fallback, sans-serif;
 }
 
 .ui-widget-content {
+  backdrop-filter: blur(3px);
   background-color:rgba(0,0,0,0);
   color:#CCCCCC;
 }
@@ -95,6 +98,9 @@ td {
   color:#CCCCCC;
 }
 
+.ui-tabs {
+  padding:0;
+}
 .ui-tabs .ui-state-default {
   background-color: rgba(255, 0, 255, 0.15);
   color:#CCCCCC;
@@ -110,3 +116,58 @@ td {
   color:#CCCCCC;
 }
 
+.ui-menu .ui-state-active {
+  background-color: rgba(255, 0, 255, 0.6);
+  color:#CCCCCC;
+}
+
+.ui-menu.ui-widget.ui-widget-content {
+  border:0px;
+}
+
+.ui-dialog {
+  padding: 0;
+}
+
+#control_list p {
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+}
+
+.ui-dialog .ui-dialog-content {
+  padding:0.1em;
+}
+
+.ui-menu .ui-menu {
+  width: 400px;
+}
+
+.encounter-outer {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.encounter-middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.encounter-inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  /*whatever width you want*/
+  color:#CCCCCC;
+  text-align:center;
+  font-size: 3em;
+  text-shadow: 5px 5px #000000;
+  display:none;
+
+}
+.encounter-inner p {
+  font-size: 0.75em;
+}
