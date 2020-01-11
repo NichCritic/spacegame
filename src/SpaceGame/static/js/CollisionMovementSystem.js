@@ -31,7 +31,10 @@ var CollisionMovementSystem = (function() {
 			let c_node = collision.collider;
 
 
-			if(!c_node.has("position")){
+
+			if(c_node.entity_has("position")){
+				c_node.add_or_attach("position", {});
+			} else {
 				continue
 			}
 

@@ -30,10 +30,7 @@ class TransactionSystem(System):
 
 
 
-            if buyer.money.money < cost:
-                # skip the transaction
-                logging.info("Buyer did not have enough money")
-                continue
+            
 
             seller_inv = seller.inventory.inventory
             if i_id not in seller_inv:
@@ -56,8 +53,13 @@ class TransactionSystem(System):
                 logging.info("Seller had less than the required qty")
                 continue
 
-            buyer.money.money -= cost
-            seller.money.money += cost
+            if buyer.money.money < cost * qty:
+                # skip the transaction
+                logging.info("Buyer did not have enough money")
+                continue
+
+            buyer.money.money -= cost * qty
+            seller.money.money += cost * qty
 
             buyer_inv = buyer.inventory.inventory
 

@@ -21,17 +21,17 @@ class BoundarySystem(System):
     def handle(self, node):
 
         if node.position.x > self.max_x:
-            diff = node.position.x - self.max_x
+            diff = (node.position.x - self.max_x) % (self.max_x - self.min_x)
             node.position.x = self.min_x + diff
 
         if node.position.y > self.max_y:
-            diff = node.position.y - self.max_y
+            diff = (node.position.y - self.max_y) % (self.max_y - self.min_y)
             node.position.y = self.min_y + diff
 
         if node.position.x < self.min_x:
-            diff = self.min_x - node.position.x 
+            diff = (self.min_x - node.position.x) % (self.max_x - self.min_x) 
             node.position.x = self.max_x - diff
             
         if node.position.y < self.min_y:
-            diff = self.min_y - node.position.y
+            diff = (self.min_y - node.position.y) % (self.maxy - self.min_y)
             node.position.y = self.max_y - diff

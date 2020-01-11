@@ -173,10 +173,13 @@ var GameLoop = (function() {
         expiry_system = new ExpirySystem(node_factory);
 
         server_sync_system = new ServerSyncSystem(node_factory);
+        proximity_system = new ProximitySystem(node_factory);
+        proximity_sink = new ProximitySink(node_factory);
+        boss_announce_system = new BossAnnounceSystem(node_factory);
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, collision_system, collision_move_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, collision_system, collision_move_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -283,6 +286,9 @@ var GameLoop = (function() {
                                            height: n.area.radius*2});
 
                 n.add_or_update("type", {"type":entity.type})
+                if(entity.type === "boss") {
+                    n.add_or_attach("boss");
+                }
             }
 
             if(entity.animated) {

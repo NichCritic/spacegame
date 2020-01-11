@@ -1,6 +1,6 @@
 
 var CollisionSystem = (function() {
-	var manditory = ["position", "area", "collidable"];
+	var manditory = ["area", "collidable"];
 	var optional = [];
 	var handles = [];
 
@@ -10,7 +10,7 @@ var CollisionSystem = (function() {
 
 	CollisionSystem.prototype.process = function() {
 		var nodes = this.node_factory.create_node_list(manditory, optional);
-		var p_nodes = this.node_factory.create_node_list(["check_collision", "position", "area"]);
+		var p_nodes = this.node_factory.create_node_list(["check_collision", "area", "proximity"]);
 		for(let j = 0; j < p_nodes.length; j++) {
 			let p_node = p_nodes[j];
 			for(let i = 0; i < nodes.length; i++) {
@@ -33,12 +33,8 @@ var CollisionSystem = (function() {
 	}
 
 	CollisionSystem.prototype.handle = function(p_node, node) {
-		let x = p_node.position.x;
-		let y = p_node.position.y;
-		let x2 = node.position.x;
-		let y2 = node.position.y;
-
-		dist = Math.sqrt((x-x2)**2 + (y-y2)**2);
+		
+		dist = p_node.proximity.proximity_map[node.id];
 
 		if(dist == 0) {
 			dist = 1;

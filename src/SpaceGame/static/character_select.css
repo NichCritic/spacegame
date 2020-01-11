@@ -142,6 +142,12 @@ td {
   width: 400px;
 }
 
+@keyframes boss {
+  0% {opacity:0;}
+  75% {opacity:1;}
+  100% {opacity:0;}
+}
+
 .encounter-outer {
   display: table;
   position: absolute;
@@ -160,14 +166,15 @@ td {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  /*whatever width you want*/
   color:#CCCCCC;
   text-align:center;
   font-size: 3em;
   text-shadow: 5px 5px #000000;
-  display:none;
-
+  opacity:0;
+  /*animation: boss 2s;*/
 }
+
 .encounter-inner p {
   font-size: 0.75em;
 }
+

@@ -211,12 +211,22 @@ var components = (function(){
 		this.charge_time = data.charge_time;
 	}
 
+	var Proximity = function(entity_id, data) {
+		this.entity_id = entity_id
+		this.proximity_map = data.proximity_map ? data.proximity_map : {}
+	}
+
+	var Boss = function(entity_id) {
+		this.entity_id = entity_id
+	}
+
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
 		"animation_state":AnimationState,
 		"area": Area,
 		"beam": Beam,
+		"boss": Boss,
 		"camera": Camera,
 		"charging": Charging,
 		"charged": Charged,
@@ -236,6 +246,7 @@ var components = (function(){
 		"player": PlayerControlled,
 		"player_created": PlayerCreated,
 		"position":Position,
+		"proximity":Proximity,
 		"remove_on_collide":RemoveOnCollide,
 		"renderable": Renderable,
 		"rotation": Rotation,
