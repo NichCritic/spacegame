@@ -401,13 +401,13 @@ class MinimapHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        nodes = self.node_factory.create_node_list(["position", "area"], [])
+        nodes = self.node_factory.create_node_list(["position", "area", "type"], [])
         player = self.get_player()
         av = self.node_factory.create_node(
             player.avatar_id, ["position", "area"], [])
 
         data = {"positions": [{"id": n.id, "radius": n.area.radius, "x": n.position.x,
-                               "y": n.position.y} for n in nodes if n.area.radius > 90],
+                               "y": n.position.y, "type": n.type.type} for n in nodes if n.type.type in ["boss", "asteroid", "ship", "spacestation1"]],
                 "player": {"id": av.id, "radius": av.area.radius, "x": av.position.x,
                            "y": av.position.y}}
         logging.info("Finish called Minimap get")

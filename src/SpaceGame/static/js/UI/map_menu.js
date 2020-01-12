@@ -33,16 +33,26 @@ var MapMenu = (function() {
             p.y = y;
             ctx.fillStyle = 'green'
             ctx.fillRect(125, 125, 5, 5);
+
             
-            ctx.fillStyle = 'red'
             for(var i in data.positions) {
+
                 let x = data.positions[i].x
                 let y = data.positions[i].y
+                if (data.positions[i].id == data.player.id) {
+                    continue;
+                }
+
                 item = {};
+                size = Math.max(data.positions[i].radius/50, 2);
 
                 item.x = 125+ (x-p.x) / 50;
                 item.y = 125+ (y-p.y) / 50;
-                ctx.fillRect(item.x-2.5, item.y-2.5, 5, 5)
+                ctx.fillStyle = 'yellow';
+                if(data.positions[i].type === "boss" || data.positions[i].type === 'ship') {
+                    ctx.fillStyle = 'red';
+                }
+                ctx.fillRect(item.x-2.5, item.y-2.5, size, size)
             }
             if(!menu.timeout) {
                 menu.timeout = setInterval(menu.loadData.bind(null, menu), 250);

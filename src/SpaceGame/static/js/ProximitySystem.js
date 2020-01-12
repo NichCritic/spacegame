@@ -10,7 +10,7 @@ var ProximitySystem = (function() {
 
 	ProximitySystem.prototype.process = function() {
 		var nodes = this.node_factory.create_node_list(manditory, optional);
-		var p_nodes = this.node_factory.create_node_list(["position"]);
+		var p_nodes = this.node_factory.create_node_list(["position", "moved"]);
 		for(let j = 0; j < p_nodes.length; j++) {
 			let p_node = p_nodes[j];
 			for(let i = 0; i < nodes.length; i++) {

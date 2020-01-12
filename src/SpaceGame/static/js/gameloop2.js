@@ -97,6 +97,9 @@ var GameLoop = (function() {
         textures.spacestation1 = {};
         textures.spacestation1.idle = [PIXI.loader.resources["static/assets/spacestation1.png"].texture];
 
+        textures.spacestation_overlay = {};
+        textures.spacestation_overlay.idle = [PIXI.loader.resources["static/assets/spacestation_overlay.png"].texture];
+
         textures.bolfenn = {};
         textures.bolfenn.idle = [PIXI.loader.resources["static/assets/bolfenn.png"].texture];
 
@@ -178,8 +181,10 @@ var GameLoop = (function() {
         boss_announce_system = new BossAnnounceSystem(node_factory);
         collision_system = new CollisionSystem(node_factory);
         collision_move_system = new CollisionMovementSystem(node_factory);
+        movement_system = new MovementSystem(node_factory);
+        rotate_system = new RotateSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, collision_system, collision_move_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -288,6 +293,20 @@ var GameLoop = (function() {
                 n.add_or_update("type", {"type":entity.type})
                 if(entity.type === "boss") {
                     n.add_or_attach("boss");
+                }
+                if(entity.type === "spacestation1") {
+                    if(!n.entity_has("overlay")) {
+                        n.add_or_attach("overlay", {});
+                        let overlay = node_factory.create_node([]);
+                        overlay.add_or_attach('position', {x: entity.position.x, y:entity.position.y});
+                        overlay.add_or_update("renderable", {spritesheet: textures["spacestation_overlay"],
+                                           image:textures["spacestation_overlay"].idle[0],
+                                           width: 700,
+                                           height: 700});
+                        overlay.add_or_attach('rotation', {'rotation':0})
+                        overlay.add_or_attach('rotate', {amt:0.1});
+                        // overlay.rotation.rotation += 0.5
+                    }
                 }
             }
 

@@ -407,11 +407,12 @@ class Animated():
 
 class Event():
 
-    def __init__(self, entity_id, script, cooldown, initial_cooldown=0):
+    def __init__(self, entity_id, script, cooldown, initial_cooldown=0, random_cooldown=False):
         self.entity_id = entity_id
         self.script = script
         self.cooldown = initial_cooldown
         self.cooldown_time = cooldown
+        self.random_cooldown = random_cooldown
 
 
 class EventActive():
@@ -623,6 +624,8 @@ class Charged():
     def __init__(self, entity_id, charge_time=0):
         self.entity_id = entity_id
         self.charge_time = charge_time
+
+
 
 components = {
     "acceleration": Acceleration,

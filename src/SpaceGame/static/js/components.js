@@ -220,6 +220,19 @@ var components = (function(){
 		this.entity_id = entity_id
 	}
 
+	var Moved = function(entity_id) {
+		this.entity_id = entity_id
+	}
+
+	var Overlay = function(entity_id) {
+		this.entity_id = entity_id;
+	}
+
+	var Rotate = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.amt = data.amt;
+	}
+
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
@@ -242,6 +255,8 @@ var components = (function(){
 		"mass": Mass,
 		"minable": Minable,
 		"mining": Mining,
+		"moved": Moved,
+		"overlay": Overlay,
 		"pickup": Pickup,
 		"player": PlayerControlled,
 		"player_created": PlayerCreated,
@@ -249,6 +264,7 @@ var components = (function(){
 		"proximity":Proximity,
 		"remove_on_collide":RemoveOnCollide,
 		"renderable": Renderable,
+		"rotate": Rotate,
 		"rotation": Rotation,
 		"rotational_velocity": RotationalVelocity,
 		"server_controlled": ServerControlled,

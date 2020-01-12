@@ -33,5 +33,5 @@ class BoundarySystem(System):
             node.position.x = self.max_x - diff
             
         if node.position.y < self.min_y:
-            diff = (self.min_y - node.position.y) % (self.maxy - self.min_y)
+            diff = (self.min_y - node.position.y) % (self.max_y - self.min_y)
             node.position.y = self.max_y - diff

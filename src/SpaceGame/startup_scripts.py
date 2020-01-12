@@ -179,16 +179,19 @@ def create_spacestations(node_factory, session):
         import math
         logging.info("Triggered")
         ships = []
-        for i in range(10):
+
+        numships = random.randint(1, 5)
+        for i in range(numships):
             trigger_node.add_or_attach_component("position", {"x": 0, "y": 0})
+            trigger_node.add_or_attach_component("area", {})
 
             x_pos = trigger_node.position.x + i * 30
             y_pos = trigger_node.position.y + i * 30
 
             spawn_pos_x = x_pos + \
-                math.sin(random.random() * 4 * math.pi) * 1000
+                math.sin(random.random() * 4 * math.pi) * trigger_node.area.radius
             spawn_pos_y = y_pos + \
-                math.cos(random.random() * 4 * math.pi) * 1000
+                math.cos(random.random() * 4 * math.pi) * trigger_node.area.radius
 
             logging.info(f"{x_pos}, {y_pos}")
 
@@ -210,25 +213,27 @@ def create_spacestations(node_factory, session):
                 'orient_towards_target': {},
                 'home': {"x": x_pos, "y": y_pos},
                 'ai_return_home': {},
-                'health': {'health': 100, 'max_health': 100},
+                'health': {'health': 250, 'max_health': 250},
                 'collidable': {},
                 'collision_movement': {},
                 'allies': {'team': 'alpha'},
-                'weapon': {'type': 'triple_shot'}
+                'weapon': {'type': 'single_shot'},
+                'drop_on_death': {"products": [silver_ore], "qty": 1}
             })
             ships.append(ship)
 
-    for i in range(100):
-        x_pos = 10000 + floor(numpy.random.normal(scale=1000.0))
-        y_pos = floor(numpy.random.normal(scale=2000.0))
-        initial_cooldown = 0  # 3600000 * numpy.random.rand()
+    for i in range(5):
+        x_pos = 10000
+        y_pos = 2000*(i-2)
+        initial_cooldown = 60000 * numpy.random.rand()
+        radius = [500, 750, 1500, 750, 500][i]
 
         node_factory.create_new_node({
-            "area": {"radius": 100},
+            "area": {"radius": radius},
             "position": {"x": x_pos, "y": y_pos},
-            "type": {"type": "target"},
+            # "type": {"type": "target"},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-            "event": {"script": test_script, "cooldown": 3600000, "initial_cooldown": initial_cooldown},
+            "event": {"script": test_script, "cooldown": 60000, "initial_cooldown": initial_cooldown, "random_cooldown":True},
             "event_proximity_trigger": {}
         })
 
