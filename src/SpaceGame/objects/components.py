@@ -231,11 +231,11 @@ class Type():
 
 class PhysicsUpdate():
 
-    def __init__(self, entity_id, last_update=None):
+    def __init__(self, entity_id, last_update=None, packets=None):
         self.entity_id = entity_id
         import time
         self.last_update = time.time() * 1000 if last_update is None else last_update
-        self.packets = []
+        self.packets = [] if packets is None else packets
 
 
 class GameStateRequest():
@@ -290,9 +290,9 @@ class ServerUpdated():
 
 class StateHistory():
 
-    def __init__(self, entity_id):
+    def __init__(self, entity_id, history = None):
         self.entity_id = entity_id
-        self.history = []
+        self.history = [] if history is None else history
 
 
 class Camera():
@@ -625,7 +625,21 @@ class Charged():
         self.entity_id = entity_id
         self.charge_time = charge_time
 
+class Damaged(): 
+    def __init__(self, entity_id, amount):
+        self.entity_id = entity_id
+        self.amount = amount
 
+class Respawn():
+    def __init__(self, entity_id, respawn_time, spec):
+        self.entity_id = entity_id
+        self.respawn_time = respawn_time
+        self.spec = spec
+
+class Spawn():
+    def __init__(self, entity_id, start_time):
+        self.entity_id = entity_id
+        self.start_time = start_time
 
 components = {
     "acceleration": Acceleration,
@@ -649,6 +663,7 @@ components = {
     "collision_damage": CollisionDamage,
     "collision_movement": CollisionMovement,
     "collision_velocity_damage": CollisionVelocityDamage,
+    "damaged": Damaged,
     "dead": Dead,
     "drop_on_death": DropOnDeath,
     "event": Event,
@@ -686,6 +701,7 @@ components = {
     "quests": Quests,
     "quest_status_updated": QuestStatusUpdated,
     "renderable": Renderable,
+    "respawn": Respawn,
     "rotation": Rotation,
     "rotational_velocity": RotationalVelocity,
     "sector": Sector,
@@ -696,6 +712,7 @@ components = {
     "shop": Shop,
     "shop_spec": ShopSpec,
     "sold": Sold,
+    "spawn": Spawn, 
     "state_history": StateHistory,
     "target": Target,
     "thrust": Thrust,

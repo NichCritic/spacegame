@@ -1,15 +1,13 @@
 TODO:
-Dock at spacestation
 bullet collision animation
 asteroid collision dust spray
-Space station overlays
+Dock at spacestation
 Bank at spacestations
 Breakout quest
 One new ship
 Hanger at spacestation
 Weird sync issue
 Better client side handling of server entities and other players
-Closing with the close button doesn't stop refresh calls for dialogs
 Peaceful miner enemy type
 Custom entity init by type
 Client event system

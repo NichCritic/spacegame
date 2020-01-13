@@ -30,6 +30,7 @@ class CollisionDamageSystem(System):
             # For other systems to respond
             logging.info(f"{c_node.id} colliding with {node.id}")
             c_node.health.health -= node.collision_damage.damage
+            c_node.add_or_attach_component("damaged", {"amount":node.collision_damage.damage})
 
             if c_node.health.health <= 0:
                 c_node.add_or_attach_component("dead", {})

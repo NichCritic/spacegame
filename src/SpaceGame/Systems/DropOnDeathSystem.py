@@ -31,7 +31,7 @@ class DropOnDeathSystem(System):
                 'rotation': {'rotation': 0},
                 'mass': {},
                 'server_updated': {},
-                'type': {'type': f'{product.name.replace(" ", "_")}_pickup'},
+                'type': {'type': f'{product["name"].replace(" ", "_")}_pickup'},
                 'area': {'radius': 16},
                 'physics_update': {},
                 'state_history': {},
@@ -41,7 +41,7 @@ class DropOnDeathSystem(System):
                 },
                 "collidable": {},
                 "pickup": {
-                    "item_id": product.id,
+                    "item_id": product["id"],
                     "qty": 1
                 }
             })

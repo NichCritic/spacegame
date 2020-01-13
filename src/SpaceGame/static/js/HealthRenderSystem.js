@@ -1,5 +1,5 @@
 var HealthRenderSystem = (function() {
-	var manditory = ["renderable", "position", "health"];
+	var manditory = ["renderable", "position", "health", "display_health"];
 	var optional = [];
 	var handles = [];
 	function HealthRenderSystem(node_factory, canvas) {
@@ -100,7 +100,11 @@ var HealthRenderSystem = (function() {
 		if(this.displayObjects[node.id]) {
 			this.displayObjects[node.id].x = x_pos;
 			this.displayObjects[node.id].y = y_pos;
-			this.displayObjects[node.id].width = node.renderable.width * node.health.health / node.health.max_health;
+			if(node.health.health >= node.health.max_health) {
+				this.displayObjects[node.id.width] = 0
+			} else {
+				this.displayObjects[node.id].width = node.renderable.width * node.health.health / node.health.max_health;
+			}
 		}
 
 	}

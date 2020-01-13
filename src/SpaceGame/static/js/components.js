@@ -232,6 +232,9 @@ var components = (function(){
 		this.entity_id = entity_id;
 		this.amt = data.amt;
 	}
+	var DisplayHealth = function(entity_id) {
+		this.entity_id = entity_id
+	}
 
 	var components = {
 		"acceleration":Acceleration,
@@ -247,7 +250,8 @@ var components = (function(){
 		"client_sync": ClientSync,
 		"collidable": Collidable,
 		"colliding": Colliding,
-		"control": Control, 
+		"control": Control,
+		"display_health": DisplayHealth,
 		"expires": Expires,
 		"force":Force,
 		"health": Health,

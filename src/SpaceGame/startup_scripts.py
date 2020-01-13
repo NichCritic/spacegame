@@ -63,6 +63,10 @@ from Systems.physicsSink import PhysicsSink
 from Systems.DropOnDeathSystem import DropOnDeathSystem
 from Systems.attachSystem import AttachSystem
 from Systems.attachDeathSystem import AttachDeathSystem
+from Systems.damagedExplosionSystem import DamagedExplosionSystem
+from Systems.damagedSink import DamagedSink
+from Systems.deathRespawnSystem import DeathRespawnSystem
+from Systems.respawnSystem import RespawnSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -136,12 +140,17 @@ def create_spacestations(node_factory, session):
     import random
     import numpy.random
     from math import floor
+    import json
 
-    gold_ore = objects.item.get_item_by_name(session, 'gold ore').static_copy()
-    silver_ore = objects.item.get_item_by_name(
+    gold_ore_item = objects.item.get_item_by_name(session, 'gold ore').static_copy()
+    silver_ore_item = objects.item.get_item_by_name(
         session, 'silver ore').static_copy()
-    iron_ore = objects.item.get_item_by_name(session, 'iron ore').static_copy()
-    rootkit = objects.item.get_item_by_name(session, 'rootkit').static_copy()
+    iron_ore_item = objects.item.get_item_by_name(session, 'iron ore').static_copy()
+    rootkit_item = objects.item.get_item_by_name(session, 'rootkit').static_copy()
+
+    gold_ore = {'id': gold_ore_item.id, 'name': gold_ore_item.name}
+    iron_ore = {'id': iron_ore_item.id, 'name': iron_ore_item.name}
+    silver_ore = {'id': silver_ore_item.id, 'name': silver_ore_item.name}
 
     # for i in range(100000):
     #     x = math.floor(random.random() * 10000000 - 5000000)
@@ -155,7 +164,7 @@ def create_spacestations(node_factory, session):
         size = max(50, 50 + int(floor(numpy.random.normal(scale=50))))
         drop_qty = floor(numpy.random.rand() * size / 50 * 6)
 
-        node_factory.create_new_node({
+        asteroid = node_factory.create_new_node({
             "type": {"type": "asteroid"},
             "area": {"radius": size},
             "position": {"x": x_pos, "y": y_pos},
@@ -173,6 +182,7 @@ def create_spacestations(node_factory, session):
             'drop_on_death': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1, "qty": drop_qty}
 
         })
+        asteroid.add_or_attach_component("respawn", {"respawn_time": 1000*60*5, "spec": json.dumps(asteroid.to_dict())})
 
     def test_script(trigger_node, triggerer_node):
         import random
@@ -241,7 +251,7 @@ def create_spacestations(node_factory, session):
         "name": "Hacker Shop",
         "sale_items": [
             {
-                "name": upgrades[rootkit.name]['name'], "id": rootkit.id,
+                "name": upgrades[rootkit_item.name]['name'], "id": rootkit_item.id,
                 "pos": 0, "cost": 5000
             }
         ],
@@ -270,7 +280,7 @@ def create_spacestations(node_factory, session):
         "inventory":
         {
             "inventory": {
-                rootkit.id: {"qty": 10000000},
+                rootkit_item.id: {"qty": 10000000},
             }
         }
     })
@@ -449,10 +459,13 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
     beam_charged_dam = BeamChargedDamageSystem(node_factory)
+    damaged_explosion = DamagedExplosionSystem(node_factory)
     attach_death = AttachDeathSystem(node_factory)
     drop_on_death = DropOnDeathSystem(node_factory)
     player_death = PlayerDeathSystem(node_factory)
+    death_respawn = DeathRespawnSystem(node_factory)
     death = DeathSystem(node_factory)
+    respawn = RespawnSystem(node_factory)
     pickup = PickupSystem(node_factory)
     coll_mov = CollisionMovementSystem(node_factory)
     boundary = BoundarySystem(node_factory)
@@ -478,6 +491,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     quest_up_sink = QuestUpdateSink(node_factory)
     phys_sink = PhysicsSink(node_factory)
     shoot_sink = ShootingSink(node_factory)
+    damaged_sink = DamagedSink(node_factory)
 
     system_set.register(shopUnpackSystem)
     system_set.register(nms)
@@ -497,10 +511,13 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(collision_dam)
     system_set.register(beam_charged_dam)
     system_set.register(collision_vel_dam)
+    system_set.register(damaged_explosion)
     system_set.register(attach_death)
     system_set.register(drop_on_death)
     system_set.register(player_death)
+    system_set.register(death_respawn)
     system_set.register(death)
+    system_set.register(respawn)
     system_set.register(coll_mov)
     system_set.register(boundary)
     system_set.register(mining)
@@ -526,5 +543,6 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(quest_up_sink)
     system_set.register(phys_sink)
     system_set.register(shoot_sink)
+    system_set.register(damaged_sink)
 
     return system_set

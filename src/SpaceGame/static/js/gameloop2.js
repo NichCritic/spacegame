@@ -196,11 +196,13 @@ var GameLoop = (function() {
         ws = new WebSocket("ws://naelick.com:8888/a/message/updates")
         ws.onmessage = function(evt){
             data_sent_rcvd_estimate += evt.data.length * 16
-            update_from_server(
-                {
-                gamestate_buffer:gamestate_buffer,
-                inputs:inputs
-            }, JSON.parse(evt.data));
+            if(inputs) {
+                update_from_server(
+                    {
+                    gamestate_buffer:gamestate_buffer,
+                    inputs:inputs
+                }, JSON.parse(evt.data));
+            }
         }
 
         ws.onclose = function(evt){    
@@ -293,6 +295,10 @@ var GameLoop = (function() {
                 n.add_or_update("type", {"type":entity.type})
                 if(entity.type === "boss") {
                     n.add_or_attach("boss");
+                    n.add_or_attach("display_health")
+                }
+                if(entity.type === 'ship') {
+                    n.add_or_attach("display_health")
                 }
                 if(entity.type === "spacestation1") {
                     if(!n.entity_has("overlay")) {
@@ -308,6 +314,7 @@ var GameLoop = (function() {
                         // overlay.rotation.rotation += 0.5
                     }
                 }
+
             }
 
             if(entity.animated) {
