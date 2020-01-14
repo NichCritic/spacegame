@@ -39,7 +39,8 @@ var weapons = (function(){
             		'sync_key': count
             	},
             	'check_collision': {},
-            	'remove_on_collide': {}
+            	'remove_on_collide': {},
+            	"local_physics": {}
             	// //Hacky way to make them go away when they hit something
             	// 'collidable': {},
             	// 'pickup': {}
@@ -84,7 +85,8 @@ var weapons = (function(){
             		'sync_key': count
             	},
             	'check_collision': {},
-            	'remove_on_collide': {}
+            	'remove_on_collide': {},
+            	"local_physics": {}
 		});
 
 		var bullet2 = node_factory.create_node(
@@ -112,7 +114,8 @@ var weapons = (function(){
             		'sync_key': count
             	},
             	'check_collision': {},
-            	'remove_on_collide': {}
+            	'remove_on_collide': {},
+            	"local_physics": {}
 		});
 
 		var bullet3 = node_factory.create_node(
@@ -140,7 +143,8 @@ var weapons = (function(){
             		'sync_key': count
             	},
             	'check_collision': {},
-            	'remove_on_collide': {}
+            	'remove_on_collide': {},
+            	"local_physics": {}
 		});
 		// console.log("bullets fired: " + count)
 	}

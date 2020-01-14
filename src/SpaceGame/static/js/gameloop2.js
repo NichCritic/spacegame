@@ -23,6 +23,7 @@ var GameLoop = (function() {
     var systems;
     var camera;
     var ship;
+    var inputs;
 
     var last_seen_entities = [];
 
@@ -106,9 +107,6 @@ var GameLoop = (function() {
         textures.asteroid = {};
         textures.asteroid.idle = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
 
-        textures.asteroid = {};
-        textures.asteroid.idle = [PIXI.loader.resources["static/assets/asteroid.png"].texture];
-
         textures.planet2 = {};
         textures.planet2.idle = [PIXI.loader.resources["static/assets/planet2.png"].texture];
 
@@ -159,6 +157,7 @@ var GameLoop = (function() {
         player_server_update_system = new PlayerServerUpdateSystem(node_factory);
         PCE_update_system = new PCEUpdateSystem(node_factory);
         server_update_system = new ServerUpdateSystem(node_factory);
+        position_lerp = new PositionLerpSystem(node_factory);
         shooting_system = new ShootingSystem(node_factory, textures, weapons);
         shooting_sink = new ShootingSink(node_factory);
         mining_system = new MiningSystem(node_factory, textures);
@@ -184,7 +183,7 @@ var GameLoop = (function() {
         movement_system = new MovementSystem(node_factory);
         rotate_system = new RotateSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, position_lerp, expiry_system, input_system, /*shooting_system,*/ mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -274,7 +273,7 @@ var GameLoop = (function() {
                 'acceleration': {x:0, y:0},
                 'force': {x:0, y:0},
                 'mass': {mass:entity.mass},
-                'position': entity.position,
+                'target_position': entity.position,
                 'rotation': {rotation: entity.rotation},
                 'velocity': {x:0, y:0},
                 'thrust': {thrust:0.00},
@@ -299,6 +298,7 @@ var GameLoop = (function() {
                 }
                 if(entity.type === 'ship') {
                     n.add_or_attach("display_health")
+                    n.add_or_attach("animation_state", {"state":"idle"})
                 }
                 if(entity.type === "spacestation1") {
                     if(!n.entity_has("overlay")) {
@@ -371,6 +371,10 @@ var GameLoop = (function() {
                 n.add_or_attach("shooting_render");
             } else {
                 n.delete_component('shooting_render');
+            }
+
+            if(entity.weapon && entity.weapon.type === "beam") {
+                n.add_or_attach("beam_weapon", {})
             }
 
             if(entities[i] === serverState.player_id){

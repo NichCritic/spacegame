@@ -28,7 +28,7 @@ class ShootingSystem(System):
 
         running_time = min(node.shooting_vars.residual_cooldown + dt_last_update,
                            firing_rate) if node.shooting_vars.residual_cooldown is not None else firing_rate
-        # logging.info(running_time)
+        logging.info(running_time)
         total_time = 0
         bullets_fired = node.shooting_vars.bullets_fired
 
@@ -36,9 +36,9 @@ class ShootingSystem(System):
             dt = inp["dt"]
             if inp["shooting"]:
                 if running_time + dt >= firing_rate:
-                    # logging.info("firing shots")
+                    logging.info("firing shots")
                     weapon_fn(self.node_factory, node,
-                              total_time, bullets_fired, inp["shooting"])
+                              total_time, bullets_fired, inp["shooting"], last_update = node.shooting_vars.last_update)
                     running_time -= firing_rate
                     bullets_fired += 1
             else:

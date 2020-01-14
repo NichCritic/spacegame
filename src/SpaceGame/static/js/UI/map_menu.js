@@ -43,8 +43,8 @@ var MapMenu = (function() {
                     continue;
                 }
 
-                item = {};
-                size = Math.max(data.positions[i].radius/50, 2);
+                let item = {};
+                let size = Math.max(data.positions[i].radius/50, 2);
 
                 item.x = 125+ (x-p.x) / 50;
                 item.y = 125+ (y-p.y) / 50;
@@ -55,7 +55,7 @@ var MapMenu = (function() {
                 ctx.fillRect(item.x-2.5, item.y-2.5, size, size)
             }
             if(!menu.timeout) {
-                menu.timeout = setInterval(menu.loadData.bind(null, menu), 250);
+                menu.timeout = setInterval(menu.loadData.bind(null, menu), 1000);
             }
         });
     }

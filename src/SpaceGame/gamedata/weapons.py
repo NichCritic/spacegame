@@ -3,7 +3,7 @@ import time
 import logging
 
 
-def beam(node_factory, node, creation_time, count, shooting):
+def beam(node_factory, node, creation_time, count, shooting, last_update=None):
     now = time.time() * 1000
     start_time = node.physics_update.last_update + creation_time
 
@@ -45,7 +45,7 @@ def beam(node_factory, node, creation_time, count, shooting):
             node.remove_component('charged')
 
 
-def homing_missile(node_factory, node, creation_time, count, shooting):
+def homing_missile(node_factory, node, creation_time, count, shooting, last_update=None):
     if not shooting:
         return
     x_vel = node.velocity.x
@@ -104,14 +104,16 @@ def homing_missile(node_factory, node, creation_time, count, shooting):
         bullet.add_or_attach_component("allies", {"team": node.allies.team})
 
 
-def single_shot(node_factory, node, creation_time, count, shooting):
+def single_shot(node_factory, node, creation_time, count, shooting, last_update=None):
     if not shooting:
         return
-    x_vel = math.sin(node.rotation.rotation) * 0.5 + node.velocity.x
-    y_vel = -math.cos(node.rotation.rotation) * 0.5 + node.velocity.y
+    x_vel = math.sin(node.rotation.rotation) * 0.3 + node.velocity.x
+    y_vel = -math.cos(node.rotation.rotation) * 0.3 + node.velocity.y
 
     now = time.time() * 1000
-    start_time = node.physics_update.last_update + creation_time
+    last_update = node.physics_update.last_update if last_update is None else last_update
+
+    start_time = last_update + creation_time
 
     dt = now - start_time
 
@@ -119,9 +121,9 @@ def single_shot(node_factory, node, creation_time, count, shooting):
         dt = 0
 
     x_pos = node.position.x + \
-        math.sin(node.rotation.rotation) * 15 + x_vel * dt
+        math.sin(node.rotation.rotation) * 15 + node.velocity.x * dt
     y_pos = node.position.y - \
-        math.cos(node.rotation.rotation) * 15 + y_vel * dt
+        math.cos(node.rotation.rotation) * 15 + node.velocity.y * dt
 
     ignored_nodes = [node.id]
     if node.entity_has("attached"):
@@ -158,7 +160,7 @@ def single_shot(node_factory, node, creation_time, count, shooting):
         bullet.add_or_attach_component('no_sync', {})
 
 
-def triple_shot(node_factory, node, creation_time, count, shooting):
+def triple_shot(node_factory, node, creation_time, count, shooting, last_update=None):
     if not shooting:
         return
     twentydegreesrad = 0.349066

@@ -2,7 +2,7 @@
 
 
 var LocalPhysicsSystem = (function() {
-	var manditory = ["position", "velocity", "rotation", "mass", "acceleration", "force", "thrust", "ship_control"];
+	var manditory = ["local_physics", "position", "velocity", "rotation", "mass", "acceleration", "force", "thrust", "ship_control"];
 	var optional = [];
 	var handles = ["ship_control"];
 
@@ -47,7 +47,7 @@ var LocalPhysicsSystem = (function() {
 	}
 
 	LocalPhysicsSystem.prototype.process = function() {
-		var nodes = this.node_factory.create_node_list(["ship_control", "rotation"]);
+		var nodes = this.node_factory.create_node_list(["ship_control"]);
 		if(nodes.length === 0){
 			return
 		}
@@ -55,14 +55,14 @@ var LocalPhysicsSystem = (function() {
 		let dt = nodes[0].ship_control.dt;
 
 
-		for(let i = 0; i < nodes.length; i++) {
-			let node = nodes[i];
-			let control = node.ship_control;
-			let dt = node.ship_control.dt;
-			do_rotation(node, control, dt)
-		}
+		// for(let i = 0; i < nodes.length; i++) {
+		// 	let node = nodes[i];
+		// 	let control = node.ship_control;
+		// 	let dt = node.ship_control.dt;
+		// 	do_rotation(node, control, dt)
+		// }
 
-		nodes = this.node_factory.create_node_list(["ship_control", "rotation", "thrust", "velocity"]);
+		nodes = this.node_factory.create_node_list(["local_physics","ship_control", "rotation", "thrust", "velocity"]);
 
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
@@ -71,7 +71,7 @@ var LocalPhysicsSystem = (function() {
 			do_force(node, control, dt)
 		}
 
-		nodes = this.node_factory.create_node_list(["force", "mass"]);
+		nodes = this.node_factory.create_node_list(["local_physics","force", "mass"]);
 
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
@@ -79,7 +79,7 @@ var LocalPhysicsSystem = (function() {
 			do_acceleration(node, dt)
 		}
 
-		nodes = this.node_factory.create_node_list(["acceleration"]);
+		nodes = this.node_factory.create_node_list(["local_physics","acceleration"]);
 
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
@@ -87,14 +87,14 @@ var LocalPhysicsSystem = (function() {
 			do_velocity(node, dt)
 		}
 
-		nodes = this.node_factory.create_node_list(["velocity", "ship_control"]);
+		nodes = this.node_factory.create_node_list(["local_physics","velocity", "ship_control"]);
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];
 			let control = node.ship_control;
 			do_brake(node, control, dt)
 		}
 
-		nodes = this.node_factory.create_node_list(["position", "velocity"])
+		nodes = this.node_factory.create_node_list(["local_physics","position", "velocity"])
 
 		for(let i = 0; i < nodes.length; i++) {
 			let node = nodes[i];

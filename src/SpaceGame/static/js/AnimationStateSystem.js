@@ -1,6 +1,6 @@
 
 var AnimationStateSystem = (function() {
-	var manditory = ["animated", "animation_state", "acceleration"];
+	var manditory = ["animation_state", "acceleration"];
 	var optional = [];
 	var handles = [];
 

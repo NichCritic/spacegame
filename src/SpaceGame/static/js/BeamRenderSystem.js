@@ -1,5 +1,5 @@
 var BeamRenderSystem = (function() {
-	var manditory = ["position", "rotation"];
+	var manditory = ["beam_weapon", "position", "rotation"];
 	var optional = ["charged", "charging", "shooting_render", "beam"];
 	var handles = [];
 	function BeamRenderSystem(node_factory, canvas) {

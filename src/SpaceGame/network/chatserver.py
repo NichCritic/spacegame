@@ -617,6 +617,9 @@ class MessageUpdatesHandler(tornado.websocket.WebSocketHandler):
         # else:
         #     self.close()
         #
+        #
+    def get_compression_options(self):
+        return {}
 
     async def start_poll(self):
         await self.poll()

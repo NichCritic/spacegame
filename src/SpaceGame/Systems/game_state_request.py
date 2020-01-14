@@ -20,8 +20,8 @@ class GameStateRequestSystem(System):
             ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
-            if node.has('no_sync'):
-                continue
+            # if node.has('no_sync'):
+            #     continue
 
             ntype = node.type.type if node.has('type') else None
             velx = node.velocity.x if node.has('velocity') else 0

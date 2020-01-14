@@ -28,15 +28,20 @@ var ServerUpdateSystem = (function() {
 
 
 	ServerUpdateSystem.prototype.handle = function(node) {
-		node.add_or_update("position", node.server_update.data.position);
+		
 		node.add_or_update("velocity", node.server_update.data.velocity);
 		node.add_or_update("acceleration", node.server_update.data.acceleration);
 		node.add_or_update("force", node.server_update.data.force);
 		node.add_or_update("thrust", node.server_update.data.thrust);
 		node.add_or_update("rotation", node.server_update.data.rotation);
 		node.add_or_update("mass", node.server_update.data.mass);
-
 		node.add_or_attach("type", {"type":"unknown"})
+
+		if(node.server_update.data.position) {
+			node.add_or_update("position", node.server_update.data.position);
+		} else if (node.server_update.data.target_position) {
+			node.add_or_update("target_position", node.server_update.data.target_position);
+		}
 
 		// if(node.type.type === "bolt") {
 		// 	let dt = Date.now() - node.server_update.data.time;

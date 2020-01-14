@@ -184,6 +184,10 @@ var components = (function(){
 		this.type = data.type;
 	}
 
+	var BeamWeapon = function(entity_id) {
+		this.entity_id = entity_id
+	}
+
 	var Pickup = function(entity_id) {
 		this.entity_id = entity_id;
 	}
@@ -235,6 +239,14 @@ var components = (function(){
 	var DisplayHealth = function(entity_id) {
 		this.entity_id = entity_id
 	}
+	var TargetPosition = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.x = data.x;
+		this.y = data.y;
+	}
+	var LocalPhysics = function(entity_id) {
+		this.entity_id = entity_id
+	}
 
 	var components = {
 		"acceleration":Acceleration,
@@ -242,6 +254,7 @@ var components = (function(){
 		"animation_state":AnimationState,
 		"area": Area,
 		"beam": Beam,
+		"beam_weapon": BeamWeapon,
 		"boss": Boss,
 		"camera": Camera,
 		"charging": Charging,
@@ -259,6 +272,7 @@ var components = (function(){
 		"mass": Mass,
 		"minable": Minable,
 		"mining": Mining,
+		"local_physics": LocalPhysics,
 		"moved": Moved,
 		"overlay": Overlay,
 		"pickup": Pickup,
@@ -278,6 +292,7 @@ var components = (function(){
 		"shooting": Shooting,
 		"shooting_vars": ShootingVars,
 		"shooting_render": ShootingRender,
+		"target_position": TargetPosition,
 		"thrust":Thrust,
 		"to_be_removed": ToBeRemoved,
 		"type": Type,
