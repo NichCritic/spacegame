@@ -20,8 +20,8 @@ class GameStateRequestSystem(System):
             ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.sector.neighbours)
 
         for node in nodes:
-            # if node.has('no_sync'):
-            #     continue
+            if node.has('no_sync'):
+                continue
 
             ntype = node.type.type if node.has('type') else None
             velx = node.velocity.x if node.has('velocity') else 0
@@ -35,7 +35,8 @@ class GameStateRequestSystem(System):
             forcex = node.force.x if node.has('force') else 0
             forcey = node.force.y if node.has('force') else 0
             rotation = node.rotation.rotation if node.has('rotation') else 0
-            rotational_velocity = node.rotational_velocity.vel if node.has('rotational_velocity') else 0
+            rotational_velocity = node.rotational_velocity.vel if node.has(
+                'rotational_velocity') else 0
             control = node.player_input.data[
                 -1] if node.has('player_input') else None,
             last_update = node.physics_update.last_update if node.has(
@@ -58,7 +59,8 @@ class GameStateRequestSystem(System):
             beam = {"width": node.beam.width,
                     "length": node.beam.length} if node.has("beam") else None
             charging = True if node.has("charging") else False
-            charged = {"charge_time":node.charged.charge_time} if node.has("charged") else None
+            charged = {"charge_time": node.charged.charge_time} if node.has(
+                "charged") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,

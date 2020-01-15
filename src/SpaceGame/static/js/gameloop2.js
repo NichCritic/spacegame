@@ -183,7 +183,7 @@ var GameLoop = (function() {
         movement_system = new MovementSystem(node_factory);
         rotate_system = new RotateSystem(node_factory);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, position_lerp, expiry_system, input_system, /*shooting_system,*/ mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, position_lerp, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
