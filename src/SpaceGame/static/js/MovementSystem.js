@@ -34,11 +34,13 @@ var MovementSystem = (function() {
 		}
 
 		if(node.id in this.position_cache) {
-			if(node.position.x != this.position_cache[node.id].x || node.position.y != this.position_cache[node.id].y) {
+			let x = Math.floor(node.position.x);
+			let y = Math.floor(node.position.y);
+			if(x != this.position_cache[node.id].x || y != this.position_cache[node.id].y) {
 				node.add_or_attach("moved", {})
 				this.position_cache[node.id] = {
-					x: node.position.x,
-					y: node.position.y
+					x: Math.floor(node.position.x),
+					y: Math.floor(node.position.y)
 				}
 			} else {
 				node.delete_component("moved");
@@ -46,8 +48,8 @@ var MovementSystem = (function() {
 		} else {
 			node.add_or_attach("moved", {});
 			this.position_cache[node.id] = {
-				x: node.position.x,
-				y: node.position.y
+				x: Math.floor(node.position.x),
+				y: Math.floor(node.position.y)
 			}
 		}
 		

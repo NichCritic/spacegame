@@ -39,6 +39,7 @@
         <script src="static/js/ProximitySystem.js"></script>
         <script src="static/js/RotateSystem.js"></script>
         <script src="static/js/PositionLerpSystem.js"></script>
+        <script src="static/js/WaypointSystem.js"></script>
         <script src="static/js/gameloop2.js"></script>
         <script src="static/js/weapons.js"></script>
         <script src="static/js/UI/shop_menu.js"></script>
@@ -144,6 +145,8 @@
         var renderer = PIXI.autoDetectRenderer(size[0], size[1]);
         var stage; stage = new PIXI.Container();
 
+        var inputs = new InputList();
+
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
         function resize() {
@@ -228,7 +231,7 @@
             // inv_mode.init();
 
             game_mode = GameLoop();
-            game_mode.init(dialog_menu, size[0], size[1]);
+            game_mode.init(dialog_menu, size[0], size[1], inputs);
 
             // map_mode = MapState();
             // map_mode.init();
@@ -303,7 +306,7 @@
         
 
         var sim_time= 0;
-        var inputs = new InputList();
+        
         var last_time = Date.now();
         var framecounter = 0
         
@@ -320,7 +323,7 @@
             requestAnimationFrame(update)
             // Sample clock to find start time
             var time = Date.now();
-            sim_time = time - last_time;
+            sim_time = Math.min(time - last_time, 100);
 
             var unprocessed_input = mode.get_input(inputs, keys, time, sim_time);
             

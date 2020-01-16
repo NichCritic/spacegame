@@ -15,7 +15,7 @@ var ProximitySystem = (function() {
 			let p_node = p_nodes[j];
 			for(let i = 0; i < nodes.length; i++) {
 				let node = nodes[i];
-				if(node.id == p_node.id){
+				if(node.id === p_node.id){
 					continue;
 				}
 				this.handle(p_node, node);

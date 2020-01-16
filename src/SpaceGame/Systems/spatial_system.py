@@ -57,12 +57,12 @@ class SpatialSystem(System):
         nodes = self.get_nodes()
 
         if not self.sectors:
-            self.sectors = self.create_sector_dict(nodes, 2500)
+            self.sectors = self.create_sector_dict(nodes, 1500)
             self.fine_sectors = self.create_sector_dict(nodes, 750)
 
         for node in nodes:
             needs_update = False
-            sx, sy = self.get_sector(node, 2500)
+            sx, sy = self.get_sector(node, 1500)
             fx, fy = self.get_sector(node, 750)
             if node.has("sector"):
 
@@ -82,7 +82,7 @@ class SpatialSystem(System):
         node_ids = set([node.id for node in nodes])
         for node in nodes:
             sx, sy, neighbour_entities = self.create_neighbours_list(
-                node, self.sectors, 2500)
+                node, self.sectors, 1500)
             fx, fy, fine_neighbour_entities = self.create_neighbours_list(
                 node, self.fine_sectors, 750)
 

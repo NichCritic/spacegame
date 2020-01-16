@@ -57,7 +57,8 @@ var GameLoop = (function() {
         return textures
     }
 
-    function setup(dialog, width, height) {
+    function setup(dialog, width, height, my_inputs) {
+        inputs = my_inputs;
         dialog_menu = dialog
 
         bg = new PIXI.Sprite(
@@ -182,8 +183,9 @@ var GameLoop = (function() {
         collision_move_system = new CollisionMovementSystem(node_factory);
         movement_system = new MovementSystem(node_factory);
         rotate_system = new RotateSystem(node_factory);
+        waypoint_system = new WaypointSystem(node_factory, inputs);
 
-        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, position_lerp, expiry_system, input_system, shooting_system, mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
+        systems = [/*server_sync_system,*/ player_server_update_system, PCE_update_system, server_update_system, position_lerp, expiry_system, waypoint_system, input_system, shooting_system, mining_system, physics_system, proximity_system, rotate_system, collision_system, collision_move_system, movement_system, boss_announce_system, camera_track_system, animation_state_system, animation_system, beam_render, mining_laser_render, health_render_system, render_system, shooting_sink, proximity_sink];
 
         camera = node_factory.create_node({
             position:{x:-100, y:-100},
@@ -212,6 +214,28 @@ var GameLoop = (function() {
             window.location.replace("/auth/login");
             // debugger;
         }
+
+        window.onmousedown = function(event) {
+            let player = node_factory.create_node_list(["player"])[0];
+            let camera = node_factory.create_node_list(["camera", "position"])[0];
+
+            let w_x = event.clientX + camera.position.x;
+            let w_y = event.clientY + camera.position.y;
+
+            player.add_or_attach("waypoint", {});
+
+            player.waypoint.waypoints.push({x: w_x, y:w_y})
+
+            let wp = node_factory.create_node([]);
+            wp.add_or_attach('position', {x: w_x, y:w_y});
+            wp.add_or_update("renderable", {spritesheet: textures["target"],
+                   image:textures["target"].idle[0],
+                   width: 50,
+                   height: 50});
+
+
+        }
+
 
     }
 
@@ -381,6 +405,7 @@ var GameLoop = (function() {
                 n.add_or_update('player');
                 n.add_or_update('inputs', {inputs:inputs});
                 n.add_or_attach('check_collision')
+                n.add_or_attach("local_physics")
 
                 if(entity.weapon) {
                     n.add_or_update('weapon', entity.weapon)

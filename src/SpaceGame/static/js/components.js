@@ -248,6 +248,11 @@ var components = (function(){
 		this.entity_id = entity_id
 	}
 
+	var Waypoint = function(entity_id, data) {
+		this.entity_id = entity_id;
+		this.waypoints = data.waypoints ? data.waypoints : [];
+	}
+
 	var components = {
 		"acceleration":Acceleration,
 		"animated":Animated,
@@ -297,6 +302,7 @@ var components = (function(){
 		"to_be_removed": ToBeRemoved,
 		"type": Type,
 		"velocity":Velocity,
+		"waypoint": Waypoint,
 		"weapon": Weapon
 	};
 
