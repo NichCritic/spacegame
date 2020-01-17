@@ -44,32 +44,47 @@ var WaypointSystem = (function() {
 		let p_x = node.position.x //- camera.position.x;
 		let p_y = node.position.y //- camera.position.y;
 
-		if(Math.sqrt((w_x-p_x)**2 + (w_y - p_y) **2) < 100) {
+		let dist = Math.sqrt((w_x-p_x)**2 + (w_y - p_y) **2)
+		if(dist < 150) {
 			node.waypoint.waypoints.shift();
 			return
 		}
 
-		let a2 = Math.atan2(p_y, p_x);
-		let a1 = Math.atan2(w_y, w_x);
+		let a = (Math.atan2(p_y - w_y, p_x - w_x) - Math.PI/2) ;
 
-		let sign = a1 > a2 ? 1 : -1;
-		let angle = a1 - a2;
+		let a1 = Math.atan2(w_y - camera.position.y, w_x - camera.position.x);
+		let a2 = Math.atan2(p_y - camera.position.y, p_x - camera.position.x);
 
-		if(angle > 0.01) {
-			node.control.left = true;
-			latest_input.left = true;
-			node.control.brake = false;
-			latest_input.brake = false;
-		}
-		else if (angle < -0.01){
-			node.control.right = true;
-			latest_input.right = true;
-			node.control.brake = false;
-			latest_input.brake = false;
-		} else {
+		let left = a1 < a2; 
+
+		let angle = (node.rotation.rotation - a) % (Math.PI*2);
+
+		if(angle < 0.35 && angle > -0.35) {
 			node.control.thrust = true;
-			latest_input.thrust = true;			
+			latest_input.thrust = true;
+		} else {
+			if (angle > Math.PI || angle < -Math.PI) {
+				node.control.brake = false;
+				latest_input.brake = false;
+			}
+
+			if(left) {
+				node.control.left = true;
+				latest_input.left = true;
+				// node.control.brake = false;
+				// latest_input.brake = false;
+			} else {
+				node.control.right = true;
+				latest_input.right = true;
+				// node.control.brake = false;
+				// latest_input.brake = false;
+			}			
 		}
+
+		// if(dist < 100) {
+		// 	latest_input.brake = false;
+		// 	node.control.brake = false;
+		// }
 
 		
 	}

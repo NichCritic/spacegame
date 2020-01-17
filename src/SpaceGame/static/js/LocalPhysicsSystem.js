@@ -12,7 +12,7 @@ var LocalPhysicsSystem = (function() {
 
 	function do_rotation(node, control, dt) {
 		let rotation = node.rotation.rotation;
-		node.rotation.rotation = control.left ? (rotation - 1/200 * dt) : (control.right ? (rotation + 1/200 * dt) : rotation);
+		node.rotation.rotation = (control.left ? (rotation - 1/200 * dt) : (control.right ? (rotation + 1/200 * dt) : rotation)) % (2 * Math.PI);
 	}
 
 	function do_force(node, control, dt) {

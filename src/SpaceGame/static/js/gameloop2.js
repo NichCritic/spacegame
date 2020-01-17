@@ -219,8 +219,11 @@ var GameLoop = (function() {
             let player = node_factory.create_node_list(["player"])[0];
             let camera = node_factory.create_node_list(["camera", "position"])[0];
 
-            let w_x = event.clientX + camera.position.x;
-            let w_y = event.clientY + camera.position.y;
+            let m_x = 1200/window.innerWidth * event.clientX;
+            let m_y = 600/window.innerHeight * event.clientY;
+
+            let w_x = m_x + camera.position.x;
+            let w_y = m_y + camera.position.y;
 
             player.add_or_attach("waypoint", {});
 
@@ -230,8 +233,8 @@ var GameLoop = (function() {
             wp.add_or_attach('position', {x: w_x, y:w_y});
             wp.add_or_update("renderable", {spritesheet: textures["target"],
                    image:textures["target"].idle[0],
-                   width: 50,
-                   height: 50});
+                   width: 300,
+                   height: 300});
 
 
         }

@@ -53,8 +53,8 @@ class InputSystem(System):
         for inp in inputs:
             dt = inp['dt']
 
-            leftrot = rot - node.rotational_velocity.vel / 200 * dt
-            rightrot = rot + node.rotational_velocity.vel / 200 * dt
+            leftrot = (rot - node.rotational_velocity.vel / 200 * dt) % (2*math.pi)
+            rightrot = (rot + node.rotational_velocity.vel / 200 * dt) % (2*math.pi)
 
             p = PhysicsPacket()
             p.rotation = leftrot if inp[

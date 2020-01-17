@@ -3,8 +3,8 @@ function do_physics(node, control, dt) {
 	let rotation = node.rotation.rotation;
 	let rot_vel = node.rotational_velocity.vel;
 
-	let rot_left = (rotation - rot_vel/200 * dt);
-	let rot_right = (rotation + rot_vel/200 * dt);
+	let rot_left = (rotation - rot_vel/200 * dt) % (2 * Math.PI);
+	let rot_right = (rotation + rot_vel/200 * dt) % (2 * Math.PI);
 
 	node.rotation.rotation = control.left ? rot_left : (control.right ? rot_right : rotation);
 
