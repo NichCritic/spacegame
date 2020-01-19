@@ -143,9 +143,9 @@ td {
 }
 
 @keyframes boss {
-  0% {opacity:0;}
+  0% {opacity:0; display:block;}
   75% {opacity:1;}
-  100% {opacity:0;}
+  100% {opacity:0; display:none;}
 }
 
 .encounter-outer {
@@ -171,6 +171,7 @@ td {
   font-size: 3em;
   text-shadow: 5px 5px #000000;
   opacity:0;
+  display:none;
   /*animation: boss 2s;*/
 }
 

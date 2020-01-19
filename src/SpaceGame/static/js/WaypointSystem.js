@@ -50,7 +50,9 @@ var WaypointSystem = (function() {
 			return
 		}
 
-		let a = (Math.atan2(p_y - w_y, p_x - w_x) - Math.PI/2) ;
+		let a = (Math.atan2(p_y - w_y, p_x - w_x) - Math.PI/2);
+
+
 
 		let a1 = Math.atan2(w_y - camera.position.y, w_x - camera.position.x);
 		let a2 = Math.atan2(p_y - camera.position.y, p_x - camera.position.x);
@@ -58,8 +60,11 @@ var WaypointSystem = (function() {
 		let left = a1 < a2; 
 
 		let angle = (node.rotation.rotation - a) % (Math.PI*2);
+		let minus_angle = angle - Math.PI*2
 
-		if(angle < 0.35 && angle > -0.35) {
+		angle = Math.abs(angle) < Math.abs(minus_angle) ? angle : minus_angle;
+
+		if(angle < 0.25 && angle > -0.25) {
 			node.control.thrust = true;
 			latest_input.thrust = true;
 		} else {
