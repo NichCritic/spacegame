@@ -130,6 +130,34 @@ class Sector():
         self.fine_neighbours = fine_neighbours
 
 
+class SectorsCourse():
+
+    def __init__(self, entity_id, sector_list=None):
+        self.entity_id = entity_id
+        self.sector_list = [] if sector_list is None else sector_list
+
+
+class SectorsFine():
+
+    def __init__(self, entity_id, sector_list=None):
+        self.entity_id = entity_id
+        self.sector_list = [] if sector_list is None else sector_list
+
+
+class NeighboursCourse():
+
+    def __init__(self, entity_id, neighbours=None):
+        self.entity_id = entity_id
+        self.neighbours = [] if neighbours is None else neighbours
+
+
+class NeighboursFine():
+
+    def __init__(self, entity_id, neighbours=None):
+        self.entity_id = entity_id
+        self.neighbours = [] if neighbours is None else neighbours
+
+
 class Shop():
 
     def __init__(self, entity_id, shop_data):
@@ -209,7 +237,9 @@ class Rotation():
         self.entity_id = entity_id
         self.rotation = rotation
 
+
 class RotationalVelocity():
+
     def __init__(self, entity_id, vel):
         self.entity_id = entity_id
         self.vel = vel
@@ -290,7 +320,7 @@ class ServerUpdated():
 
 class StateHistory():
 
-    def __init__(self, entity_id, history = None):
+    def __init__(self, entity_id, history=None):
         self.entity_id = entity_id
         self.history = [] if history is None else history
 
@@ -625,18 +655,24 @@ class Charged():
         self.entity_id = entity_id
         self.charge_time = charge_time
 
-class Damaged(): 
+
+class Damaged():
+
     def __init__(self, entity_id, amount):
         self.entity_id = entity_id
         self.amount = amount
 
+
 class Respawn():
+
     def __init__(self, entity_id, respawn_time, spec):
         self.entity_id = entity_id
         self.respawn_time = respawn_time
         self.spec = spec
 
+
 class Spawn():
+
     def __init__(self, entity_id, start_time):
         self.entity_id = entity_id
         self.start_time = start_time
@@ -712,7 +748,7 @@ components = {
     "shop": Shop,
     "shop_spec": ShopSpec,
     "sold": Sold,
-    "spawn": Spawn, 
+    "spawn": Spawn,
     "state_history": StateHistory,
     "target": Target,
     "thrust": Thrust,
