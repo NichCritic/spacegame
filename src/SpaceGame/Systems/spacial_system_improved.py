@@ -8,65 +8,42 @@ import time
 class SpatialSystem(System):
 
     mandatory = ["position"]
-    optional = ["area", "sectors"]
+    optional = ["area"]
     handles = []
 
-    def __init__(self, node_factory):
+    def __init__(self, node_factory, spatial_map, sector_component):
         self.node_factory = node_factory
-        self.sectors = None
+        self.spatial_map = fine_spatial_map
+        self.sector_component = sector_component
 
-    def process(self):
-        nodes = self.get_nodes()
+    def handle(self, node):
+        if node.entity_has(self.sector_component):
+            return
+        radius = node.area.radius if node.has("area") else 0
 
-        if not self.sectors:
-            self.sectors = self.create_sector_dict(nodes, 2500)
-            self.fine_sectors = self.create_sector_dict(nodes, 750)
+        sectors = self.spatial_map.add(node.id, node.position.x, node.position.y, radius)
 
-        for node in nodes:
-            needs_update = False
-            sx, sy = self.get_sector(node, 2500)
-            fx, fy = self.get_sector(node, 750)
-            if node.has("sector"):
-
-                if node.id not in self.sectors[(sx, sy)]:
-                    if node.id in self.sectors[(node.sector.sx, node.sector.sy)]:
-                        self.sectors[
-                            (node.sector.sx, node.sector.sy)].remove(node.id)
-                    self.sectors[(sx, sy)].append(node.id)
-                    node.add_or_attach_component("ping_neighbours", {})
-
-                if node.id not in self.fine_sectors[(fx, fy)]:
-                    if node.id in self.fine_sectors[(node.sector.fx, node.sector.fy)]:
-                        self.fine_sectors[
-                            (node.sector.fx, node.sector.fy)].remove(node.id)
-                    self.fine_sectors[(fx, fy)].append(node.id)
-
-        node_ids = set([node.id for node in nodes])
-        for node in nodes:
-            sx, sy, neighbour_entities = self.create_neighbours_list(
-                node, self.sectors, 2500)
-            fx, fy, fine_neighbour_entities = self.create_neighbours_list(
-                node, self.fine_sectors, 750)
-
-            node.add_or_update_component(
-                "sector", {"sx": sx, "sy": sy, "neighbours": neighbour_entities,
-                           "fx": fx, "fy": fy, "fine_neighbours": fine_neighbour_entities})
+        node.add_or_attach_component(self.sector_component, {"sectors": sectors})
 
 
-'''
-0---------------------------2500
-|
-|
-|
-|
-|
-|
-|-------------1250------------|
-|               |
-|               |
-|               |
-|               |
-|               |
-2500------------------------2500
+class SpatialSystemMoved(System):
+    mandatory = ["position", "moved"]
+    optional = ["area"]
+    handles = []
 
-'''
+    def __init__(self, node_factory, spatial_map, sector_component):
+        self.node_factory = node_factory
+        self.spatial_map = spatial_map
+        self.sector_component = sector_component
+        self.mandatory.append(sector_component)
+
+    def handle(self, node):
+        radius = node.area.radius if node.has("area") else 0
+        coords = self.spatial_map.move(node.id, node.position.x, node.position.y, radius)
+        node.add_or_update_component(self.sector_component, {"sectors": coords})
+
+
+        
+
+
+
