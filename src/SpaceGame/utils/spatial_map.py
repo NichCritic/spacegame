@@ -21,7 +21,7 @@ class SpatialMap():
                 self.map[(i, j)].add(id)
                 self.entity_map[id].add((i, j))
 
-        return self.entity_map[id]
+        return (s_left, s_right, s_top, s_bottom)
 
     def move(self, id, x, y, radius):
         s_left = math.floor((x - radius) / self.size)
@@ -42,12 +42,36 @@ class SpatialMap():
 
         for coord in new_coords:
             self.map[coord].add(id)
-        return coords
+        return (s_left, s_right, s_top, s_bottom)
 
     def remove(self, id):
         for coord in self.entity_map[id]:
             self.map[coord].remove(id)
         del self.entity_map[id]
+
+    def neighbours_by_sector(self, sector_rect):
+        s_left, s_right, s_top, s_bottom = sector_rect
+
+        coords = set([(i, j) for i in range(s_left, s_right)
+                      for j in range(s_top, s_bottom)])
+        ns = set()
+        for co in coords:
+            ns += self.map[co]
+        return ns
+
+    def neighbours_surround(self, x, y, radius):
+        s_left = math.floor((x - radius) / self.size) - 1
+        s_right = math.floor((x + radius) / self.size) + 1
+
+        s_top = math.floor((y - radius) / self.size) - 1
+        s_bottom = math.floor((y + radius) / self.size) + 1
+
+        coords = set([(i, j) for i in range(s_left, s_right)
+                      for j in range(s_top, s_bottom)])
+        ns = set()
+        for co in coords:
+            ns += self.map[co]
+        return ns
 
     def neighbours(self, id):
         ns = set()

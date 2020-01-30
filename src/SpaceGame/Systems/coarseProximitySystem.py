@@ -4,23 +4,22 @@ import logging
 import time
 
 
-class ProximitySystem(System):
+class CoarseProximitySystem(System):
 
-    mandatory = ["position", "fine_neighbours", "moved"]
+    mandatory = ["position", "coarse_neighbours", "moved"]
     optional = []
     handles = []
 
     def __init__(self, node_factory):
         self.node_factory = node_factory
-        self.sim_time = 0
 
     def distance(self, p1, p2):
-        return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+        return math.abs((p1.x - p2.x)) + math.abs((p1.y - p2.y))
 
     def handle(self, node):
 
         nnodes = self.node_factory.create_node_list(
-            ["position", "area"], [], entity_ids=node.fine_neighbours.neighbours)
+            ["position"], [], entity_ids=node.coarse_neighbours.neighbours)
 
         node.add_or_attach_component("proximity", {})
         node.proximity.proximity_map = {}
@@ -30,7 +29,7 @@ class ProximitySystem(System):
         for nnode in nnodes:
             if node.id == nnode.id:
                 continue
-            dist = self.distance(node.position, nnode.position)
+            dist = distance(self, p1, p2)
 
             if dist == 0:
                 dist = 0.01

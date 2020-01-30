@@ -130,32 +130,32 @@ class Sector():
         self.fine_neighbours = fine_neighbours
 
 
-class SectorsCourse():
+class SectorsCoarse():
 
-    def __init__(self, entity_id, sector_list=None):
+    def __init__(self, entity_id, sector_rect):
         self.entity_id = entity_id
-        self.sector_list = [] if sector_list is None else sector_list
+        self.sector_rect = sector_rect
 
 
 class SectorsFine():
 
-    def __init__(self, entity_id, sector_list=None):
+    def __init__(self, entity_id, sector_rect):
         self.entity_id = entity_id
-        self.sector_list = [] if sector_list is None else sector_list
+        self.sector_rect = sector_rect
 
 
-class NeighboursCourse():
+class NeighboursCoarse():
 
     def __init__(self, entity_id, neighbours=None):
         self.entity_id = entity_id
-        self.neighbours = [] if neighbours is None else neighbours
+        self.neighbours = set() if neighbours is None else neighbours
 
 
 class NeighboursFine():
 
     def __init__(self, entity_id, neighbours=None):
         self.entity_id = entity_id
-        self.neighbours = [] if neighbours is None else neighbours
+        self.neighbours = set() if neighbours is None else neighbours
 
 
 class Shop():
@@ -740,7 +740,7 @@ components = {
     "respawn": Respawn,
     "rotation": Rotation,
     "rotational_velocity": RotationalVelocity,
-    "sectors_course": SectorsCourse,
+    "sectors_coarse": SectorsCoarse,
     "sectors_fine": SectorsFine,
     "server_updated": ServerUpdated,
     "shoot_at_target": ShootAtTarget,

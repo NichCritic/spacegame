@@ -51,7 +51,7 @@ from Systems.purePhysicsSystem import PhysicsSystem
 from Systems.server_update_system import ServerUpdateSystem
 from Systems.shooting_system import ShootingSystem
 from Systems.shopUnpackSystem import ShopUnpackSystem
-from Systems.spatial_system import SpatialSystem
+from Systems.spatial_system_improved import SpatialSystem, SpatialSystemMoved
 from Systems.system_set import SystemSet
 from Systems.transaction_system import TransactionSystem
 from Systems.boughtSoldSink import BoughtSink, SoldSink
@@ -67,6 +67,7 @@ from Systems.damagedExplosionSystem import DamagedExplosionSystem
 from Systems.damagedSink import DamagedSink
 from Systems.deathRespawnSystem import DeathRespawnSystem
 from Systems.respawnSystem import RespawnSystem
+from Systems.NeighbourSystem import FineNeighbourSystem, CoarseNeighbourSystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -74,6 +75,8 @@ from gamedata.upgrades import upgrades
 
 
 from command.command_handler import CommandHandler
+from utils.spatial_map import SpatialMap
+
 
 from gamedata.quests import Quest, QuestManager
 from gamedata.quest_data.intro import Stage1, Stage2, Stage3
@@ -94,8 +97,10 @@ def setup_objects(all_db_components, all_components, session):
         "starting_room": default_room,
         "player_id": 0})
     account_utils = AccountUtils(avatar_factory)
+    fine_spatial_map = SpatialMap(size=100)
+    coarse_spatial_map = SpatialMap(size=2500)
 
-    return avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils
+    return avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils, fine_spatial_map, coarse_spatial_map
 
 
 def unpack_db_objects(node_factory):
@@ -142,11 +147,14 @@ def create_spacestations(node_factory, session):
     from math import floor
     import json
 
-    gold_ore_item = objects.item.get_item_by_name(session, 'gold ore').static_copy()
+    gold_ore_item = objects.item.get_item_by_name(
+        session, 'gold ore').static_copy()
     silver_ore_item = objects.item.get_item_by_name(
         session, 'silver ore').static_copy()
-    iron_ore_item = objects.item.get_item_by_name(session, 'iron ore').static_copy()
-    rootkit_item = objects.item.get_item_by_name(session, 'rootkit').static_copy()
+    iron_ore_item = objects.item.get_item_by_name(
+        session, 'iron ore').static_copy()
+    rootkit_item = objects.item.get_item_by_name(
+        session, 'rootkit').static_copy()
 
     gold_ore = {'id': gold_ore_item.id, 'name': gold_ore_item.name}
     iron_ore = {'id': iron_ore_item.id, 'name': iron_ore_item.name}
@@ -182,7 +190,8 @@ def create_spacestations(node_factory, session):
             'drop_on_death': {"products": [iron_ore] * 100 + [silver_ore] * 10 + [gold_ore] * 1, "qty": drop_qty}
 
         })
-        asteroid.add_or_attach_component("respawn", {"respawn_time": 1000*60*5, "spec": json.dumps(asteroid.to_dict())})
+        asteroid.add_or_attach_component(
+            "respawn", {"respawn_time": 1000 * 60 * 5, "spec": json.dumps(asteroid.to_dict())})
 
     def test_script(trigger_node, triggerer_node):
         import random
@@ -199,9 +208,11 @@ def create_spacestations(node_factory, session):
             y_pos = trigger_node.position.y + i * 30
 
             spawn_pos_x = x_pos + \
-                math.sin(random.random() * 4 * math.pi) * trigger_node.area.radius
+                math.sin(random.random() * 4 * math.pi) * \
+                trigger_node.area.radius
             spawn_pos_y = y_pos + \
-                math.cos(random.random() * 4 * math.pi) * trigger_node.area.radius
+                math.cos(random.random() * 4 * math.pi) * \
+                trigger_node.area.radius
 
             logging.info(f"{x_pos}, {y_pos}")
 
@@ -210,7 +221,7 @@ def create_spacestations(node_factory, session):
                 "area": {"radius": 10},
                 "position": {"x": spawn_pos_x, "y": spawn_pos_y},
                 "rotation": {"rotation": 0},
-                "rotational_velocity": {"vel":1},
+                "rotational_velocity": {"vel": 1},
                 "velocity": {"x": 0, "y": 0},
                 'force': {},
                 'acceleration': {},
@@ -234,7 +245,7 @@ def create_spacestations(node_factory, session):
 
     for i in range(5):
         x_pos = 10000
-        y_pos = 2000*(i-2)
+        y_pos = 2000 * (i - 2)
         initial_cooldown = 60000 * numpy.random.rand()
         radius = [500, 750, 1500, 750, 500][i]
 
@@ -243,7 +254,7 @@ def create_spacestations(node_factory, session):
             "position": {"x": x_pos, "y": y_pos},
             # "type": {"type": "target"},
             "velocity": {"x": 0, "y": 0},  # Needed to pick up proximity
-            "event": {"script": test_script, "cooldown": 60000, "initial_cooldown": initial_cooldown, "random_cooldown":True},
+            "event": {"script": test_script, "cooldown": 60000, "initial_cooldown": initial_cooldown, "random_cooldown": True},
             "event_proximity_trigger": {}
         })
 
@@ -264,7 +275,7 @@ def create_spacestations(node_factory, session):
         "area": {"radius": 26},
         "position": {"x": 20000, "y": 0},
         "rotation": {"rotation": 3 / 4 * 2 * math.pi},
-        "rotational_velocity": {"vel":1},
+        "rotational_velocity": {"vel": 1},
         "type": {"type": "ship3"},
         "collidable": {},
         'force': {},
@@ -290,7 +301,7 @@ def create_spacestations(node_factory, session):
         "area": {"radius": 119 * 2},
         "position": {"x": -2000, "y": 0},
         "rotation": {"rotation": 1 / 4 * 2 * math.pi},
-        "rotational_velocity": {"vel":0.25},
+        "rotational_velocity": {"vel": 0.25},
         "velocity": {"x": 0, "y": 0},
         "type": {"type": "boss"},
         'force': {},
@@ -316,7 +327,7 @@ def create_spacestations(node_factory, session):
             "area": {"radius": 10},
             "position": {"x": 0, "y": 0},
             "rotation": {"rotation": 0},
-            "rotational_velocity": {"vel":0},
+            "rotational_velocity": {"vel": 0},
             "velocity": {"x": 0, "y": 0},
             'force': {},
             'acceleration': {},
@@ -337,7 +348,7 @@ def create_spacestations(node_factory, session):
             "type": {"type": "target"},
             "position": {"x": 0, "y": 0},
             "rotation": {"rotation": 0},
-            "rotational_velocity": {"vel":0},
+            "rotational_velocity": {"vel": 0},
             "velocity": {"x": 0, "y": 0},
             'force': {},
             'acceleration': {},
@@ -349,7 +360,7 @@ def create_spacestations(node_factory, session):
             # 'allies': {'team': 'bossman'}
         })
 
-    bolt_locations=[(-13, 15), (13, 15)]
+    bolt_locations = [(-13, 15), (13, 15)]
     for x, y in bolt_locations:
         node_factory.create_new_node({
             'attached': {"target_id": boss.id, "x": x * 2, "y": y * 2, 'rotation': math.pi},
@@ -357,7 +368,7 @@ def create_spacestations(node_factory, session):
             "type": {"type": "ship"},
             "position": {"x": 0, "y": 0},
             "rotation": {"rotation": 0},
-            "rotational_velocity": {"vel":0},
+            "rotational_velocity": {"vel": 0},
             "velocity": {"x": 0, "y": 0},
             'force': {},
             'acceleration': {},
@@ -368,6 +379,7 @@ def create_spacestations(node_factory, session):
             'weapon': {'type': 'triple_shot', "firing_rate": 200},
             # 'allies': {'team': 'bossman'}
         })
+
 
 def collision_test(node_factory, session):
 
@@ -440,7 +452,7 @@ def setup_commands(node_factory, session_manager, db_comps, quest_manager):
     return command_handler
 
 
-def register_systems(session_manager, object_db, node_factory, node_factory_db, player_factory, quest_systems):
+def register_systems(session_manager, object_db, node_factory, node_factory_db, player_factory, quest_systems, fine_spatial_map, coarse_spatial_map):
     system_set = SystemSet()
     shopUnpackSystem = ShopUnpackSystem(node_factory, session_manager)
     nms = NetworkMessageSystem(node_factory, player_factory)
@@ -453,8 +465,18 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     attachSystem = AttachSystem(node_factory)
     shoot = ShootingSystem(node_factory, weapons)
     movetrack = MovementTrackingSystem(node_factory)
-    spatial = SpatialSystem(node_factory)
+    fine_spatial = SpatialSystem(
+        node_factory, fine_spatial_map, "sectors_fine")
+    coarse_spatial = SpatialSystem(
+        node_factory, coarse_spatial_map, "sectors_coarse")
+    fine_spatial_moved = SpatialSystemMoved(
+        node_factory, fine_spatial_map, "sectors_fine")
+    coarse_spatial_moved = SpatialSystemMoved(
+        node_factory, coarse_spatial_map, "sectors_coarse")
+    fine_neighbour = FineNeighbourSystem(node_factory, fine_spatial_map)
+    coarse_neighbour = CoarseNeighbourSystem(node_factory, coarse_spatial_map)
     proximity = ProximitySystem(node_factory)
+    coarse_proximity = CourseProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
@@ -504,7 +526,11 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(attachSystem)
     system_set.register(shoot)
     system_set.register(movetrack)
-    system_set.register(spatial)
+    system_set.register(coarse_spatial)
+    system_set.register(fine_spatial)
+    system_set.register(coarse_spatial_moved)
+    system_set.register(fine_spatial_moved)
+    system_set.register(coarse_proximity)
     system_set.register(proximity)
     system_set.register(collision)
     system_set.register(pickup)

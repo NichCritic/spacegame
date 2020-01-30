@@ -11,9 +11,9 @@ class PlayerCenteredSystem(System):
 
     def get_nodes(self):
         players = self.node_factory.create_node_list(
-            ["player_controlled", "proximity"])
-        ids = sum([set(node.proximity.proximity_map.keys())
+            ["player_controlled", "course_neighbours"])
+        ids = sum(node.course_neighbours.neighbours
                    for node in players])
         nodes = self.node_factory.create_node_list(self.mandatory,
-                                                   self.optional, entity_ids=ids)
+                                                   self.optional, entity_ids = ids)
         return nodes

@@ -21,9 +21,11 @@ class SpatialSystem(System):
             return
         radius = node.area.radius if node.has("area") else 0
 
-        sectors = self.spatial_map.add(node.id, node.position.x, node.position.y, radius)
+        sectors = self.spatial_map.add(
+            node.id, node.position.x, node.position.y, radius)
 
-        node.add_or_attach_component(self.sector_component, {"sectors": sectors})
+        node.add_or_attach_component(self.sector_component, {
+                                     "sector_rect": sectors})
 
 
 class SpatialSystemMoved(System):
@@ -39,11 +41,7 @@ class SpatialSystemMoved(System):
 
     def handle(self, node):
         radius = node.area.radius if node.has("area") else 0
-        coords = self.spatial_map.move(node.id, node.position.x, node.position.y, radius)
-        node.add_or_update_component(self.sector_component, {"sectors": coords})
-
-
-        
-
-
-
+        coords = self.spatial_map.move(
+            node.id, node.position.x, node.position.y, radius)
+        node.add_or_update_component(self.sector_component, {
+                                     "sector_rect": coords})

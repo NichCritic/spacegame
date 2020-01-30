@@ -26,7 +26,7 @@ all_components.update(components)
 session_manager = setup_db('sqlite:///main.db')
 
 with session_manager.get_session() as session:
-    avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils = setup_objects(
+    avatar_factory, node_factory, db_node_factory, object_db, player_factory, account_utils, fine_spatial_map, coarse_spatial_map = setup_objects(
         all_db_components, all_components, session)
     object_db.set_session(session)
     create_spacestations(db_node_factory, session)
@@ -35,9 +35,10 @@ with session_manager.get_session() as session:
 
 
 quest_manager, quest_systems = setup_quests(node_factory, session_manager)
-command_handler = setup_commands(node_factory, session_manager, object_db, quest_manager)
+command_handler = setup_commands(
+    node_factory, session_manager, object_db, quest_manager)
 system_set = register_systems(
-    session_manager, object_db, node_factory, db_node_factory, player_factory, quest_systems)
+    session_manager, object_db, node_factory, db_node_factory, player_factory, quest_systems, fine_spatial_map, coarse_spatial_map)
 
 
 def main():
@@ -63,7 +64,7 @@ def main():
             (r"/inv", InventoryHandler, dict(account_utils=account_utils,
                                              player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/quests", QuestHandler, dict(account_utils=account_utils,
-                                             player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
+                                            player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/upgrade", UpgradeHandler, dict(account_utils=account_utils,
                                                player_factory=player_factory, session_manager=session_manager, node_factory=node_factory)),
             (r"/money", MoneyHandler, dict(account_utils=account_utils,
