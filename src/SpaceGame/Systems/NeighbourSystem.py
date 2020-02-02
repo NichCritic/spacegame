@@ -20,7 +20,7 @@ class CoarseNeighbourSystem(System):
         neighbours = self.spatial_map.neighbours_by_sector(
             (left - 1, right + 1, top - 1, bottom + 1))
         node.add_or_attach_component(
-            "coarse_neighbours", {"neighbours": neighbours})
+            "neighbours_coarse", {"neighbours": neighbours})
 
 
 class FineNeighbourSystem(System):
@@ -37,4 +37,4 @@ class FineNeighbourSystem(System):
         neighbours = self.spatial_map.neighbours_by_sector(
             node.fine_sectors.sector_rect)
         node.add_or_attach_component(
-            "fine_neighbours", {"neighbours": neighbours})
+            "neighbours_fine", {"neighbours": neighbours})

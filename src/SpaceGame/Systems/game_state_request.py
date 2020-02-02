@@ -3,7 +3,7 @@ from Systems.system import System
 
 class GameStateRequestSystem(System):
 
-    mandatory = ["player_controlled", "player_input", "sector", "tracked_ids"]
+    mandatory = ["player_controlled", "player_input", "neighbours_coarse", "tracked_ids"]
     optional = ["ping_neighbours"]
     handles = []
 
@@ -17,7 +17,7 @@ class GameStateRequestSystem(System):
                 node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
-            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.sector.neighbours)
+            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.neighbours_coarse.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):

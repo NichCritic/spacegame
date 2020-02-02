@@ -13,7 +13,7 @@ class SpatialSystem(System):
 
     def __init__(self, node_factory, spatial_map, sector_component):
         self.node_factory = node_factory
-        self.spatial_map = fine_spatial_map
+        self.spatial_map = spatial_map
         self.sector_component = sector_component
 
     def handle(self, node):

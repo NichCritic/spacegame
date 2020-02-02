@@ -114,20 +114,20 @@ class Colliding():
         self.collisions = [] if not collisions else collisions
 
 
-class Sector():
-    '''
-    A sector is position / 2500
-    neightbours has the list of all entities in the sector
-    '''
+# class Sector():
+#     '''
+#     A sector is position / 2500
+#     neightbours has the list of all entities in the sector
+#     '''
 
-    def __init__(self, entity_id, sx, sy, fx, fy, neighbours, fine_neighbours):
-        self.entity_id = entity_id
-        self.sx = sx
-        self.sy = sy
-        self.fx = fx
-        self.fy = fy
-        self.neighbours = neighbours
-        self.fine_neighbours = fine_neighbours
+#     def __init__(self, entity_id, sx, sy, fx, fy, neighbours, fine_neighbours):
+#         self.entity_id = entity_id
+#         self.sx = sx
+#         self.sy = sy
+#         self.fx = fx
+#         self.fy = fy
+#         self.neighbours = neighbours
+#         self.fine_neighbours = fine_neighbours
 
 
 class SectorsCoarse():
@@ -759,6 +759,8 @@ components = {
     "updated": Updated,
     "velocity": Velocity,
     "weapon": Weapon,
+    "neighbours_coarse": NeighboursCoarse,
+    "neighbours_fine": NeighboursFine
 }
 
 db_components = {

@@ -6,7 +6,7 @@ import time
 
 class ProximitySystem(System):
 
-    mandatory = ["position", "fine_neighbours", "moved"]
+    mandatory = ["position", "neighbours_fine", "moved"]
     optional = []
     handles = []
 
@@ -20,7 +20,7 @@ class ProximitySystem(System):
     def handle(self, node):
 
         nnodes = self.node_factory.create_node_list(
-            ["position", "area"], [], entity_ids=node.fine_neighbours.neighbours)
+            ["position", "area"], [], entity_ids=node.neighbours_fine.neighbours)
 
         node.add_or_attach_component("proximity", {})
         node.proximity.proximity_map = {}

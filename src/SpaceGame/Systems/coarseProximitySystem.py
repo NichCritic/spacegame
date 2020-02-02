@@ -6,7 +6,7 @@ import time
 
 class CoarseProximitySystem(System):
 
-    mandatory = ["position", "coarse_neighbours", "moved"]
+    mandatory = ["position", "neighbours_coarse", "moved"]
     optional = []
     handles = []
 

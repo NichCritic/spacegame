@@ -68,6 +68,7 @@ from Systems.damagedSink import DamagedSink
 from Systems.deathRespawnSystem import DeathRespawnSystem
 from Systems.respawnSystem import RespawnSystem
 from Systems.NeighbourSystem import FineNeighbourSystem, CoarseNeighbourSystem
+from Systems.coarseProximitySystem import CoarseProximitySystem
 
 import objects.item
 from gamedata.weapons import weapons
@@ -476,7 +477,7 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     fine_neighbour = FineNeighbourSystem(node_factory, fine_spatial_map)
     coarse_neighbour = CoarseNeighbourSystem(node_factory, coarse_spatial_map)
     proximity = ProximitySystem(node_factory)
-    coarse_proximity = CourseProximitySystem(node_factory)
+    coarse_proximity = CoarseProximitySystem(node_factory)
     collision = CollisionSystem(node_factory)
     collision_vel_dam = CollisionVelocityDamageSystem(node_factory)
     collision_dam = CollisionDamageSystem(node_factory)
