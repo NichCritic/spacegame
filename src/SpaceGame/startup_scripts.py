@@ -531,6 +531,8 @@ def register_systems(session_manager, object_db, node_factory, node_factory_db, 
     system_set.register(fine_spatial)
     system_set.register(coarse_spatial_moved)
     system_set.register(fine_spatial_moved)
+    system_set.register(coarse_neighbour)
+    system_set.register(fine_neighbour)
     system_set.register(coarse_proximity)
     system_set.register(proximity)
     system_set.register(collision)

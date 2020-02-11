@@ -24,6 +24,7 @@ class SystemSet(object):
 
         system_times = {}
         # before = time.time()
+        # logging.info("--------------------------------")
         for sys in self.systems:
             # logging.info(f"{sys.__class__.__name__}")
             before_s = time.time()

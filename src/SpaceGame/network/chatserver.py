@@ -122,7 +122,7 @@ class ShopHandler(BaseHandler):
     def get_closest_shop(self, av):
 
         shops = self.node_factory.create_node_list(
-            ["position", "shop"], [], av.sector.neighbours)
+            ["position", "shop"], [], av.neighbours_coarse.neighbours)
 
         if not shops:
             self.clear()
@@ -143,7 +143,7 @@ class ShopHandler(BaseHandler):
     def get(self):
         player = self.get_player()
         av = self.node_factory.create_node(
-            player.avatar_id, ["position", "sector", "inventory"])
+            player.avatar_id, ["position", "neighbours_coarse", "inventory"])
 
         closest = self.get_closest_shop(av)
         closest.add_or_attach_component('inventory', {'inventory': {}})
@@ -187,8 +187,6 @@ class ShopHandler(BaseHandler):
         av.add_or_attach_component('transaction', {"transactions": []})
 
         logging.info("adding transaction")
-
-
 
         if json_data['msg'] == 'buy':
             av.transaction.transactions.append({
@@ -246,6 +244,7 @@ class InventoryHandler(BaseHandler):
         logging.info("Finish called items get")
         self.finish(data)
 
+
 class QuestHandler(BaseHandler):
 
     def initialize(self, account_utils, player_factory, session_manager, node_factory):
@@ -272,12 +271,12 @@ class QuestHandler(BaseHandler):
 
         av = self.node_factory.create_node(player.avatar_id, [], ["quests"])
         if not av.has("quests"):
-            self.finish({"quests":{}})
+            self.finish({"quests": {}})
             return
 
         quests = {}
         for n, q in av.quests.quests.items():
-            quests[n] = {"stage":q["stage"], "status":q["status"]}
+            quests[n] = {"stage": q["stage"], "status": q["status"]}
 
         data = {"quests": quests}
         logging.info("Finish called quests get")
@@ -401,7 +400,8 @@ class MinimapHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        nodes = self.node_factory.create_node_list(["position", "area", "type"], [])
+        nodes = self.node_factory.create_node_list(
+            ["position", "area", "type"], [])
         player = self.get_player()
         av = self.node_factory.create_node(
             player.avatar_id, ["position", "area"], [])

@@ -54,7 +54,7 @@ def create_shop(node_factory, position, session):
 
 
 with session_manager.get_session() as session:
-    _, node_factory, node_factory_db, object_db, player_factory, account_utils = setup_objects(
+    _, node_factory, node_factory_db, object_db, player_factory, account_utils, _, _ = setup_objects(
         all_db_components, all_components, session)
     object_db.set_session(session)
 

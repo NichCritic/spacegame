@@ -1,5 +1,6 @@
 import math
 from collections import defaultdict
+import logging
 
 
 class SpatialMap():
@@ -16,8 +17,10 @@ class SpatialMap():
         s_top = math.floor((y - radius) / self.size)
         s_bottom = math.floor((y + radius) / self.size)
 
-        for j in range(s_top, s_bottom):
-            for i in range(s_left, s_right):
+        for j in range(s_top, s_bottom + 1):
+            for i in range(s_left, s_right + 1):
+                if id == "1f5ae516-324c-4209-93e0-348c98c22ab8":
+                    logging.info(f"{id} added to {i, j}")
                 self.map[(i, j)].add(id)
                 self.entity_map[id].add((i, j))
 
@@ -30,8 +33,8 @@ class SpatialMap():
         s_top = math.floor((y - radius) / self.size)
         s_bottom = math.floor((y + radius) / self.size)
 
-        coords = set([(i, j) for i in range(s_left, s_right)
-                      for j in range(s_top, s_bottom)])
+        coords = set([(i, j) for i in range(s_left, s_right + 1)
+                      for j in range(s_top, s_bottom + 1)])
 
         old_coords = self.entity_map[id] - coords
         new_coords = coords - self.entity_map[id]
@@ -52,11 +55,14 @@ class SpatialMap():
     def neighbours_by_sector(self, sector_rect):
         s_left, s_right, s_top, s_bottom = sector_rect
 
-        coords = set([(i, j) for i in range(s_left, s_right)
-                      for j in range(s_top, s_bottom)])
+        coords = set([(i, j) for i in range(s_left, s_right + 1)
+                      for j in range(s_top, s_bottom + 1)])
         ns = set()
+
+        # logging.info(f"{self.map[(-6, -3)]}")
         for co in coords:
-            ns += self.map[co]
+            # if "1f5ae516-324c-4209-93e0-348c98c22ab8" in self.map[co]:
+            ns |= self.map[co]
         return ns
 
     def neighbours_surround(self, x, y, radius):
@@ -66,17 +72,17 @@ class SpatialMap():
         s_top = math.floor((y - radius) / self.size) - 1
         s_bottom = math.floor((y + radius) / self.size) + 1
 
-        coords = set([(i, j) for i in range(s_left, s_right)
-                      for j in range(s_top, s_bottom)])
+        coords = set([(i, j) for i in range(s_left, s_right + 1)
+                      for j in range(s_top, s_bottom + 1)])
         ns = set()
         for co in coords:
-            ns += self.map[co]
+            ns |= self.map[co]
         return ns
 
     def neighbours(self, id):
         ns = set()
         for coord in self.entity_map[id]:
-            ns += self.map[coord]
+            ns |= self.map[coord]
         return ns
 
     def neighbours_coords(self, x, y):

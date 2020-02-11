@@ -17,12 +17,16 @@ class SpatialSystem(System):
         self.sector_component = sector_component
 
     def handle(self, node):
+
         if node.entity_has(self.sector_component):
             return
+        # logging.info(f"This happens to {node.id}")
         radius = node.area.radius if node.has("area") else 0
 
         sectors = self.spatial_map.add(
             node.id, node.position.x, node.position.y, radius)
+        if node.id == "1f5ae516-324c-4209-93e0-348c98c22ab8":
+            logging.info(f"{node.id} in {sectors}")
 
         node.add_or_attach_component(self.sector_component, {
                                      "sector_rect": sectors})

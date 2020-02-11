@@ -14,12 +14,12 @@ class CoarseProximitySystem(System):
         self.node_factory = node_factory
 
     def distance(self, p1, p2):
-        return math.abs((p1.x - p2.x)) + math.abs((p1.y - p2.y))
+        return abs((p1.x - p2.x)) + abs((p1.y - p2.y))
 
     def handle(self, node):
 
         nnodes = self.node_factory.create_node_list(
-            ["position"], [], entity_ids=node.coarse_neighbours.neighbours)
+            ["position"], [], entity_ids=node.neighbours_coarse.neighbours)
 
         node.add_or_attach_component("proximity", {})
         node.proximity.proximity_map = {}
@@ -29,7 +29,7 @@ class CoarseProximitySystem(System):
         for nnode in nnodes:
             if node.id == nnode.id:
                 continue
-            dist = distance(self, p1, p2)
+            dist = self.distance(node.position, nnode.position)
 
             if dist == 0:
                 dist = 0.01

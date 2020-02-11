@@ -6,7 +6,7 @@ import time
 
 class CoarseNeighbourSystem(System):
 
-    mandatory = ["course_sectors"]
+    mandatory = ["sectors_coarse"]
     optional = []
     handles = []
 
@@ -15,17 +15,22 @@ class CoarseNeighbourSystem(System):
         self.spatial_map = spatial_map
 
     def handle(self, node):
-        left, right, top, bottom = node.coarse_sectors.sector_rect
+        # logging.info(f"coarse neighbours handles {node.id}")
+        left, right, top, bottom = node.sectors_coarse.sector_rect
 
         neighbours = self.spatial_map.neighbours_by_sector(
             (left - 1, right + 1, top - 1, bottom + 1))
-        node.add_or_attach_component(
+
+        if node.id == "1f5ae516-324c-4209-93e0-348c98c22ab8":
+            logging.info(f"{left, right, top, bottom}, {neighbours}")
+
+        node.add_or_update_component(
             "neighbours_coarse", {"neighbours": neighbours})
 
 
 class FineNeighbourSystem(System):
 
-    mandatory = ["fine_sectors"]
+    mandatory = ["sectors_fine"]
     optional = []
     handles = []
 
@@ -35,6 +40,6 @@ class FineNeighbourSystem(System):
 
     def handle(self, node):
         neighbours = self.spatial_map.neighbours_by_sector(
-            node.fine_sectors.sector_rect)
-        node.add_or_attach_component(
+            node.sectors_fine.sector_rect)
+        node.add_or_update_component(
             "neighbours_fine", {"neighbours": neighbours})

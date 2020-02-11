@@ -3,7 +3,8 @@ from Systems.system import System
 
 class GameStateRequestSystem(System):
 
-    mandatory = ["player_controlled", "player_input", "neighbours_coarse", "tracked_ids"]
+    mandatory = ["player_controlled", "player_input",
+                 "neighbours_coarse", "tracked_ids"]
     optional = ["ping_neighbours"]
     handles = []
 
@@ -11,13 +12,13 @@ class GameStateRequestSystem(System):
         game_state = {"player_id": pnode.id, "entities": {},
                       "time": pnode.player_input.data[-1]['time']}
 
-        for n_id in pnode.sector.neighbours:
+        for n_id in pnode.neighbours_coarse.neighbours:
             if n_id not in pnode.tracked_ids.ids or pnode.has("ping_neighbours"):
                 node = self.node_factory.create_node(n_id, [], [])
                 node.add_or_attach_component("updated", {})
 
         nodes = self.node_factory.create_node_list(
-            ["position", "updated"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.neighbours_coarse.neighbours)
+            ["position"], ["type", "velocity", "mass", "inventory_mass", "area", "acceleration", "force", "rotation", "rotational_velocity", "physics_update", "player_input", "state_history", "mining", "minable", "collidable", "animated", "health", "weapon", "client_sync", "expires", "no_sync", "quest_status_updated", "pickup", "beam", "charged", "charging", "shooting"], entity_ids=pnode.neighbours_coarse.neighbours)
 
         for node in nodes:
             if node.has('no_sync'):
@@ -35,7 +36,8 @@ class GameStateRequestSystem(System):
             forcex = node.force.x if node.has('force') else 0
             forcey = node.force.y if node.has('force') else 0
             rotation = node.rotation.rotation if node.has('rotation') else 0
-            rotational_velocity = node.rotational_velocity.vel if node.has('rotational_velocity') else 0
+            rotational_velocity = node.rotational_velocity.vel if node.has(
+                'rotational_velocity') else 0
             control = node.player_input.data[
                 -1] if node.has('player_input') else None,
             last_update = node.physics_update.last_update if node.has(
@@ -58,7 +60,8 @@ class GameStateRequestSystem(System):
             beam = {"width": node.beam.width,
                     "length": node.beam.length} if node.has("beam") else None
             charging = True if node.has("charging") else False
-            charged = {"charge_time":node.charged.charge_time} if node.has("charged") else None
+            charged = {"charge_time": node.charged.charge_time} if node.has(
+                "charged") else None
 
             game_state["entities"][node.id] = {
                 "id": node.id,
@@ -108,7 +111,7 @@ class GameStateRequestSystem(System):
                                                                            "stage": node.quest_status_updated.stage}
             node.remove_component("updated")
         # print("Returning game state request")
-        if node.has("ping_neighbours"):
-            node.remove_component("ping_neighbours")
+        if pnode.has("ping_neighbours"):
+            pnode.remove_component("ping_neighbours")
             pass
         pnode.message(game_state)
