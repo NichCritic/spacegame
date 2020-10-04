@@ -35,7 +35,7 @@ U key: View and apply upgrades
 M key: View minimap
 Q key: View Quest status
 
-##Architecture
+## Architecture
 The game logic is divided into Systems (found in the Systems folder). At each game tick, each system gets access to the Component data for every entity it is interested in, specified in the mandatory and optional arrays at the top of each System, performs operations on it, and adds or removes Components as needed to complete its task.
 Typically a System will be related to some component which doesn't contain any data, which acts as a flag. If that flag doesn't exist on any components the System doesn't run.
 
